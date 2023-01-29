@@ -1678,6 +1678,7 @@ namespace Parser {
         switch (scriptKind) {
             case ScriptKind.JS:
             case ScriptKind.JSX:
+            case ScriptKind.KJS:
                 contextFlags = NodeFlags.JavaScriptFile;
                 break;
             case ScriptKind.JSON:
@@ -1728,7 +1729,8 @@ namespace Parser {
         // Prime the scanner.
         nextToken();
 
-        const statements = parseList(ParsingContext.SourceElements, parseStatement);
+        
+        const statements = ParseMainStatements()
         Debug.assert(token() === SyntaxKind.EndOfFileToken);
         const endOfFileToken = addJSDocComment(parseTokenNode<EndOfFileToken>());
 
@@ -2972,6 +2974,38 @@ namespace Parser {
 
         return false;
     }
+    function parseJsxOpeningOrSelfClosingElementOrOpeningFragmentForStatement(): NodeArray<Statement> {
+        const list: JsxChild[] = [];
+        const listPos = getNodePos();
+        const saveParsingContext = parsingContext;
+        parsingContext |= 1 << ParsingContext.JsxChildren;
+        const openingTag = factory.createJsxOpeningFragment()
+        while (true) {
+            currentToken = scanner.reScanJsxToken()
+            if (currentToken === SyntaxKind.EndOfFileToken) {
+                break;
+            }
+            const child = parseJsxChild(openingTag, currentToken);
+            if (!child) break;
+            list.push(child);
+        }
+
+        parsingContext = saveParsingContext;
+        return createNodeArray([
+            factory.createExpressionStatement(factory.createJsxFragment(
+                openingTag,
+                list,
+                factory.createJsxJsxClosingFragment()
+            ))
+        ], listPos);
+    }
+
+    function ParseMainStatements() {
+        return languageVariant === LanguageVariant.KJS ? parseJsxOpeningOrSelfClosingElementOrOpeningFragmentForStatement() : parseList(
+            ParsingContext.SourceElements,
+            parseStatement
+        );
+    }
 
     // Parses a list of elements
     function parseList<T extends Node>(kind: ParsingContext, parseElement: () => T): NodeArray<T> {
@@ -3059,7 +3093,7 @@ namespace Parser {
         return node;
     }
 
-    function consumeNode(node: Node) {
+    function consumeNode<N extends Node>(node: N):N {
         // Move the scanner so it is after the node we just consumed.
         scanner.setTextPos(node.end);
         nextToken();
@@ -5192,7 +5226,7 @@ namespace Parser {
             }
 
             // JSX overrides
-            if (languageVariant === LanguageVariant.JSX) {
+            if (languageVariant === LanguageVariant.JSX || languageVariant === LanguageVariant.KJS) {
                 const isArrowFunctionInJsx = lookAhead(() => {
                     parseOptional(SyntaxKind.ConstKeyword);
                     const third = nextToken();
@@ -5686,9 +5720,7 @@ namespace Parser {
                 return false;
             case SyntaxKind.LessThanToken:
                 // If we are not in JSX context, we are parsing TypeAssertion which is an UnaryExpression
-                if (languageVariant !== LanguageVariant.JSX) {
-                    return false;
-                }
+                return LanguageVariant.KJS === languageVariant || LanguageVariant.JSX === languageVariant;
                 // We are in JSX context and the token is part of JSXElement.
                 // falls through
             default:
@@ -5712,7 +5744,7 @@ namespace Parser {
             const pos = getNodePos();
             return finishNode(factory.createPrefixUnaryExpression(token() as PrefixUnaryOperator, nextTokenAnd(parseLeftHandSideExpressionOrHigher)), pos);
         }
-        else if (languageVariant === LanguageVariant.JSX && token() === SyntaxKind.LessThanToken && lookAhead(nextTokenIsIdentifierOrKeywordOrGreaterThan)) {
+        else if ((languageVariant === LanguageVariant.JSX || languageVariant === LanguageVariant.KJS) && token() === SyntaxKind.LessThanToken && lookAhead(nextTokenIsIdentifierOrKeywordOrGreaterThan)) {
             // JSXElement is part of primaryExpression
             return parseJsxElementOrSelfClosingElementOrFragment(/*inExpressionContext*/ true);
         }
@@ -5871,7 +5903,13 @@ namespace Parser {
         // private names will never work with `super` (`super.#foo`), but that's a semantic error, not syntactic
         return finishNode(factory.createPropertyAccessExpression(expression, parseRightSideOfDot(/*allowIdentifierNames*/ true, /*allowPrivateIdentifiers*/ true)), pos);
     }
+    function getPrimaryTagNameIfCanBy(openingTag: ts.JsxTagNameExpression) {
+        if (openingTag.kind === SyntaxKind.Identifier) {
 
+            // return openingTag.tagName.escapedText
+            return idText(openingTag)
+        }
+    }
     function parseJsxElementOrSelfClosingElementOrFragment(inExpressionContext: boolean, topInvalidNodePosition?: number, openingTag?: JsxOpeningElement | JsxOpeningFragment): JsxElement | JsxSelfClosingElement | JsxFragment {
         const pos = getNodePos();
         const opening = parseJsxOpeningOrSelfClosingElementOrOpeningFragment(inExpressionContext);
@@ -5980,8 +6018,66 @@ namespace Parser {
                 return Debug.assertNever(token);
         }
     }
+    function parseJsxTagJsChildren(): NodeArray<JsxExpression> {
+        const kind = ParsingContext.BlockStatements;
+        const saveParsingContext = parsingContext;
+        parsingContext |= 1 << kind;
+        const list: ts.Statement[] = [];
+        const listPos = getNodePos();
 
-    function parseJsxChildren(openingTag: JsxOpeningElement | JsxOpeningFragment): NodeArray<JsxChild> {
+        while (currentToken !== SyntaxKind.EndOfFileToken) {
+            let token = scanner.reScanScriptTagToken();
+
+            // console.log("🚀 --> file: parser.ts:6083 --> parseJsxTagJsChildren --> token", token, SyntaxKind[token as any]);
+            if (token === ts.SyntaxKind.LessThanSlashToken) {
+                // nextToken(); 
+                // let tagName = parseIdentifierName()
+                // const text = scanner.getTokenValue()
+                // console.log("🚀 --> file: --> currentToken PARSE LIST", currentToken, SyntaxKind[currentToken], text);
+                break;
+            }
+            if (token == undefined) {
+                nextToken();
+            }
+
+            list.push(consumeNode(parseStatement()));
+        }
+
+
+        parsingContext = saveParsingContext;
+        return createNodeArray([
+            factory.createJsxExpression(
+                undefined,
+                factory.createArrowFunction(
+                    undefined,
+                    undefined,
+                    [],
+                    undefined,
+                    undefined,
+                    factory.createBlock(list, true)
+                )
+            )
+        ], listPos);
+
+    }
+
+    function parseCSSStringChildren(): NodeArray<JsxChild> {
+        const list: JsxChild[] = [];
+        const listPos = getNodePos();
+        const saveParsingContext = parsingContext;
+        parsingContext |= 1 << ParsingContext.JsxChildren;
+        // console.log("🚀 --> file: parser.ts:6117 --> VVVVVVVV", scanner.getTokenValue(), currentToken, SyntaxKind[currentToken]);
+
+        currentToken = scanner.reScanCssStringToken();
+        const valur = scanner.getTokenValue()
+        // console.log("🚀 --> file: parser.ts:6117 --> parseCSSStringChildren --> currentToken", valur, currentToken, SyntaxKind[currentToken]);
+
+        list.push(factory.createJsxText(valur, true));
+        // currentToken = nextToken();
+        parsingContext = saveParsingContext;
+        return createNodeArray(list, listPos);
+    }
+    function parseJsxStringChildren(openingTag: JsxOpeningElement | JsxOpeningFragment): NodeArray<JsxChild> {
         const list = [];
         const listPos = getNodePos();
         const saveParsingContext = parsingContext;
@@ -6003,7 +6099,22 @@ namespace Parser {
         parsingContext = saveParsingContext;
         return createNodeArray(list, listPos);
     }
+    function parseJsxChildren(openingTag: JsxOpeningElement | JsxOpeningFragment): NodeArray<JsxChild> {
 
+        if (languageVariant !== ts.LanguageVariant.KJS) {
+            return parseJsxStringChildren(openingTag);
+        }
+        // console.log("🚀 --> file: languageVariant !== ts.LanguageVariant.KJS", getPrimaryTagNameIfCanBy(openingTag));
+        if (openingTag.kind === SyntaxKind.JsxOpeningElement) {
+            const tagName = getPrimaryTagNameIfCanBy(openingTag.tagName)
+            if (tagName === "script") {
+                return parseJsxTagJsChildren();
+            } else if (tagName === "style") {
+                return parseCSSStringChildren();
+            }
+        }
+        return parseJsxStringChildren(openingTag);
+    }
     function parseJsxAttributes(): JsxAttributes {
         const pos = getNodePos();
         return finishNode(factory.createJsxAttributes(parseList(ParsingContext.JsxAttributes, parseJsxAttribute)), pos);
@@ -6026,10 +6137,24 @@ namespace Parser {
         let node: JsxOpeningLikeElement;
 
         if (token() === SyntaxKind.GreaterThanToken) {
-            // Closing tag, so scan the immediately-following text with the JSX scanning instead
-            // of regular scanning to avoid treating illegal characters (e.g. '#') as immediate
-            // scanning errors
-            scanJsxText();
+            if (languageVariant === LanguageVariant.KJS) {
+                const tagNameString = getPrimaryTagNameIfCanBy(tagName);
+                if (tagNameString !== undefined && (tagNameString === "script" || tagNameString === "style")) {
+                    if (tagNameString === "script") {
+                        nextToken();
+                    }
+                } else {
+                    // Closing tag, so scan the immediately-following text with the JSX scanning instead
+                    // of regular scanning to avoid treating illegal characters (e.g. '#') as immediate
+                    // scanning errors 
+                    scanJsxText();
+                }
+            } else {
+                // Closing tag, so scan the immediately-following text with the JSX scanning instead
+                // of regular scanning to avoid treating illegal characters (e.g. '#') as immediate
+                // scanning errors 
+                scanJsxText();
+            }
             node = factory.createJsxOpeningElement(tagName, typeArguments, attributes);
         }
         else {

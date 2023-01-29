@@ -1649,6 +1649,8 @@ export const enum ScriptElementKindModifier {
     dctsModifier = ".d.cts",
     ctsModifier = ".cts",
     cjsModifier = ".cjs",
+    kjsModifier = ".kjs",
+    ktsModifier = ".kts",
 }
 
 export const enum ClassificationTypeNames {

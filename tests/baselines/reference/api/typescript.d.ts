@@ -449,6 +449,8 @@ declare namespace ts {
     type ModifierSyntaxKind = SyntaxKind.AbstractKeyword | SyntaxKind.AccessorKeyword | SyntaxKind.AsyncKeyword | SyntaxKind.ConstKeyword | SyntaxKind.DeclareKeyword | SyntaxKind.DefaultKeyword | SyntaxKind.ExportKeyword | SyntaxKind.InKeyword | SyntaxKind.PrivateKeyword | SyntaxKind.ProtectedKeyword | SyntaxKind.PublicKeyword | SyntaxKind.ReadonlyKeyword | SyntaxKind.OutKeyword | SyntaxKind.OverrideKeyword | SyntaxKind.StaticKeyword;
     type KeywordTypeSyntaxKind = SyntaxKind.AnyKeyword | SyntaxKind.BigIntKeyword | SyntaxKind.BooleanKeyword | SyntaxKind.IntrinsicKeyword | SyntaxKind.NeverKeyword | SyntaxKind.NumberKeyword | SyntaxKind.ObjectKeyword | SyntaxKind.StringKeyword | SyntaxKind.SymbolKeyword | SyntaxKind.UndefinedKeyword | SyntaxKind.UnknownKeyword | SyntaxKind.VoidKeyword;
     type TokenSyntaxKind = SyntaxKind.Unknown | SyntaxKind.EndOfFileToken | TriviaSyntaxKind | LiteralSyntaxKind | PseudoLiteralSyntaxKind | PunctuationSyntaxKind | SyntaxKind.Identifier | KeywordSyntaxKind;
+    type JsxScriptTokenSyntaxKind = SyntaxKind.LessThanSlashToken;
+    type KtsCssTagTokenSyntaxKind = SyntaxKind.EndOfFileToken | SyntaxKind.StringLiteral | SyntaxKind.LessThanSlashToken;
     type JsxTokenSyntaxKind = SyntaxKind.LessThanSlashToken | SyntaxKind.EndOfFileToken | SyntaxKind.ConflictMarkerTrivia | SyntaxKind.JsxText | SyntaxKind.JsxTextAllWhiteSpaces | SyntaxKind.OpenBraceToken | SyntaxKind.LessThanToken;
     type JSDocSyntaxKind = SyntaxKind.EndOfFileToken | SyntaxKind.WhitespaceTrivia | SyntaxKind.AtToken | SyntaxKind.NewLineTrivia | SyntaxKind.AsteriskToken | SyntaxKind.OpenBraceToken | SyntaxKind.CloseBraceToken | SyntaxKind.LessThanToken | SyntaxKind.GreaterThanToken | SyntaxKind.OpenBracketToken | SyntaxKind.CloseBracketToken | SyntaxKind.EqualsToken | SyntaxKind.CommaToken | SyntaxKind.DotToken | SyntaxKind.Identifier | SyntaxKind.BacktickToken | SyntaxKind.HashToken | SyntaxKind.Unknown | KeywordSyntaxKind;
     enum NodeFlags {
@@ -3191,7 +3193,8 @@ declare namespace ts {
         React = 2,
         ReactNative = 3,
         ReactJSX = 4,
-        ReactJSXDev = 5
+        ReactJSXDev = 5,
+        Kix = 6
     }
     enum ImportsNotUsedAsValues {
         Remove = 0,
@@ -3219,7 +3222,9 @@ declare namespace ts {
          * Used on extensions that doesn't define the ScriptKind but the content defines it.
          * Deferred extensions are going to be included in all project contexts.
          */
-        Deferred = 7
+        Deferred = 7,
+        KJS = 8,
+        KTS = 9
     }
     enum ScriptTarget {
         ES3 = 0,
@@ -3238,7 +3243,8 @@ declare namespace ts {
     }
     enum LanguageVariant {
         Standard = 0,
-        JSX = 1
+        JSX = 1,
+        KJS = 2
     }
     /** Either a parsed command line or a parsed tsconfig.json */
     interface ParsedCommandLine {
@@ -3348,7 +3354,9 @@ declare namespace ts {
         Dmts = ".d.mts",
         Cjs = ".cjs",
         Cts = ".cts",
-        Dcts = ".d.cts"
+        Dcts = ".d.cts",
+        Kjs = ".kjs",
+        Kts = ".kts"
     }
     interface ResolvedModuleWithFailedLookupLocations {
         readonly resolvedModule: ResolvedModuleFull | undefined;
@@ -4385,6 +4393,8 @@ declare namespace ts {
         scanJsxAttributeValue(): SyntaxKind;
         reScanJsxAttributeValue(): SyntaxKind;
         reScanJsxToken(allowMultilineJsxText?: boolean): JsxTokenSyntaxKind;
+        reScanCssStringToken(allowMultilineJsxText?: boolean): KtsCssTagTokenSyntaxKind;
+        reScanScriptTagToken(): JsxScriptTokenSyntaxKind | undefined;
         reScanLessThanToken(): SyntaxKind;
         reScanHashToken(): SyntaxKind;
         reScanQuestionToken(): SyntaxKind;
@@ -6925,7 +6935,9 @@ declare namespace ts {
         mjsModifier = ".mjs",
         dctsModifier = ".d.cts",
         ctsModifier = ".cts",
-        cjsModifier = ".cjs"
+        cjsModifier = ".cjs",
+        kjsModifier = ".kjs",
+        ktsModifier = ".kts"
     }
     enum ClassificationTypeNames {
         comment = "comment",

@@ -134,6 +134,7 @@ const jsxOptionMap = new Map(Object.entries({
     "react": JsxEmit.React,
     "react-jsx": JsxEmit.ReactJSX,
     "react-jsxdev": JsxEmit.ReactJSXDev,
+    "kix": JsxEmit.Kix,
 }));
 
 /** @internal */

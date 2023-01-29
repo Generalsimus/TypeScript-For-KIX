@@ -745,6 +745,10 @@ export type TokenSyntaxKind =
     | KeywordSyntaxKind
     ;
 
+export type JsxScriptTokenSyntaxKind = SyntaxKind.LessThanSlashToken
+
+export type KtsCssTagTokenSyntaxKind = SyntaxKind.EndOfFileToken | SyntaxKind.StringLiteral | SyntaxKind.LessThanSlashToken
+    
 export type JsxTokenSyntaxKind =
     | SyntaxKind.LessThanSlashToken
     | SyntaxKind.EndOfFileToken
@@ -7159,6 +7163,7 @@ export const enum JsxEmit {
     ReactNative = 3,
     ReactJSX = 4,
     ReactJSXDev = 5,
+    Kix = 6,
 }
 
 export const enum ImportsNotUsedAsValues {
@@ -7193,7 +7198,9 @@ export const enum ScriptKind {
      * Used on extensions that doesn't define the ScriptKind but the content defines it.
      * Deferred extensions are going to be included in all project contexts.
      */
-    Deferred = 7
+    Deferred = 7,
+    KJS = 8,
+    KTS = 9,
 }
 
 export const enum ScriptTarget {
@@ -7214,7 +7221,8 @@ export const enum ScriptTarget {
 
 export const enum LanguageVariant {
     Standard,
-    JSX
+    JSX,
+    KJS,
 }
 
 /** Either a parsed command line or a parsed tsconfig.json */
@@ -7587,6 +7595,8 @@ export const enum Extension {
     Cjs = ".cjs",
     Cts = ".cts",
     Dcts = ".d.cts",
+    Kjs = ".kjs",
+    Kts = ".kts",
 }
 
 export interface ResolvedModuleWithFailedLookupLocations {

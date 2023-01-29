@@ -13,8 +13,10 @@ import {
     Diagnostics,
     identity,
     JSDocSyntaxKind,
+    JsxScriptTokenSyntaxKind,
     JsxTokenSyntaxKind,
     KeywordSyntaxKind,
+    KtsCssTagTokenSyntaxKind,
     LanguageVariant,
     LineAndCharacter,
     MapLike,
@@ -69,6 +71,9 @@ export interface Scanner {
     scanJsxAttributeValue(): SyntaxKind;
     reScanJsxAttributeValue(): SyntaxKind;
     reScanJsxToken(allowMultilineJsxText?: boolean): JsxTokenSyntaxKind;
+    reScanCssStringToken(allowMultilineJsxText?: boolean): KtsCssTagTokenSyntaxKind;
+    // reScanKsxToken(allowMultilineJsxText?: boolean): JsxTokenSyntaxKind;
+    reScanScriptTagToken(): JsxScriptTokenSyntaxKind | undefined;
     reScanLessThanToken(): SyntaxKind;
     reScanHashToken(): SyntaxKind;
     reScanQuestionToken(): SyntaxKind;
@@ -932,7 +937,7 @@ export function isIdentifierPart(ch: number, languageVersion: ScriptTarget | und
     return ch >= CharacterCodes.A && ch <= CharacterCodes.Z || ch >= CharacterCodes.a && ch <= CharacterCodes.z ||
         ch >= CharacterCodes._0 && ch <= CharacterCodes._9 || ch === CharacterCodes.$ || ch === CharacterCodes._ ||
         // "-" and ":" are valid in JSX Identifiers
-        (identifierVariant === LanguageVariant.JSX ? (ch === CharacterCodes.minus || ch === CharacterCodes.colon) : false) ||
+        ((identifierVariant === LanguageVariant.JSX || identifierVariant === LanguageVariant.KJS) ? (ch === CharacterCodes.minus || ch === CharacterCodes.colon) : false) ||
         ch > CharacterCodes.maxAsciiCharacter && isUnicodeIdentifierPart(ch, languageVersion);
 }
 
@@ -1011,6 +1016,8 @@ export function createScanner(languageVersion: ScriptTarget,
         scanJsxAttributeValue,
         reScanJsxAttributeValue,
         reScanJsxToken,
+        reScanCssStringToken,
+        reScanScriptTagToken,
         reScanLessThanToken,
         reScanHashToken,
         reScanQuestionToken,
@@ -1949,7 +1956,7 @@ export function createScanner(languageVersion: ScriptTarget,
                     if (text.charCodeAt(pos + 1) === CharacterCodes.equals) {
                         return pos += 2, token = SyntaxKind.LessThanEqualsToken;
                     }
-                    if (languageVariant === LanguageVariant.JSX &&
+                    if ((languageVariant === LanguageVariant.JSX || languageVariant === LanguageVariant.KJS) &&
                         text.charCodeAt(pos + 1) === CharacterCodes.slash &&
                         text.charCodeAt(pos + 2) !== CharacterCodes.asterisk) {
                         return pos += 2, token = SyntaxKind.LessThanSlashToken;
@@ -2292,6 +2299,26 @@ export function createScanner(languageVersion: ScriptTarget,
         pos = tokenPos;
         return token = scanTemplateAndSetTokenValue(/* isTaggedTemplate */ true);
     }
+    function reScanScriptTagToken(): JsxScriptTokenSyntaxKind | undefined {
+        pos = tokenPos = startPos;
+        while (pos < end) {
+            let char = text.charCodeAt(pos);
+
+            if (char === CharacterCodes.lessThan) {
+                if (text.charCodeAt(pos + 1) === CharacterCodes.slash) {
+                    // console.log("🚀 --> file: scanner.ts:2311 --> reScanScriptTagToken --> tagName", tagName);
+                    pos += 2;
+                    return SyntaxKind.LessThanSlashToken;
+                }
+            }
+            if (isWhiteSpaceLike(char)) {
+                pos++
+                continue
+            }
+            break
+        }
+
+    }
 
     function reScanJsxToken(allowMultilineJsxText = true): JsxTokenSyntaxKind {
         pos = tokenPos = startPos;
@@ -2318,6 +2345,58 @@ export function createScanner(languageVersion: ScriptTarget,
         Debug.assert(token === SyntaxKind.QuestionQuestionToken, "'reScanQuestionToken' should only be called on a '??'");
         pos = tokenPos + 1;
         return token = SyntaxKind.QuestionToken;
+    }
+    function reScanCssStringToken(): KtsCssTagTokenSyntaxKind {
+        startPos = tokenPos = pos;
+
+        let quote: CharacterCodes | undefined
+        let comment: Boolean = false
+        while (pos < end) {
+            let char = text.charCodeAt(pos);
+            if (comment === true) {
+                if (char === CharacterCodes.slash && text.charCodeAt(pos - 1) === CharacterCodes.asterisk) {
+                    comment = false;
+                }
+                pos++
+                continue;
+            }
+            if (
+                quote === undefined &&
+                char === CharacterCodes.slash &&
+                comment === false &&
+                text.charCodeAt(pos + 1) === CharacterCodes.asterisk
+            ) {
+                pos += 2;
+                comment = true;
+                continue;
+            }
+
+            if (quote === undefined && char === CharacterCodes.lessThan) {
+                if (text.charCodeAt(pos + 1) === CharacterCodes.slash) {
+                    tokenValue = text.substring(startPos, pos);
+                    pos += 2;
+                    return token = SyntaxKind.LessThanSlashToken;
+                }
+            }
+            if (quote !== undefined && isLineBreak(char)) {
+                error(Diagnostics.Unterminated_string_literal);
+            }
+            if (char === CharacterCodes.singleQuote || char === CharacterCodes.doubleQuote) {
+                token = SyntaxKind.StringLiteral;
+                if (quote === char) {
+                    quote = undefined;
+                } else if (quote === undefined) {
+                    quote = char;
+                }
+            }
+            pos++;
+        }
+
+        tokenValue = text.substring(startPos, pos);
+        // console.log("🚀 --> file: scanner.ts:2388 --> reScanCssStringToken --> tokenValue", {tokenValue});
+        // console.log("🚀 --> file: scanner.ts:2367 --> reScanCssStringToken --> char === undefined && char === CharacterCodes.lessThan", text.substring(startPos, pos), char === undefined, char === CharacterCodes.lessThan);
+
+        return SyntaxKind.EndOfFileToken
     }
 
     function scanJsxToken(allowMultilineJsxText = true): JsxTokenSyntaxKind {

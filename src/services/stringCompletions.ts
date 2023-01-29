@@ -302,6 +302,8 @@ function kindModifiersFromExtension(extension: Extension | undefined): ScriptEle
         case Extension.Dcts: return ScriptElementKindModifier.dctsModifier;
         case Extension.Cjs: return ScriptElementKindModifier.cjsModifier;
         case Extension.Cts: return ScriptElementKindModifier.ctsModifier;
+        case Extension.Kjs: return ScriptElementKindModifier.kjsModifier;
+        case Extension.Kts: return ScriptElementKindModifier.ktsModifier;
         case Extension.TsBuildInfo: return Debug.fail(`Extension ${Extension.TsBuildInfo} is unsupported.`);
         case undefined: return ScriptElementKindModifier.none;
         default:
