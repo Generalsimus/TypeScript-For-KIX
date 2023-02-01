@@ -6413,7 +6413,7 @@ export interface AnonymousType extends ObjectType {
 
 /** @internal */
 export interface InstantiationExpressionType extends AnonymousType {
-    node: ExpressionWithTypeArguments | TypeQueryNode;
+    node: NodeWithTypeArguments;
 }
 
 /** @internal */
