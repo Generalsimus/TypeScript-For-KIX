@@ -1,14 +1,14 @@
-import { CustomContextType } from "../.."
-import { isClassStaticBlockDeclaration } from "../../../../factory/nodeTests"
-import { ArrowFunction, ClassStaticBlockDeclaration, FunctionDeclaration, FunctionExpression, MethodDeclaration, NodeFlags, VariableStatement, Visitor } from "../../../../types"
-import { visitEachChild } from "../../../../visitorPublic"
-import { createObject, createObjectArgsType } from "../../factoryCode/createObject"
-import { identifier } from "../../factoryCode/identifier"
-import { variableStatement } from "../../factoryCode/variableStatement"
-import { getVariableDeclarationNames } from "../../utils/getVariableDeclarationNames"
-import { createBlockVisitor } from "./createBlockVisitor"
- 
-type BlockNodesType = FunctionExpression | ArrowFunction | FunctionDeclaration | MethodDeclaration | ClassStaticBlockDeclaration
+import { CustomContextType } from "../..";
+import { isClassStaticBlockDeclaration } from "../../../../factory/nodeTests";
+import { ArrowFunction, ClassStaticBlockDeclaration, FunctionDeclaration, FunctionExpression, MethodDeclaration, NodeFlags, VariableStatement, Visitor } from "../../../../types";
+import { visitEachChild } from "../../../../visitorPublic";
+import { createObject, createObjectArgsType } from "../../factoryCode/createObject";
+import { identifier } from "../../factoryCode/identifier";
+import { variableStatement } from "../../factoryCode/variableStatement";
+import { getVariableDeclarationNames } from "../../utils/getVariableDeclarationNames";
+import { createBlockVisitor } from "./createBlockVisitor";
+
+type BlockNodesType = FunctionExpression | ArrowFunction | FunctionDeclaration | MethodDeclaration | ClassStaticBlockDeclaration;
 
 const createGlobalBlockVisitor = createBlockVisitor(<N extends BlockNodesType>(node: N, visitor: Visitor, context: CustomContextType) => {
     const declarationProperties: createObjectArgsType = [];
@@ -19,11 +19,11 @@ const createGlobalBlockVisitor = createBlockVisitor(<N extends BlockNodesType>(n
             for (const declarationIdentifierName in declarationNamesObject) {
 
                 context.addIdentifiersChannelCallback(declarationIdentifierName, (identifierState) => {
-                    identifierState.declaredFlag = NodeFlags.None
+                    identifierState.declaredFlag = NodeFlags.None;
                     identifierState.substituteCallback = (indexIdToUniqueString, _) => {
                         declarationProperties.push([indexIdToUniqueString, identifier(declarationIdentifierName)]);
 
-                    }
+                    };
                 });
 
 
@@ -35,7 +35,7 @@ const createGlobalBlockVisitor = createBlockVisitor(<N extends BlockNodesType>(n
     return {
         visitedNode: visitEachChild(node, visitor, context),
         declarationProperties
-    }
+    };
     // return ts.visitEachChild(node, visitor, context);
 }, true);
 
@@ -48,12 +48,12 @@ export const createGlobalBlockNodesVisitor = <N extends BlockNodesType>(
     context: CustomContextType
 ) => {
 
-        const OldRegistrations = context.getJSXPropRegistrationIdentifier
-        context.getJSXPropRegistrationIdentifier = undefined
+        const OldRegistrations = context.getJSXPropRegistrationIdentifier;
+        context.getJSXPropRegistrationIdentifier = undefined;
 
-        const [{ visitedNode, declarationProperties }, variableState] = createGlobalBlockVisitor(node, visitor, context)
+        const [{ visitedNode, declarationProperties }, variableState] = createGlobalBlockVisitor(node, visitor, context);
 
-        context.getJSXPropRegistrationIdentifier = OldRegistrations
+        context.getJSXPropRegistrationIdentifier = OldRegistrations;
 
 
         if (variableState.globalScopeIdentifiers) {
@@ -63,8 +63,8 @@ export const createGlobalBlockNodesVisitor = <N extends BlockNodesType>(
                     [variableState.globalScopeIdentifiers, createObject(declarationProperties)]
                 ]),
                 context
-            )
+            );
         }
 
-        return visitedNode
-    } 
+        return visitedNode;
+    };

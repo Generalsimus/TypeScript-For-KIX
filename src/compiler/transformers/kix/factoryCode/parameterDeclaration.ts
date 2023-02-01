@@ -10,6 +10,6 @@ export const parameterDeclaration = (params: (string | BindingName)[] = []) => {
             undefined,
             undefined,
             undefined
-        )
-    })
-}
+        );
+    });
+};

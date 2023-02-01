@@ -1,6 +1,6 @@
 import { identifier } from "./identifier";
 import { stringLiteral } from "./stringLiteral";
-import { BinaryExpression, BinaryOperator, Expression, SyntaxKind } from "../../../types"; 
+import { BinaryExpression, BinaryOperator, Expression, SyntaxKind } from "../../../types";
 import { factory } from "../../../factory/nodeFactory";
 
 // type ArgsType = ts.ElementAccessExpression
@@ -13,5 +13,5 @@ export function nodeToken(nodes: (string |  Expression)[], token:  BinaryOperato
             factory.createToken(token as any),
             stringLiteral(property2),
         );
-    }) as BinaryExpression
+    }) as BinaryExpression;
 }

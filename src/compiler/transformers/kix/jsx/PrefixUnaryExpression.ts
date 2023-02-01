@@ -13,9 +13,9 @@ import { ValueChangeNodeTokens } from "./PostfixUnaryExpression";
 export const VisitPrefixUnaryExpression = (node: PrefixUnaryExpression, visitor: Visitor, context: CustomContextType) => {
 
     const visitedNode = visitEachChild(node, visitor, context);
-    if ( isIdentifier(visitedNode.operand) && ValueChangeNodeTokens.includes(node.operator)) {
+    if (isIdentifier(visitedNode.operand) && ValueChangeNodeTokens.includes(node.operator)) {
 
-        const identifierName =  idText(visitedNode.operand);
+        const identifierName = idText(visitedNode.operand);
 
         context.addIdentifiersChannelCallback(identifierName, (identifierState) => {
             identifierState.isChanged = true;
@@ -36,10 +36,10 @@ export const VisitPrefixUnaryExpression = (node: PrefixUnaryExpression, visitor:
                             )
                         ],
                         SyntaxKind.EqualsToken
-                    )
-                })
-            }
+                    );
+                });
+            };
         });
     }
-return visitedNode
-}
+    return visitedNode;
+};

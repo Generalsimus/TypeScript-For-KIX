@@ -10,14 +10,14 @@ import { propertyAccessExpression } from "../factoryCode/propertyAccessExpressio
 export const ValueChangeNodeTokens = [
     SyntaxKind.PlusPlusToken,
     SyntaxKind.MinusMinusToken
-]
+];
 
-export const VisitPostfixUnaryExpression = (node:  PostfixUnaryExpression, visitor:  Visitor, context: CustomContextType) => {
+export const VisitPostfixUnaryExpression = (node: PostfixUnaryExpression, visitor: Visitor, context: CustomContextType) => {
 
-    const visitedNode =  visitEachChild(node, visitor, context);
-    if ( isIdentifier(visitedNode.operand) && ValueChangeNodeTokens.includes(node.operator)) {
+    const visitedNode = visitEachChild(node, visitor, context);
+    if (isIdentifier(visitedNode.operand) && ValueChangeNodeTokens.includes(node.operator)) {
 
-        const identifierName =  idText(visitedNode.operand);
+        const identifierName = idText(visitedNode.operand);
 
         context.addIdentifiersChannelCallback(identifierName, (identifierState) => {
             identifierState.isChanged = true;
@@ -45,11 +45,11 @@ export const VisitPostfixUnaryExpression = (node:  PostfixUnaryExpression, visit
                             )
                         ),
                         context.factory.createNumericLiteral("1")
-                    ],  SyntaxKind.MinusToken)
-                })
-            }
+                    ], SyntaxKind.MinusToken);
+                });
+            };
         });
     }
 
-    return visitedNode
-}
+    return visitedNode;
+};

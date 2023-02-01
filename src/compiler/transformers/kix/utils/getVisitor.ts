@@ -6,11 +6,11 @@ import { jsxTransformers } from "../jsx";
 export const getVisitor = (transforms: typeof jsxTransformers) => (context: CustomContextType) => {
 
 
-    const visitor = <N extends  Node>(node: N):  VisitResult<N> => {
+    const visitor = <N extends Node>(node: N): VisitResult<N> => {
 
-        return ((transforms as any)[node.kind] ||  visitEachChild)(node, visitor, context)
-    }
+        return ((transforms as any)[node.kind] || visitEachChild)(node, visitor, context);
+    };
 
-    return visitor
+    return visitor;
 
-}
+};

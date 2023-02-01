@@ -9,7 +9,7 @@ import { createGlobalBlockNodesVisitor } from "./utils/createGlobalBlockNodesVis
 
 
 const FunctionDeclarationVisitor = createGlobalBlockNodesVisitor(
-    (visitedNode:  FunctionDeclaration, declarationNode, context) => {
+    (visitedNode: FunctionDeclaration, declarationNode, context) => {
         return context.factory.updateFunctionDeclaration(
             visitedNode,
             getModifiers(visitedNode),
@@ -25,16 +25,16 @@ const FunctionDeclarationVisitor = createGlobalBlockNodesVisitor(
                     ...visitedNode.body.statements
                 ]
             ),
-        )
+        );
     }
-)
+);
 
 export const VisitFunctionDeclaration = (node: FunctionDeclaration, visitor: Visitor, context: CustomContextType) => {
     const returnValue: Node[] = [
         FunctionDeclarationVisitor(node, visitor, context)
-    ]
+    ];
     if (node.name) {
-        const declarationIdentifierName =  idText(node.name)
+        const declarationIdentifierName = idText(node.name);
 
         context.addIdentifiersChannelCallback(declarationIdentifierName, (identifierState) => {
             identifierState.declaredFlag = NodeFlags.None;
@@ -57,11 +57,11 @@ export const VisitFunctionDeclaration = (node: FunctionDeclaration, visitor: Vis
                 });
 
                 // substituteCallback(indexIdToUniqueString, declarationIdentifier)
-            }
+            };
         });
 
     }
 
     // returnValue.push();
-    return returnValue
-}
+    return returnValue;
+};

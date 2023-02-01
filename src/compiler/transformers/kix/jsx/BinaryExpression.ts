@@ -25,9 +25,9 @@ const AssignmentTokensList = [
     SyntaxKind.AmpersandAmpersandEqualsToken,
     SyntaxKind.BarBarEqualsToken,
     SyntaxKind.QuestionQuestionEqualsToken,
-]
+];
 export const VisitBinaryExpression = (node: BinaryExpression, visitor: Visitor, context: CustomContextType) => {
-    let visitedNode = visitEachChild(node, visitor, context);
+    const visitedNode = visitEachChild(node, visitor, context);
     if (isIdentifier(visitedNode.left) && AssignmentTokensList.includes(visitedNode.operatorToken.kind)) {
 
         const identifierName = idText(visitedNode.left);
@@ -69,13 +69,13 @@ export const VisitBinaryExpression = (node: BinaryExpression, visitor: Visitor, 
                     );
                 });
                 // substituteCallback(indexIdToUniqueString, declarationIdentifier);
-            }
+            };
 
         });
 
 
     }
 
-    return visitedNode
-}
+    return visitedNode;
+};
 

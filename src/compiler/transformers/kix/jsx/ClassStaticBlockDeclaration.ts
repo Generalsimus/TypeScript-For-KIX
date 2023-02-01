@@ -14,7 +14,7 @@ export const VisitClassStaticBlockDeclaration = createGlobalBlockNodesVisitor(
                     ...visitedNode.body.statements
                 ]
             ),
-        )
+        );
         // return context.factory.updateArrowFunction(
         //     visitedNode,
         //     visitedNode.modifiers,
@@ -27,7 +27,7 @@ export const VisitClassStaticBlockDeclaration = createGlobalBlockNodesVisitor(
         //     ]),
         // )
     }
-)
+);
 
 // export const ClassStaticBlockDeclaration = () => createBlockVisitor((
 //     node: ts.ClassStaticBlockDeclaration,

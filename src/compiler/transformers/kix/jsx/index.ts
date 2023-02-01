@@ -9,18 +9,18 @@ import { VisitCallExpression } from "./CallExpression";
 import { createJsxChildrenNode } from "./utils/createJsxChildrenNode";
 import { VisitPropertyAccessExpressionOrElementAccessExpression } from "./utils/PropertyAccessExpressionOrElementAccessExpression";
 import { VisitVariableStatement } from "./VariableStatement";
-import { VisitIfStatement } from './IfStatement';
-import { VisitSwitchStatement } from './SwitchStatement';
-import { VisitForStatement } from './ForStatement';
-import { VisitForInStatement } from './ForInStatement';
-import { VisitForOfStatement } from './ForOfStatement';
-import { VisitMethodDeclaration } from './MethodDeclaration';
-import { VisitClassStaticBlockDeclaration } from './ClassStaticBlockDeclaration';
-import { VisitTryStatement } from './TryStatement';
+import { VisitIfStatement } from "./IfStatement";
+import { VisitSwitchStatement } from "./SwitchStatement";
+import { VisitForStatement } from "./ForStatement";
+import { VisitForInStatement } from "./ForInStatement";
+import { VisitForOfStatement } from "./ForOfStatement";
+import { VisitMethodDeclaration } from "./MethodDeclaration";
+import { VisitClassStaticBlockDeclaration } from "./ClassStaticBlockDeclaration";
+import { VisitTryStatement } from "./TryStatement";
 import { VisitWhileStatement } from "./WhileStatement";
 import { VisitPostfixUnaryExpression } from "./PostfixUnaryExpression";
 import { VisitPrefixUnaryExpression } from "./PrefixUnaryExpression";
-import { VisitSourceFile   } from "./SourceFile";
+import { VisitSourceFile } from "./SourceFile";
 import { VisitDoStatement } from "./DoStatement";
 import { JsxElement, JsxFragment, JsxSelfClosingElement, SyntaxKind, Visitor } from "../../../types";
 
@@ -36,19 +36,19 @@ export const jsxTransformers = {
             children
         } = node;
 
-        return VisitJsxToObject(visitor, context, tagName, attributes, children)
+        return VisitJsxToObject(visitor, context, tagName, attributes, children);
     },
     [SyntaxKind.JsxSelfClosingElement]: (node: JsxSelfClosingElement, visitor: Visitor, context: CustomContextType) => {
 
-        return VisitJsxToObject(visitor, context, node.tagName, node.attributes, [] as any)
+        return VisitJsxToObject(visitor, context, node.tagName, node.attributes, [] as any);
     },
     [SyntaxKind.JsxFragment]: (node: JsxFragment, visitor: Visitor, context: CustomContextType) => {
         const childrenNode = createJsxChildrenNode(
             visitor,
             context,
             node.children
-        )
-        return childrenNode || context.factory.createArrayLiteralExpression([], false)
+        );
+        return childrenNode || context.factory.createArrayLiteralExpression([], false);
     },
     [SyntaxKind.ArrowFunction]: VisitArrowFunction,
     [SyntaxKind.FunctionExpression]: VisitFunctionExpression,
@@ -66,9 +66,9 @@ export const jsxTransformers = {
 
 
 
-    ////////////////////////////////// 
+    //////////////////////////////////
     // [ts.SyntaxKind.CaseClause]: createLowLevelBlockVisitor(ts.visitEachChild),
-    //  
+    //
     [SyntaxKind.PropertyAccessExpression]: VisitPropertyAccessExpressionOrElementAccessExpression,
     [SyntaxKind.ElementAccessExpression]: VisitPropertyAccessExpressionOrElementAccessExpression,
     [SyntaxKind.CallExpression]: VisitCallExpression,
@@ -78,4 +78,4 @@ export const jsxTransformers = {
     [SyntaxKind.PostfixUnaryExpression]: VisitPostfixUnaryExpression,
     [SyntaxKind.PrefixUnaryExpression]: VisitPrefixUnaryExpression,
     [SyntaxKind.SourceFile]: VisitSourceFile,
-}
+};

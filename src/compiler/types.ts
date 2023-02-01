@@ -745,10 +745,10 @@ export type TokenSyntaxKind =
     | KeywordSyntaxKind
     ;
 
-export type JsxScriptTokenSyntaxKind = SyntaxKind.LessThanSlashToken
+export type JsxScriptTokenSyntaxKind = SyntaxKind.LessThanSlashToken;
 
-export type KtsCssTagTokenSyntaxKind = SyntaxKind.EndOfFileToken | SyntaxKind.StringLiteral | SyntaxKind.LessThanSlashToken
-    
+export type KtsCssTagTokenSyntaxKind = SyntaxKind.EndOfFileToken | SyntaxKind.StringLiteral | SyntaxKind.LessThanSlashToken;
+
 export type JsxTokenSyntaxKind =
     | SyntaxKind.LessThanSlashToken
     | SyntaxKind.EndOfFileToken

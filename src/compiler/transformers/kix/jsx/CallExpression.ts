@@ -4,15 +4,15 @@ import { visitEachChild } from "../../../visitorPublic";
 import { callChainFunction } from "../factoryCode/callChainFunction";
 
 export const VisitCallExpression = (
-    node:  CallExpression,
-    visitor:  Visitor,
+    node: CallExpression,
+    visitor: Visitor,
     context: CustomContextType
 ) => {
-    const oldValue = context.JsxHaveQuestionDotToken
-    let newNode =  visitEachChild(node, visitor, context)
+    const oldValue = context.JsxHaveQuestionDotToken;
+    let newNode = visitEachChild(node, visitor, context);
     if (context.JsxHaveQuestionDotToken === node) {
-        newNode = callChainFunction(newNode.expression, [...newNode.arguments])
+        newNode = callChainFunction(newNode.expression, [...newNode.arguments]);
     }
     context.JsxHaveQuestionDotToken = oldValue;
     return newNode;
-}
+};

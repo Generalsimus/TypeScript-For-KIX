@@ -26,18 +26,18 @@ const ForInStatementVisitor = createBlockVisitor(<N extends ForOfStatement>({ in
                             ]);
                         }
                         // substituteCallback(indexIdToUniqueString, declarationIdentifier)
-                    }
-                })
+                    };
+                });
 
             }
         }
     }
 
     return {
-        defaultDeclarations: defaultDeclarations,
+        defaultDeclarations,
         statement: visitor(statement) as typeof statement
-    }
-}, false)
+    };
+}, false);
 export const VisitForOfStatement = (
     node: ForOfStatement,
     visitor: Visitor,
@@ -49,22 +49,22 @@ export const VisitForOfStatement = (
         variableState,
         defaultDeclarations,
         context
-    )
+    );
     return context.factory.updateForOfStatement(
         node,
         node.awaitModifier && visitor(node.awaitModifier) as typeof node.awaitModifier,
         visitor(node.initializer) as typeof node.initializer,
         visitor(node.expression) as typeof node.expression,
         updatedStatement,
-    )
-}
+    );
+};
 const updateForOfStatementStatement = (
     statement: ForInStatement["statement"],
     { blockScopeIdentifiers }: VariableStateType,
     defaultDeclarations: createObjectArgsType,
     context: CustomContextType
 ) => {
-    if (!blockScopeIdentifiers) return statement
+    if (!blockScopeIdentifiers) return statement;
 
     const variableDeclarationNode = variableStatement([
         [
@@ -80,11 +80,11 @@ const updateForOfStatementStatement = (
                 variableDeclarationNode,
                 ...statement.statements
             ]
-        )
+        );
     }
 
     return context.factory.createBlock([
         variableDeclarationNode,
         statement
     ]);
-} 
+};

@@ -10,17 +10,17 @@ export const forEachJsxAttributes = (
 ) => {
     for (const attribute of attributeProperties) {
         if (attribute.kind === SyntaxKind.JsxAttribute) {
-            const attributeName = attribute.name
-            let attributeValueNode = safeInitializer(attribute.initializer)
+            const attributeName = attribute.name;
+            let attributeValueNode = safeInitializer(attribute.initializer);
             if (!attributeValueNode) continue;
             if (isJsxText(attributeValueNode)) {
 
-                attributeValueNode = stringLiteral(attributeValueNode.text)
+                attributeValueNode = stringLiteral(attributeValueNode.text);
                 // attributeValueNode = stringLiteral(attributeValueNode.getText())
             }
-            forEachCallback(attributeName, attributeValueNode)
+            forEachCallback(attributeName, attributeValueNode);
 
         }
     }
 
-}
+};

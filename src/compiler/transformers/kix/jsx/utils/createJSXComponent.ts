@@ -1,9 +1,9 @@
-import { CustomContextType } from "../.."
-import { Expression, Identifier, JsxAttributes, JsxChild, JsxTagNameExpression, NodeArray, Visitor } from "../../../../types"
-import { createObject } from "../../factoryCode/createObject"
-import { createJsxChildrenNode } from "./createJsxChildrenNode"
-import { forEachJsxAttributes } from "./forEachJsxAttributes"
-import { useJsxPropRegistration } from "./useJsxPropRegistration"
+import { CustomContextType } from "../..";
+import { Expression, Identifier, JsxAttributes, JsxChild, JsxTagNameExpression, NodeArray, Visitor } from "../../../../types";
+import { createObject } from "../../factoryCode/createObject";
+import { createJsxChildrenNode } from "./createJsxChildrenNode";
+import { forEachJsxAttributes } from "./forEachJsxAttributes";
+import { useJsxPropRegistration } from "./useJsxPropRegistration";
 
 //TODO:კლასის კომპენენტის შემთXვევაში უნდა იყოს ასე new ClassName().method() და არა ესე new ClassName.method()
 export const createJSXComponent = (
@@ -17,11 +17,11 @@ export const createJSXComponent = (
         visitor,
         context,
         children
-    )
+    );
 
     const propsObjectNodesForFactoryCode: [Identifier | string, Expression][] = [
         ["$C", componentName],
-    ]
+    ];
 
     if (childrenNode) {
         propsObjectNodesForFactoryCode.push([
@@ -29,8 +29,8 @@ export const createJSXComponent = (
             childrenNode,
         ]);
     }
-    const dynamicPropsObjectNodesForFactoryCode: [Identifier | string, Expression][] = []
-    const staticPropsObjectNodesForFactoryCode: [Identifier | string, Expression][] = []
+    const dynamicPropsObjectNodesForFactoryCode: [Identifier | string, Expression][] = [];
+    const staticPropsObjectNodesForFactoryCode: [Identifier | string, Expression][] = [];
 
 
     forEachJsxAttributes(attributes.properties, (attributeName, attributeValueNode) => {
@@ -40,19 +40,20 @@ export const createJSXComponent = (
             context,
             (node, isJSXregistererNode) => {
                 if (isJSXregistererNode) {
-                    dynamicPropsObjectNodesForFactoryCode.push([attributeName, node])
-                } else {
-                    staticPropsObjectNodesForFactoryCode.push([attributeName, node])
+                    dynamicPropsObjectNodesForFactoryCode.push([attributeName, node]);
+                }
+ else {
+                    staticPropsObjectNodesForFactoryCode.push([attributeName, node]);
                 }
             }
-        )
-    })
+        );
+    });
     if (staticPropsObjectNodesForFactoryCode.length) {
-        propsObjectNodesForFactoryCode.push(["a", createObject(staticPropsObjectNodesForFactoryCode)])
+        propsObjectNodesForFactoryCode.push(["a", createObject(staticPropsObjectNodesForFactoryCode)]);
     }
     if (dynamicPropsObjectNodesForFactoryCode.length) {
-        propsObjectNodesForFactoryCode.push(["d", createObject(dynamicPropsObjectNodesForFactoryCode)])
+        propsObjectNodesForFactoryCode.push(["d", createObject(dynamicPropsObjectNodesForFactoryCode)]);
     }
 
     return createObject(propsObjectNodesForFactoryCode);
-}
+};

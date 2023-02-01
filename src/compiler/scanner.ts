@@ -2302,7 +2302,7 @@ export function createScanner(languageVersion: ScriptTarget,
     function reScanScriptTagToken(): JsxScriptTokenSyntaxKind | undefined {
         pos = tokenPos = startPos;
         while (pos < end) {
-            let char = text.charCodeAt(pos);
+            const char = text.charCodeAt(pos);
 
             if (char === CharacterCodes.lessThan) {
                 if (text.charCodeAt(pos + 1) === CharacterCodes.slash) {
@@ -2312,10 +2312,10 @@ export function createScanner(languageVersion: ScriptTarget,
                 }
             }
             if (isWhiteSpaceLike(char)) {
-                pos++
-                continue
+                pos++;
+                continue;
             }
-            break
+            break;
         }
 
     }
@@ -2349,15 +2349,15 @@ export function createScanner(languageVersion: ScriptTarget,
     function reScanCssStringToken(): KtsCssTagTokenSyntaxKind {
         startPos = tokenPos = pos;
 
-        let quote: CharacterCodes | undefined
-        let comment: Boolean = false
+        let quote: CharacterCodes | undefined;
+        let comment: Boolean = false;
         while (pos < end) {
-            let char = text.charCodeAt(pos);
+            const char = text.charCodeAt(pos);
             if (comment === true) {
                 if (char === CharacterCodes.slash && text.charCodeAt(pos - 1) === CharacterCodes.asterisk) {
                     comment = false;
                 }
-                pos++
+                pos++;
                 continue;
             }
             if (
@@ -2385,7 +2385,8 @@ export function createScanner(languageVersion: ScriptTarget,
                 token = SyntaxKind.StringLiteral;
                 if (quote === char) {
                     quote = undefined;
-                } else if (quote === undefined) {
+                }
+ else if (quote === undefined) {
                     quote = char;
                 }
             }
@@ -2396,7 +2397,7 @@ export function createScanner(languageVersion: ScriptTarget,
         // console.log("🚀 --> file: scanner.ts:2388 --> reScanCssStringToken --> tokenValue", {tokenValue});
         // console.log("🚀 --> file: scanner.ts:2367 --> reScanCssStringToken --> char === undefined && char === CharacterCodes.lessThan", text.substring(startPos, pos), char === undefined, char === CharacterCodes.lessThan);
 
-        return SyntaxKind.EndOfFileToken
+        return SyntaxKind.EndOfFileToken;
     }
 
     function scanJsxToken(allowMultilineJsxText = true): JsxTokenSyntaxKind {

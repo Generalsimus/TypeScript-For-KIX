@@ -9,8 +9,8 @@ import { createBlockVisitor, VariableStateType } from "./utils/createBlockVisito
 
 
 const SwitchStatementBlockVisitor = createBlockVisitor(<N extends NodeArray<Statement>>(nodes: N, visitor: Visitor, _: CustomContextType): NodeArray<Statement> => {
- 
-    return visitNodes(nodes, visitor, isStatement)
+
+    return visitNodes(nodes, visitor, isStatement);
 }, false);
 
 export const VisitSwitchStatement = (
@@ -21,18 +21,18 @@ export const VisitSwitchStatement = (
     // statement
     const clauses: CaseOrDefaultClause[] = node.caseBlock.clauses.map(caseBlockNode => {
         const [visitedStatementNode, variableState] = SwitchStatementBlockVisitor(caseBlockNode.statements, visitor, context);
-        const updatedStatements = updateCaseOrDefaultClauseStatements(visitedStatementNode, variableState)
+        const updatedStatements = updateCaseOrDefaultClauseStatements(visitedStatementNode, variableState);
         if (isDefaultClause(caseBlockNode)) {
             return context.factory.updateDefaultClause(
                 caseBlockNode,
                 updatedStatements
-            )
+            );
         }
         return context.factory.updateCaseClause(
             caseBlockNode,
             visitor(caseBlockNode.expression) as Expression,
             updatedStatements
-        )
+        );
     });
 
     return context.factory.updateSwitchStatement(
@@ -42,8 +42,8 @@ export const VisitSwitchStatement = (
             node.caseBlock,
             clauses
         ),
-    )
-}
+    );
+};
 
 
 const updateCaseOrDefaultClauseStatements = (statements: NodeArray<Statement>, variableState: VariableStateType) => {
@@ -53,8 +53,8 @@ const updateCaseOrDefaultClauseStatements = (statements: NodeArray<Statement>, v
                 [variableState.blockScopeIdentifiers, createObject([])]
             ]),
             ...statements
-        ]
+        ];
     }
 
-    return statements
-}
+    return statements;
+};

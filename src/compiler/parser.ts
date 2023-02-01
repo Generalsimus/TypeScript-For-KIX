@@ -395,7 +395,7 @@ const enum SignatureFlags {
     None = 0,
     Yield = 1 << 0,
     Await = 1 << 1,
-    Type  = 1 << 2,
+    Type = 1 << 2,
     IgnoreMissingOpenBrace = 1 << 4,
     JSDoc = 1 << 5,
 }
@@ -1605,7 +1605,7 @@ namespace Parser {
                             expression = parseLiteralNode() as StringLiteral | NumericLiteral;
                             break;
                         }
-                        // falls through
+                    // falls through
                     default:
                         expression = parseObjectLiteralExpression();
                         break;
@@ -1729,8 +1729,8 @@ namespace Parser {
         // Prime the scanner.
         nextToken();
 
-        
-        const statements = ParseMainStatements()
+
+        const statements = ParseMainStatements();
         Debug.assert(token() === SyntaxKind.EndOfFileToken);
         const endOfFileToken = addJSDocComment(parseTokenNode<EndOfFileToken>());
 
@@ -2540,11 +2540,11 @@ namespace Parser {
         const pos = getNodePos();
         const result =
             kind === SyntaxKind.Identifier ? factory.createIdentifier("", /*originalKeywordKind*/ undefined) :
-            isTemplateLiteralKind(kind) ? factory.createTemplateLiteralLikeNode(kind, "", "", /*templateFlags*/ undefined) :
-            kind === SyntaxKind.NumericLiteral ? factory.createNumericLiteral("", /*numericLiteralFlags*/ undefined) :
-            kind === SyntaxKind.StringLiteral ? factory.createStringLiteral("", /*isSingleQuote*/ undefined) :
-            kind === SyntaxKind.MissingDeclaration ? factory.createMissingDeclaration() :
-            factory.createToken(kind);
+                isTemplateLiteralKind(kind) ? factory.createTemplateLiteralLikeNode(kind, "", "", /*templateFlags*/ undefined) :
+                    kind === SyntaxKind.NumericLiteral ? factory.createNumericLiteral("", /*numericLiteralFlags*/ undefined) :
+                        kind === SyntaxKind.StringLiteral ? factory.createStringLiteral("", /*isSingleQuote*/ undefined) :
+                            kind === SyntaxKind.MissingDeclaration ? factory.createMissingDeclaration() :
+                                factory.createToken(kind);
         return finishNode(result, pos) as T;
     }
 
@@ -2808,7 +2808,7 @@ namespace Parser {
                     case SyntaxKind.DotToken: // Not an array literal member, but don't want to close the array (see `tests/cases/fourslash/completionsDotInArrayLiteralInObjectLiteral.ts`)
                         return true;
                 }
-                // falls through
+            // falls through
             case ParsingContext.ArgumentExpressions:
                 return token() === SyntaxKind.DotDotDotToken || isStartOfExpression();
             case ParsingContext.Parameters:
@@ -2979,9 +2979,9 @@ namespace Parser {
         const listPos = getNodePos();
         const saveParsingContext = parsingContext;
         parsingContext |= 1 << ParsingContext.JsxChildren;
-        const openingTag = factory.createJsxOpeningFragment()
+        const openingTag = factory.createJsxOpeningFragment();
         while (true) {
-            currentToken = scanner.reScanJsxToken()
+            currentToken = scanner.reScanJsxToken();
             if (currentToken === SyntaxKind.EndOfFileToken) {
                 break;
             }
@@ -3097,7 +3097,7 @@ namespace Parser {
         return node;
     }
 
-    function consumeNode<N extends Node>(node: N):N {
+    function consumeNode<N extends Node>(node: N): N {
         // Move the scanner so it is after the node we just consumed.
         scanner.setTextPos(node.end);
         nextToken();
@@ -3651,16 +3651,16 @@ namespace Parser {
         const pos = getNodePos();
         const node =
             isTemplateLiteralKind(kind) ? factory.createTemplateLiteralLikeNode(kind, scanner.getTokenValue(), getTemplateLiteralRawText(kind), scanner.getTokenFlags() & TokenFlags.TemplateLiteralLikeFlags) :
-            // Octal literals are not allowed in strict mode or ES5
-            // Note that theoretically the following condition would hold true literals like 009,
-            // which is not octal. But because of how the scanner separates the tokens, we would
-            // never get a token like this. Instead, we would get 00 and 9 as two separate tokens.
-            // We also do not need to check for negatives because any prefix operator would be part of a
-            // parent unary expression.
-            kind === SyntaxKind.NumericLiteral ? factory.createNumericLiteral(scanner.getTokenValue(), scanner.getNumericLiteralFlags()) :
-            kind === SyntaxKind.StringLiteral ? factory.createStringLiteral(scanner.getTokenValue(), /*isSingleQuote*/ undefined, scanner.hasExtendedUnicodeEscape()) :
-            isLiteralKind(kind) ? factory.createLiteralLikeNode(kind, scanner.getTokenValue()) :
-            Debug.fail();
+                // Octal literals are not allowed in strict mode or ES5
+                // Note that theoretically the following condition would hold true literals like 009,
+                // which is not octal. But because of how the scanner separates the tokens, we would
+                // never get a token like this. Instead, we would get 00 and 9 as two separate tokens.
+                // We also do not need to check for negatives because any prefix operator would be part of a
+                // parent unary expression.
+                kind === SyntaxKind.NumericLiteral ? factory.createNumericLiteral(scanner.getTokenValue(), scanner.getNumericLiteralFlags()) :
+                    kind === SyntaxKind.StringLiteral ? factory.createStringLiteral(scanner.getTokenValue(), /*isSingleQuote*/ undefined, scanner.hasExtendedUnicodeEscape()) :
+                        isLiteralKind(kind) ? factory.createLiteralLikeNode(kind, scanner.getTokenValue()) :
+                            Debug.fail();
 
         if (scanner.hasExtendedUnicodeEscape()) {
             node.hasExtendedUnicodeEscape = true;
@@ -4492,13 +4492,13 @@ namespace Parser {
             case SyntaxKind.AsteriskEqualsToken:
                 // If there is '*=', treat it as * followed by postfix =
                 scanner.reScanAsteriskEqualsToken();
-                // falls through
+            // falls through
             case SyntaxKind.AsteriskToken:
                 return parseJSDocAllType();
             case SyntaxKind.QuestionQuestionToken:
                 // If there is '??', treat it as prefix-'?' in JSDoc type.
                 scanner.reScanQuestionToken();
-                // falls through
+            // falls through
             case SyntaxKind.QuestionToken:
                 return parseJSDocUnknownOrNullableType();
             case SyntaxKind.FunctionKeyword:
@@ -5372,7 +5372,7 @@ namespace Parser {
         const hasJSDocFunctionType = unwrappedType && isJSDocFunctionType(unwrappedType);
         if (!allowAmbiguity && token() !== SyntaxKind.EqualsGreaterThanToken && (hasJSDocFunctionType || token() !== SyntaxKind.OpenBraceToken)) {
             // Returning undefined here will cause our caller to rewind to where we started from.
-                return undefined;
+            return undefined;
         }
 
         // If we have an arrow, then try to parse the body. Even if not, try to parse if we
@@ -5693,7 +5693,7 @@ namespace Parser {
                 if (isAwaitExpression()) {
                     return parseAwaitExpression();
                 }
-                // falls through
+            // falls through
             default:
                 return parseUpdateExpression();
         }
@@ -5725,8 +5725,8 @@ namespace Parser {
             case SyntaxKind.LessThanToken:
                 // If we are not in JSX context, we are parsing TypeAssertion which is an UnaryExpression
                 return LanguageVariant.KJS === languageVariant || LanguageVariant.JSX === languageVariant;
-                // We are in JSX context and the token is part of JSXElement.
-                // falls through
+            // We are in JSX context and the token is part of JSXElement.
+            // falls through
             default:
                 return true;
         }
@@ -5911,7 +5911,7 @@ namespace Parser {
         if (openingTag.kind === SyntaxKind.Identifier) {
 
             // return openingTag.tagName.escapedText
-            return idText(openingTag)
+            return idText(openingTag);
         }
     }
     function parseJsxElementOrSelfClosingElementOrFragment(inExpressionContext: boolean, topInvalidNodePosition?: number, openingTag?: JsxOpeningElement | JsxOpeningFragment): JsxElement | JsxSelfClosingElement | JsxFragment {
@@ -5934,8 +5934,8 @@ namespace Parser {
                     lastChild.openingElement,
                     lastChild.children,
                     finishNode(factory.createJsxClosingElement(finishNode(factory.createIdentifier(""), end, end)), end, end)),
-                lastChild.openingElement.pos,
-                end);
+                    lastChild.openingElement.pos,
+                    end);
 
                 children = createNodeArray([...children.slice(0, children.length - 1), newLast], children.pos, end);
                 closingElement = lastChild.closingElement;
@@ -6030,11 +6030,11 @@ namespace Parser {
         const listPos = getNodePos();
 
         while (currentToken !== SyntaxKind.EndOfFileToken) {
-            let token = scanner.reScanScriptTagToken();
+            const token = scanner.reScanScriptTagToken();
 
             // console.log("🚀 --> file: parser.ts:6083 --> parseJsxTagJsChildren --> token", token, SyntaxKind[token as any]);
             if (token === ts.SyntaxKind.LessThanSlashToken) {
-                // nextToken(); 
+                // nextToken();
                 // let tagName = parseIdentifierName()
                 // const text = scanner.getTokenValue()
                 // console.log("🚀 --> file: --> currentToken PARSE LIST", currentToken, SyntaxKind[currentToken], text);
@@ -6073,7 +6073,7 @@ namespace Parser {
         // console.log("🚀 --> file: parser.ts:6117 --> VVVVVVVV", scanner.getTokenValue(), currentToken, SyntaxKind[currentToken]);
 
         currentToken = scanner.reScanCssStringToken();
-        const valur = scanner.getTokenValue()
+        const valur = scanner.getTokenValue();
         // console.log("🚀 --> file: parser.ts:6117 --> parseCSSStringChildren --> currentToken", valur, currentToken, SyntaxKind[currentToken]);
 
         list.push(factory.createJsxText(valur, true));
@@ -6110,10 +6110,11 @@ namespace Parser {
         }
         // console.log("🚀 --> file: languageVariant !== ts.LanguageVariant.KJS", getPrimaryTagNameIfCanBy(openingTag));
         if (openingTag.kind === SyntaxKind.JsxOpeningElement) {
-            const tagName = getPrimaryTagNameIfCanBy(openingTag.tagName)
+            const tagName = getPrimaryTagNameIfCanBy(openingTag.tagName);
             if (tagName === "script") {
                 return parseJsxTagJsChildren();
-            } else if (tagName === "style") {
+            }
+            else if (tagName === "style") {
                 return parseCSSStringChildren();
             }
         }
@@ -6147,16 +6148,18 @@ namespace Parser {
                     if (tagNameString === "script") {
                         nextToken();
                     }
-                } else {
+                }
+                else {
                     // Closing tag, so scan the immediately-following text with the JSX scanning instead
                     // of regular scanning to avoid treating illegal characters (e.g. '#') as immediate
-                    // scanning errors 
+                    // scanning errors
                     scanJsxText();
                 }
-            } else {
+            }
+            else {
                 // Closing tag, so scan the immediately-following text with the JSX scanning instead
                 // of regular scanning to avoid treating illegal characters (e.g. '#') as immediate
-                // scanning errors 
+                // scanning errors
                 scanJsxText();
             }
             node = factory.createJsxOpeningElement(tagName, typeArguments, attributes);
@@ -6596,7 +6599,7 @@ namespace Parser {
     function parseArgumentOrArrayLiteralElement(): Expression {
         return token() === SyntaxKind.DotDotDotToken ? parseSpreadElement() :
             token() === SyntaxKind.CommaToken ? finishNode(factory.createOmittedExpression(), getNodePos()) :
-            parseAssignmentExpressionOrHigher(/*allowReturnTypeInArrowFunction*/ true);
+                parseAssignmentExpressionOrHigher(/*allowReturnTypeInArrowFunction*/ true);
     }
 
     function parseArgumentExpression(): Expression {
@@ -6697,8 +6700,8 @@ namespace Parser {
         const isAsync = some(modifiers, isAsyncModifier) ? SignatureFlags.Await : SignatureFlags.None;
         const name = isGenerator && isAsync ? doInYieldAndAwaitContext(parseOptionalBindingIdentifier) :
             isGenerator ? doInYieldContext(parseOptionalBindingIdentifier) :
-            isAsync ? doInAwaitContext(parseOptionalBindingIdentifier) :
-            parseOptionalBindingIdentifier();
+                isAsync ? doInAwaitContext(parseOptionalBindingIdentifier) :
+                    parseOptionalBindingIdentifier();
 
         const typeParameters = parseTypeParameters();
         const parameters = parseParameters(isGenerator | isAsync);
@@ -8738,7 +8741,7 @@ namespace Parser {
                                 linkEnd = scanner.getTextPos();
                                 break;
                             }
-                            // fallthrough if it's not a {@link sequence
+                        // fallthrough if it's not a {@link sequence
                         default:
                             // Anything else is doc comment text. We just save it. Because it
                             // wasn't a tag, we can no longer parse a tag on this line until we hit the next
@@ -8955,7 +8958,7 @@ namespace Parser {
                                 break;
                             }
                             scanner.setTextPos(scanner.getTextPos() - 1);
-                            // falls through
+                        // falls through
                         case SyntaxKind.EndOfFileToken:
                             // Done
                             break loop;
@@ -9003,8 +9006,8 @@ namespace Parser {
                                 indent += 1;
                                 break;
                             }
-                            // record the * as a comment
-                            // falls through
+                        // record the * as a comment
+                        // falls through
                         default:
                             if (state !== JSDocState.SavingBackticks) {
                                 state = JSDocState.SavingComments; // leading identifiers start recording as well
@@ -9060,7 +9063,7 @@ namespace Parser {
                 }
                 const create = linkType === "link" ? factory.createJSDocLink
                     : linkType === "linkcode" ? factory.createJSDocLinkCode
-                    : factory.createJSDocLinkPlain;
+                        : factory.createJSDocLinkPlain;
                 return finishNode(create(name, text.join("")), start, scanner.getTextPos());
             }
 
@@ -10387,7 +10390,7 @@ function extractPragmas(pragmas: PragmaPseudoMapEntry[], range: CommentRange, te
             return;
         }
         if (pragma.args) {
-            const argument: {[index: string]: string | {value: string, pos: number, end: number}} = {};
+            const argument: { [index: string]: string | { value: string, pos: number, end: number } } = {};
             for (const arg of pragma.args) {
                 const matcher = getNamedArgRegEx(arg.name);
                 const matchResult = matcher.exec(text);
@@ -10445,11 +10448,11 @@ function addPragmaForMatch(pragmas: PragmaPseudoMapEntry[], range: CommentRange,
     return;
 }
 
-function getNamedPragmaArguments(pragma: PragmaDefinition, text: string | undefined): {[index: string]: string} | "fail" {
+function getNamedPragmaArguments(pragma: PragmaDefinition, text: string | undefined): { [index: string]: string } | "fail" {
     if (!text) return {};
     if (!pragma.args) return {};
     const args = trimString(text).split(/\s+/);
-    const argMap: {[index: string]: string} = {};
+    const argMap: { [index: string]: string } = {};
     for (let i = 0; i < pragma.args.length; i++) {
         const argument = pragma.args[i];
         if (!args[i] && !argument.optional) {

@@ -4,14 +4,14 @@ import { idText } from "../../../utilitiesPublic";
 
 
 export const getVariableDeclarationNames = (node: ParameterDeclaration | ExportSpecifier | BindingElement | VariableDeclaration, currentThree: string[] = [], three: Record<string, string[]> = {}) => {
-    const currentThreeList = [...currentThree]
-    const identifierName = ((node as any).propertyName || node.name)
+    const currentThreeList = [...currentThree];
+    const identifierName = ((node as any).propertyName || node.name);
     if (isIdentifier(identifierName)) {
         currentThreeList.push(idText(identifierName));
 
         if (isIdentifier(node.name)) {
             // context.factory.getGeneratedNameForNode(node, GeneratedIdentifierFlags.AllowNameSubstitution)
-            three[idText(node.name)] = currentThreeList
+            three[idText(node.name)] = currentThreeList;
         }
 
     }
@@ -19,9 +19,9 @@ export const getVariableDeclarationNames = (node: ParameterDeclaration | ExportS
     if (node && isObjectBindingPattern(node.name)) {
 
         for (const element of node.name.elements) {
-            getVariableDeclarationNames(element, [...currentThreeList], three)
+            getVariableDeclarationNames(element, [...currentThreeList], three);
         }
 
     }
-    return three
-} 
+    return three;
+};

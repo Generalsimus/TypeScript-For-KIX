@@ -5,20 +5,20 @@ import { createObject } from "../factoryCode/createObject";
 import { variableStatement } from "../factoryCode/variableStatement";
 import { createBlockVisitor, VariableStateType } from "./utils/createBlockVisitor";
 const doWhileBlockVisitor = createBlockVisitor(<N extends DoStatement["statement"]>(statement: N, visitor: Visitor,  /*, context: CustomContextType */) => {
-    return visitor(statement) as typeof statement
-}, false)
+    return visitor(statement) as typeof statement;
+}, false);
 
 export const VisitDoStatement = (node: DoStatement, visitor: Visitor, context: CustomContextType) => {
     const [visitedStatementNode, variableState] = doWhileBlockVisitor(node.statement, visitor, context);
-    const expression = visitor(node.expression) as typeof node.expression
+    const expression = visitor(node.expression) as typeof node.expression;
 
 
     return context.factory.updateDoStatement(
         node,
         updateStatement(visitedStatementNode, variableState, context),
         expression
-    )
-}
+    );
+};
 
 
 
@@ -33,7 +33,7 @@ const updateStatement = (
     { blockScopeIdentifiers }: VariableStateType,
     context: CustomContextType
 ) => {
-    if (!blockScopeIdentifiers) return statement
+    if (!blockScopeIdentifiers) return statement;
 
 
 
@@ -53,7 +53,7 @@ const updateStatement = (
                 variableDeclarationNode,
                 ...statement.statements
             ]
-        )
+        );
     }
 
     return context.factory.createBlock([
@@ -61,4 +61,4 @@ const updateStatement = (
         statement
     ]);
 
-}
+};

@@ -1970,7 +1970,7 @@ function tryAddingExtensions(candidate: string, extensions: Extensions, original
             || undefined;
         case Extension.Kjs:
             // basically idendical to the kts/kjs case below, but prefers matching tsx and jsx files exactly before falling back to the ts or js file path
-            return extensions & Extensions.Kix && (tryExtension(Extension.Kjs, originalExtension === Extension.Kjs)) 
+            return extensions & Extensions.Kix && (tryExtension(Extension.Kjs, originalExtension === Extension.Kjs))
             || undefined;
         case Extension.Ts:
         case Extension.Dts:
@@ -2998,9 +2998,9 @@ export function classicNameResolver(moduleName: string, containingFile: string, 
 
     const resolved =
         tryResolve(Extensions.TypeScript | Extensions.Declaration) ||
-        tryResolve(Extensions.Kix | Extensions.Declaration) || 
+        tryResolve(Extensions.Kix | Extensions.Declaration) ||
         tryResolve(Extensions.JavaScript | (compilerOptions.resolveJsonModule ? Extensions.Json : 0));
-    // No originalPath because classic resolution doesn't resolve realPath 
+    // No originalPath because classic resolution doesn't resolve realPath
     return createResolvedModuleWithFailedLookupLocations(
         resolved && resolved.value,
         resolved?.value && pathContainsNodeModules(resolved.value.path),

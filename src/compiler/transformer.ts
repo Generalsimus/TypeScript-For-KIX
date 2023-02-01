@@ -138,7 +138,7 @@ function getScriptTransformers(compilerOptions: CompilerOptions, customTransform
     }
 
     transformers.push(transformClassFields);
-    
+
     if (compilerOptions.jsx === JsxEmit.Kix) {
         transformers.push(transformKix);
     }

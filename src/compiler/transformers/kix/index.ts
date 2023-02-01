@@ -1,19 +1,19 @@
-import { Bundle, Identifier, LanguageVariant, Node, NodeFlags, SourceFile, TransformationContext, TransformerFactory, Visitor } from "../../types"
-import { chainBundle } from "../utilities"
-import { jsxTransformers } from "./jsx"
-import { getVisitor } from "./utils/getVisitor"
+import { Bundle, Identifier, LanguageVariant, Node, NodeFlags, SourceFile, TransformationContext, TransformerFactory, Visitor } from "../../types";
+import { chainBundle } from "../utilities";
+import { jsxTransformers } from "./jsx";
+import { getVisitor } from "./utils/getVisitor";
 // import { chainBundle } from "./utilities";
 
 
 
-export type VisitEachType = <N extends Node>(node: N, nodeVisitor: Visitor, context: CustomContextType) => N
-export type IdentifiersStateType = {
+export type VisitEachType = <N extends Node>(node: N, nodeVisitor: Visitor, context: CustomContextType) => N;
+export interface IdentifiersStateType {
     isJsx: boolean,
     isChanged: boolean,
     declaredFlag: NodeFlags | undefined,
     substituteCallback: (indexIdToUniqueString: string, declarationIdentifier: Identifier) => void,
 }
-export type declaredBlockIdentifiersType = Map<string, IdentifiersStateType>
+export type declaredBlockIdentifiersType = Map<string, IdentifiersStateType>;
 export interface CustomContextType extends TransformationContext {
     getJSXPropRegistrationIdentifier?: () => Identifier
     /* JSX ში მოთავხებული .? უსაფრთხოებისთვის როდესაც ხდება რეგისტრაცია და ასევესაჭიროა მისი გაშვებაც ნიმუში: ssss?.() */
@@ -30,7 +30,7 @@ export interface CustomContextType extends TransformationContext {
 }
 
 
-const getNodeVisitor = getVisitor(jsxTransformers) as TransformerFactory<SourceFile>
+const getNodeVisitor = getVisitor(jsxTransformers) as TransformerFactory<SourceFile>;
 
 
 // transformKix
@@ -42,11 +42,11 @@ export function transformKix(context: TransformationContext): (x: SourceFile | B
     return chainBundle(context, (sourceFile: SourceFile) => {
        const languageVariant = sourceFile?.languageVariant;
     //    console.log("🚀 --> file: index.ts:43 --> returnchainBundle --> sourceFile", sourceFile.fileName, LanguageVariant[languageVariant] );
-       
+
         if (languageVariant === LanguageVariant.JSX || languageVariant === LanguageVariant.KJS) {
 
-            return visitor(sourceFile) as typeof sourceFile
+            return visitor(sourceFile);
         }
-        return sourceFile
+        return sourceFile;
     });
-} 
+}

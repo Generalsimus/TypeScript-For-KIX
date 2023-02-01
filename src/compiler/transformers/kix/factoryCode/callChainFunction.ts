@@ -1,6 +1,6 @@
 import { factory } from "../../../factory/nodeFactory";
 import { Expression, SyntaxKind } from "../../../types";
-import { identifier } from "./identifier"
+import { identifier } from "./identifier";
 
 export const callChainFunction = (
     name: string | Expression,
@@ -12,4 +12,4 @@ export const callChainFunction = (
         undefined,
         args.map(identifier),
     );
-}
+};

@@ -1498,7 +1498,7 @@ export function isEffectiveStrictModeSourceFile(node: SourceFile, compilerOption
         case ScriptKind.JSX:
         case ScriptKind.TSX:
         case ScriptKind.KJS:
-        case ScriptKind.KTS: 
+        case ScriptKind.KTS:
             break;
         default:
             return false;
@@ -7922,10 +7922,10 @@ export function getLanguageVariant(scriptKind: ScriptKind) {
         case ScriptKind.JSX:
         case ScriptKind.JS:
         case ScriptKind.JSON:
-            return LanguageVariant.JSX
+            return LanguageVariant.JSX;
         case ScriptKind.KJS:
         case ScriptKind.KTS:
-            return LanguageVariant.KJS
+            return LanguageVariant.KJS;
         default:
             return LanguageVariant.Standard;
     }
@@ -8720,7 +8720,7 @@ export function getScriptKindFromFileName(fileName: string): ScriptKind {
         case Extension.Cjs:
         case Extension.Mjs:
             return ScriptKind.JS;
-            case Extension.Jsx:
+        case Extension.Jsx:
             return ScriptKind.JSX;
         case Extension.Kjs:
             return ScriptKind.KJS;

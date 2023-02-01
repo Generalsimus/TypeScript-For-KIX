@@ -1,9 +1,9 @@
-import { CustomContextType } from "../.."
+import { CustomContextType } from "../..";
 import { SourceFile, Visitor } from "../../../../types";
 import { visitEachChild } from "../../../../visitorPublic";
 import { createObject } from "../../factoryCode/createObject";
 import { variableStatement } from "../../factoryCode/variableStatement";
-import { createBlockVisitor } from "./createBlockVisitor"; 
+import { createBlockVisitor } from "./createBlockVisitor";
 
 const moduleBodyNodesVisitor = createBlockVisitor(<N extends SourceFile>(sourceFileNode: N, visitor: Visitor, context: CustomContextType) => {
 
@@ -16,13 +16,13 @@ export const moduleSourceFileBodyVisitor = (
     context: CustomContextType,
 ): SourceFile => {
 
-    let [visitedStatements, variableState] = moduleBodyNodesVisitor(sourceFileNode, visitor, context)
+    const [visitedStatements, variableState] = moduleBodyNodesVisitor(sourceFileNode, visitor, context);
 
 
     if (variableState.globalScopeIdentifiers) {
         const declarationNode = variableStatement([
             [variableState.globalScopeIdentifiers, createObject([])]
-        ])
+        ]);
 
         return context.factory.updateSourceFile(
             sourceFileNode,
@@ -35,11 +35,11 @@ export const moduleSourceFileBodyVisitor = (
             sourceFileNode.typeReferenceDirectives,
             sourceFileNode.hasNoDefaultLib,
             sourceFileNode.libReferenceDirectives,
-        )
+        );
 
     }
 
 
 
-    return visitedStatements
-} 
+    return visitedStatements;
+};

@@ -19,7 +19,7 @@ export const VisitVariableStatement = (node: VariableStatement, visitor: Visitor
             visitedVariableStatement,
             getModifiers(visitedVariableStatement),
             context.factory.updateVariableDeclarationList(visitedVariableStatement.declarationList, [variableDeclaration])
-        )
+        );
         returnValue.push(declarationNode);
 
 
@@ -38,7 +38,7 @@ export const VisitVariableStatement = (node: VariableStatement, visitor: Visitor
                 // const { substituteCallback } = identifierState
                 identifierState.substituteCallback = (indexIdToUniqueString, declarationIdentifier) => {
                     context.substituteNodesList.set(declarationNode, (_, substituteVisitor) => {
-                        context.substituteNodesList.delete(declarationNode)
+                        context.substituteNodesList.delete(declarationNode);
                         return [
                             substituteVisitor(declarationNode) as Node,
                             context.factory.createExpressionStatement(nodeToken([
@@ -51,15 +51,15 @@ export const VisitVariableStatement = (node: VariableStatement, visitor: Visitor
                                 ),
                                 identifier(declarationIdentifierName)
                             ]))
-                        ]
+                        ];
                     });
                     // substituteCallback(indexIdToUniqueString, declarationIdentifier);
-                }
+                };
 
-            })
+            });
         }
     }
 
-    return returnValue
-}
+    return returnValue;
+};
 

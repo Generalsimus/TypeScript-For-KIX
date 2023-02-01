@@ -6,7 +6,7 @@ import { createGlobalBlockNodesVisitor } from "./utils/createGlobalBlockNodesVis
 export const VisitMethodDeclaration = createGlobalBlockNodesVisitor(
     (visitedNode: MethodDeclaration, declarationNode, context) => {
 
-        
+
         return context.factory.updateMethodDeclaration(
             visitedNode,
             getModifiers(visitedNode),
@@ -25,4 +25,4 @@ export const VisitMethodDeclaration = createGlobalBlockNodesVisitor(
             ),
         );
     }
-)
+);

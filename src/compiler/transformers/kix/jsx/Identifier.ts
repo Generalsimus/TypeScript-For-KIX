@@ -26,18 +26,18 @@ export const VisitIdentifier = (node: Identifier, _: Visitor , context: CustomCo
               declarationIdentifier,
               stringLiteral(indexIdToUniqueString)
             ]
-          )
+          );
         });
         //   substituteCallback(indexIdToUniqueString, declarationIdentifier)
-      }
+      };
 
 
-      return node
+      return node;
     });
 
   }
 
-  return node
-}
+  return node;
+};
 
 

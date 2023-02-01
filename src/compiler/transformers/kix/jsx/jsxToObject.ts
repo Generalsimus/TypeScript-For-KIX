@@ -10,28 +10,29 @@ import { JsxAttributes, JsxChild, JsxTagNameExpression, NodeArray, SyntaxKind, V
 import { idText } from "../../../utilitiesPublic";
 import { isIdentifier, isJsxText, isStringLiteral } from "../../../factory/nodeTests";
 
-const getTagNameString = (tagName:  JsxTagNameExpression, _?: string) => {
-    if ( isIdentifier(tagName)) {
-        const tagNameString =  idText(tagName);
+const getTagNameString = (tagName: JsxTagNameExpression, _?: string) => {
+    if (isIdentifier(tagName)) {
+        const tagNameString = idText(tagName);
         if (/^([a-z]|\d+|\-|\:)*$/.test(tagNameString)) {
-            return tagNameString
+            return tagNameString;
         }
-    } else if (tagName.kind ===  SyntaxKind.ThisKeyword) {
-        return "this"
     }
-}
+    else if (tagName.kind === SyntaxKind.ThisKeyword) {
+        return "this";
+    }
+};
 export const VisitJsxToObject = (
-    visitor:  Visitor,
+    visitor: Visitor,
     context: CustomContextType,
-    tagName:  JsxTagNameExpression,
+    tagName: JsxTagNameExpression,
     attributes: JsxAttributes,
-    children:  NodeArray< JsxChild>
+    children: NodeArray<JsxChild>
 ) => {
     const childrenNode = createJsxChildrenNode(
         visitor,
         context,
         children
-    )
+    );
     // Identifier | ThisExpression | JsxTagNamePropertyAccess;
     const tagNameToString = getTagNameString(tagName);
 
@@ -42,7 +43,7 @@ export const VisitJsxToObject = (
                 tagNameToString,
                 childrenNode || context.factory.createArrayLiteralExpression([], false)
             ]
-        ]
+        ];
 
 
 
@@ -50,17 +51,18 @@ export const VisitJsxToObject = (
         const xmlnsNodeProperties: createObjectArgsType = [];
         const eventObjectNodeProperties: createObjectArgsType = [];
         const dynamicObjectNodeProperties: createObjectArgsType = [];
-        let haveDefaultXmlns: boolean = false;
+        let haveDefaultXmlns = false;
         forEachJsxAttributes(attributes.properties, (attributeName, attributeValueNode) => {
-            const attributeNameString =  idText(attributeName)
+            const attributeNameString = idText(attributeName);
 
 
             if (/^(on+[A-Z])/.test(attributeNameString)) {
                 eventObjectNodeProperties.push([
                     attributeNameString.replace(/^on/, "").toLowerCase(),
                     visitor(attributeValueNode) as typeof attributeValueNode
-                ])
-            } else if ( isJsxText(attributeValueNode) ||  isStringLiteral(attributeValueNode)) {
+                ]);
+            }
+            else if (isJsxText(attributeValueNode) || isStringLiteral(attributeValueNode)) {
                 const attributeStringNode = stringLiteral(attributeValueNode.text);
 
                 if (attributeNameString.startsWith("xmlns:")) {
@@ -68,25 +70,29 @@ export const VisitJsxToObject = (
                     xmlnsNodeProperties.push(
                         [attributeNameString.replace(/^(xmlns\:)/, ""), attributeStringNode]
                     );
-                } else if (attributeNameString === "xmlns") {
+                }
+                else if (attributeNameString === "xmlns") {
                     haveDefaultXmlns = true;
                     // xmlnsNodeProperties["$D"] = attributeStringNode
                     xmlnsNodeProperties.push(
                         ["$D", attributeStringNode]
                     );
-                } else {
+                }
+                else {
                     objectNodeProperties.push([attributeName, attributeStringNode]);
                 }
-            } else {
+            }
+            else {
                 useJsxPropRegistration(attributeValueNode, visitor, context, (node, isRegisterNode) => {
                     if (isRegisterNode) {
-                        dynamicObjectNodeProperties.push([attributeName, node])
-                    } else {
-                        objectNodeProperties.push([attributeName, node])
+                        dynamicObjectNodeProperties.push([attributeName, node]);
                     }
-                })
+                    else {
+                        objectNodeProperties.push([attributeName, node]);
+                    }
+                });
             }
-        })
+        });
 
         const elementConstruction: createObjectArgsType = [];
 
@@ -118,12 +124,12 @@ export const VisitJsxToObject = (
         }
         if (tagNameToString === "svg" && !haveDefaultXmlns) {
             xmlnsNodeProperties.push(
-                ['$D', stringLiteral("http://www.w3.org/2000/svg")]
-            )
+                ["$D", stringLiteral("http://www.w3.org/2000/svg")]
+            );
         }
         if (xmlnsNodeProperties.length) {
             returnElementNode = createObject([
-                ['$X', returnElementNode],
+                ["$X", returnElementNode],
                 ...xmlnsNodeProperties
             ]);
         }
@@ -136,8 +142,8 @@ export const VisitJsxToObject = (
         tagName,
         attributes,
         children
-    )
-}
+    );
+};
 
 
 
@@ -158,7 +164,7 @@ const elemens = {
 
         }
     })
-}; 
+};
 */
 /*
 // component structure
@@ -168,14 +174,14 @@ const elemens = {
     i:[],
     a:{}
     d:{}
-}; 
+};
 */
 /*
 // dynamic child structure
 
 const elemens = {
-    $D: ()=>() 
-}; 
+    $D: ()=>()
+};
 */
 /*
 // NS element structure
@@ -185,5 +191,5 @@ const elemens = {
     $D:"",
     h:"http://www.w3.org/TR/html4/"
     f="http://www.w3schools.com/furniture"
-}; 
+};
 */

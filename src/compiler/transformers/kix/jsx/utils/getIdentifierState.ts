@@ -1,5 +1,5 @@
 import { CustomContextType, declaredBlockIdentifiersType, IdentifiersStateType } from "../..";
-import { NodeFlags } from "../../../../types"; 
+import { NodeFlags } from "../../../../types";
 import { getIndexId } from "./getIndexId";
 import { NumberToUniqueString } from "./numberToUniqueString";
 
@@ -13,57 +13,58 @@ const createIdentifiersMap = (context: CustomContextType) => {
 
         if (!hasIdentifierState) {
 
-            let substituteCallback: IdentifiersStateType["substituteCallback"] = () => { }
-            const { getVariableUniqueIdentifier } = context
+            let substituteCallback: IdentifiersStateType["substituteCallback"] = () => { };
+            const { getVariableUniqueIdentifier } = context;
             const indexId = getIndexId();
-            let newIdentifierState = {
+            const newIdentifierState = {
                 isJsx: false,
                 isChanged: false,
                 declaredFlag: undefined,
                 get substituteCallback() {
-                    return substituteCallback
+                    return substituteCallback;
                 },
                 set substituteCallback(newValue) {
 
-                    const substituteCallbackCache = substituteCallback
+                    const substituteCallbackCache = substituteCallback;
                     substituteCallback = (indexIdToUniqueString, declarationIdentifier) => {
                         newValue(indexIdToUniqueString, declarationIdentifier);
                         substituteCallbackCache(indexIdToUniqueString, declarationIdentifier);
-                    }
+                    };
                     if (this.isJsx && this.isChanged && this.declaredFlag !== undefined) {
                         if (this.declaredFlag !== NodeFlags.Const) {
                             substituteCallback(NumberToUniqueString(indexId), getVariableUniqueIdentifier(this.declaredFlag));
                         }
-                        substituteCallback = () => { }
+                        substituteCallback = () => { };
                     }
                 }
 
             };
 
             if (identifierState) {
-                newIdentifierState.substituteCallback = identifierState.substituteCallback
+                newIdentifierState.substituteCallback = identifierState.substituteCallback;
             }
 
-            declaredBlockIdentifiers.set(identifierName, newIdentifierState)
-        } else if (identifierState) {
-            const currentIdentifierState = declaredBlockIdentifiers.get(identifierName)!
+            declaredBlockIdentifiers.set(identifierName, newIdentifierState);
+        }
+ else if (identifierState) {
+            const currentIdentifierState = declaredBlockIdentifiers.get(identifierName)!;
 
-            currentIdentifierState.substituteCallback = identifierState.substituteCallback
+            currentIdentifierState.substituteCallback = identifierState.substituteCallback;
 
         }
-    }
-    return { declaredBlockIdentifiers, addDeclaredIdentifierState }
-}
+    };
+    return { declaredBlockIdentifiers, addDeclaredIdentifierState };
+};
 
 
-type LocalIdentifiersChannelCallbackType = (declaredBlockIdentifiers: declaredBlockIdentifiersType, isGlobalBlock: boolean) => void
+type LocalIdentifiersChannelCallbackType = (declaredBlockIdentifiers: declaredBlockIdentifiersType, isGlobalBlock: boolean) => void;
 
 export const creteManageIdentifierState = <R extends any>(context: CustomContextType, isGlobalBlock: boolean, visitor: () => R): R => {
     const { declaredBlockIdentifiers, addDeclaredIdentifierState } = createIdentifiersMap(context);
-    let localIdentifiersChannelCallback: LocalIdentifiersChannelCallbackType = () => { }
+    let localIdentifiersChannelCallback: LocalIdentifiersChannelCallbackType = () => { };
 
-    const addDeclaredIdentifierParentCache = context.addDeclaredIdentifierState
-    const addIdentifiersChannelCallbackParentCache = context.addIdentifiersChannelCallback
+    const addDeclaredIdentifierParentCache = context.addDeclaredIdentifierState;
+    const addIdentifiersChannelCallbackParentCache = context.addIdentifiersChannelCallback;
 
     const addIdentifiersChannelCallback = (
         identifierName: string,
@@ -76,22 +77,24 @@ export const creteManageIdentifierState = <R extends any>(context: CustomContext
                 if (identifierState.declaredFlag === NodeFlags.None && !isGlobalBlock) {
                     addIdentifiersChannelCallbackParentCache(identifierName, addCallback);
                     addDeclaredIdentifierParentCache(identifierName, identifierState);
-                } else {
-                    addCallback(identifierState)
                 }
-            } else {
+ else {
+                    addCallback(identifierState);
+                }
+            }
+ else {
                 addIdentifiersChannelCallbackParentCache(identifierName, addCallback);
             }
-        }
+        };
 
 
 
-        const localIdentifiersChannelCallbackCache = localIdentifiersChannelCallback
+        const localIdentifiersChannelCallbackCache = localIdentifiersChannelCallback;
         localIdentifiersChannelCallback = (declaredBlockIdentifiers: declaredBlockIdentifiersType, isGlobalBlock: boolean) => {
             localIdentifiersChannelCallbackCache(declaredBlockIdentifiers, isGlobalBlock);
             newIdentifiersChannelCallback(declaredBlockIdentifiers, isGlobalBlock);
-        }
-    }
+        };
+    };
 
 
 
@@ -99,18 +102,18 @@ export const creteManageIdentifierState = <R extends any>(context: CustomContext
 
 
 
-    context.addDeclaredIdentifierState = addDeclaredIdentifierState
-    context.addIdentifiersChannelCallback = addIdentifiersChannelCallback
+    context.addDeclaredIdentifierState = addDeclaredIdentifierState;
+    context.addIdentifiersChannelCallback = addIdentifiersChannelCallback;
 
 
     const visitedBlock = visitor();
     localIdentifiersChannelCallback(declaredBlockIdentifiers, isGlobalBlock);
 
 
-    context.addDeclaredIdentifierState = addDeclaredIdentifierParentCache
-    context.addIdentifiersChannelCallback = addIdentifiersChannelCallbackParentCache
+    context.addDeclaredIdentifierState = addDeclaredIdentifierParentCache;
+    context.addIdentifiersChannelCallback = addIdentifiersChannelCallbackParentCache;
 
 
 
-    return visitedBlock
-}
+    return visitedBlock;
+};

@@ -13,25 +13,25 @@ const TryStatementVisitor = createBlockVisitor(<N extends Node>(node: N, visitor
 }, false);
 
 const TryStatementCatchClauseVisitor = createBlockVisitor(<N extends CatchClause>(node: N, visitor: Visitor, context: CustomContextType) => {
-    let propertyDeclaration: createObjectArgsType = [];
+    const propertyDeclaration: createObjectArgsType = [];
     if (node.variableDeclaration) {
         const declarationNamesObject = getVariableDeclarationNames(node.variableDeclaration);
         for (const declarationIdentifierName in declarationNamesObject) {
             context.addDeclaredIdentifierState(declarationIdentifierName);
             context.addIdentifiersChannelCallback(declarationIdentifierName, (identifierState) => {
-                identifierState.substituteCallback = (indexIdToUniqueString, /*, declarationIdentifiere */ ) => {
+                identifierState.substituteCallback = (indexIdToUniqueString, /*, declarationIdentifiere */) => {
                     propertyDeclaration.push([
                         indexIdToUniqueString,
                         identifier(declarationIdentifierName)
-                    ])
-                }
-            })
+                    ]);
+                };
+            });
         }
     }
     return {
         propertyDeclaration,
         visitedNode: visitor(node)
-    }
+    };
 }, false);
 
 export const VisitTryStatement = (
@@ -44,10 +44,10 @@ export const VisitTryStatement = (
 
     //  catchClause
     const catchClause = node.catchClause && TryStatementCatchClauseVisitor(node.catchClause, visitor, context);
-    let catchClauseNode: typeof node.catchClause
+    let catchClauseNode: typeof node.catchClause;
     if (catchClause) {
-        const [{ propertyDeclaration, visitedNode }, catchClauseVariableState] = catchClause
-        const visitedCatchClauseNode = visitedNode as CatchClause
+        const [{ propertyDeclaration, visitedNode }, catchClauseVariableState] = catchClause;
+        const visitedCatchClauseNode = visitedNode as CatchClause;
 
         catchClauseNode = visitedCatchClauseNode && context.factory.updateCatchClause(
             visitedCatchClauseNode,
@@ -57,10 +57,10 @@ export const VisitTryStatement = (
     }
     // finallyBlock
     const finallyBlock = node.finallyBlock && TryStatementVisitor(node.finallyBlock, visitor, context);
-    let finallyBlockNode: typeof node.finallyBlock
+    let finallyBlockNode: typeof node.finallyBlock;
     if (finallyBlock) {
-        const [visitedFinallyBlockNode, finallyBlockVariableState] = finallyBlock
-        finallyBlockNode = visitedFinallyBlockNode && updateBlock(visitedFinallyBlockNode as Block, finallyBlockVariableState, context)
+        const [visitedFinallyBlockNode, finallyBlockVariableState] = finallyBlock;
+        finallyBlockNode = visitedFinallyBlockNode && updateBlock(visitedFinallyBlockNode as Block, finallyBlockVariableState, context);
     }
     // update
     return context.factory.updateTryStatement(
@@ -68,8 +68,8 @@ export const VisitTryStatement = (
         updateBlock(tryBlockNode as typeof node.tryBlock, tryBlockVariableState, context),
         catchClauseNode,
         finallyBlockNode,
-    )
-}
+    );
+};
 
 
 
@@ -86,7 +86,7 @@ const updateBlock = (
         return context.factory.updateBlock(
             node,
             [declarationNode, ...node.statements]
-        )
+        );
     }
-    return node
-} 
+    return node;
+};

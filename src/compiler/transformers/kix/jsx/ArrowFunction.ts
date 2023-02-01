@@ -18,17 +18,17 @@ export const VisitArrowFunction = createGlobalBlockNodesVisitor(
             ConciseBodyToMultiLineBlock(visitedNode.body, context, [
                 declarationVariableNode,
             ]),
-        )
+        );
     }
-)
+);
 
 const ConciseBodyToMultiLineBlock = (body:  ConciseBody, context: CustomContextType, addStatement:  Statement[] = []) => {
-    if ( isBlock(body)) {
-        return context.factory.updateBlock(body, [...addStatement, ...body.statements])
+    if (isBlock(body)) {
+        return context.factory.updateBlock(body, [...addStatement, ...body.statements]);
     }
 
     return context.factory.createBlock([
         ...addStatement,
         context.factory.createReturnStatement(body)
-    ], true)
-}
+    ], true);
+};

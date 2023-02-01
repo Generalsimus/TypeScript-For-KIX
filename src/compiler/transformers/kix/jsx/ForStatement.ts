@@ -19,14 +19,14 @@ const ForStatementBlockVisitor = createBlockVisitor(<N extends InitializerArgTyp
     visitor: Visitor,
     context: CustomContextType
 ) => {
-    const getVariableUniqueIdentifierCache = context.getVariableUniqueIdentifier
-    context.getVariableUniqueIdentifier = getVariableUniqueIdentifierParent
+    const getVariableUniqueIdentifierCache = context.getVariableUniqueIdentifier;
+    context.getVariableUniqueIdentifier = getVariableUniqueIdentifierParent;
 
     statement = visitor(statement) as typeof statement;
 
-    context.getVariableUniqueIdentifier = getVariableUniqueIdentifierCache
+    context.getVariableUniqueIdentifier = getVariableUniqueIdentifierCache;
 
-    return statement
+    return statement;
 
 }, false);
 
@@ -35,15 +35,15 @@ const ForStatementVisitor = createBlockVisitor((
     visitor: Visitor,
     context: CustomContextType
 ) => {
-    let { initializer, condition, incrementor } = node
-    initializer = initializer && visitor(initializer) as typeof initializer
-    condition = condition && visitor(condition) as typeof condition
-    incrementor = incrementor && visitor(incrementor) as typeof incrementor
+    let { initializer, condition, incrementor } = node;
+    initializer = initializer && visitor(initializer) as typeof initializer;
+    condition = condition && visitor(condition) as typeof condition;
+    incrementor = incrementor && visitor(incrementor) as typeof incrementor;
     if (initializer && isVariableDeclarationList(initializer)) {
         for (const variableDeclaration of initializer.declarations) {
             const declarationNamesObject = getVariableDeclarationNames(variableDeclaration);
             for (const declarationIdentifierName in declarationNamesObject) {
-                context.addDeclaredIdentifierState(declarationIdentifierName)
+                context.addDeclaredIdentifierState(declarationIdentifierName);
                 context.addIdentifiersChannelCallback(declarationIdentifierName, (identifierState) => {
                     identifierState.declaredFlag = initializer!.flags;
                 });
@@ -61,8 +61,8 @@ const ForStatementVisitor = createBlockVisitor((
         condition,
         incrementor,
         statement
-    }
-}, false)
+    };
+}, false);
 
 export const VisitForStatement = (node: ForStatement, visitor: Visitor, context: CustomContextType) => {
     let [{
@@ -73,11 +73,12 @@ export const VisitForStatement = (node: ForStatement, visitor: Visitor, context:
     }, variableState] = ForStatementVisitor(node, visitor, context);
 
     if (initializer && isVariableDeclarationList(initializer) && initializer.flags === NodeFlags.Let) {
-        const letInitializerUpdated = updateLetInitializerAndConditionForBlock(initializer, condition, variableState, context)
-        initializer = letInitializerUpdated.initializer
-        condition = letInitializerUpdated.condition
-    } else {
-        statement = updateStatementNode(statement, variableState, context)
+        const letInitializerUpdated = updateLetInitializerAndConditionForBlock(initializer, condition, variableState, context);
+        initializer = letInitializerUpdated.initializer;
+        condition = letInitializerUpdated.condition;
+    }
+ else {
+        statement = updateStatementNode(statement, variableState, context);
     }
     return context.factory.updateForStatement(
         node,
@@ -86,7 +87,7 @@ export const VisitForStatement = (node: ForStatement, visitor: Visitor, context:
         incrementor,
         statement,
     );
-}
+};
 
 
 
@@ -98,14 +99,14 @@ const updateLetInitializerAndConditionForBlock = (
     { blockScopeIdentifiers }: VariableStateType,
     context: CustomContextType
 ) => {
-    if (!blockScopeIdentifiers) return { initializer, condition }
+    if (!blockScopeIdentifiers) return { initializer, condition };
 
     const declarationNode = context.factory.createVariableDeclaration(
         blockScopeIdentifiers,
         undefined,
         undefined,
         undefined
-    )
+    );
     initializer = context.factory.updateVariableDeclarationList(
         initializer,
         [
@@ -119,13 +120,14 @@ const updateLetInitializerAndConditionForBlock = (
     ], SyntaxKind.EqualsToken);
 
     if (condition) {
-        condition = nodeToken([stateObjectNode, condition], SyntaxKind.CommaToken)
-    } else {
-        condition = stateObjectNode
+        condition = nodeToken([stateObjectNode, condition], SyntaxKind.CommaToken);
+    }
+ else {
+        condition = stateObjectNode;
     }
 
-    return { initializer, condition }
-}
+    return { initializer, condition };
+};
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 const updateStatementNode = (
@@ -148,11 +150,11 @@ const updateStatementNode = (
                 variableDeclarationNode,
                 ...statement.statements
             ],
-        )
+        );
     }
 
     return context.factory.createBlock([
         variableDeclarationNode,
         statement
-    ])
-}
+    ]);
+};

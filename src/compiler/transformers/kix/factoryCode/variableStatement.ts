@@ -1,7 +1,7 @@
 import { factory } from "../../../factory/nodeFactory";
 import { BindingName, Expression, NodeFlags } from "../../../types";
 
- 
+
 export const variableStatement = (Nodes: [ BindingName | string,  Expression][], flag =  NodeFlags.Const) => {
 
     return factory.createVariableStatement(
@@ -18,4 +18,4 @@ export const variableStatement = (Nodes: [ BindingName | string,  Expression][],
             flag
         )
     );
-}
+};

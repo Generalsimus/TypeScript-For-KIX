@@ -22,10 +22,10 @@ export const VisitWhileStatement = (
         node,
         visitor(node.expression) as typeof node.expression,
         updateStatement(statement as typeof node.statement, variableState, context),
-    )
-}
+    );
+};
 const updateStatement = (statement: IterationStatement["statement"], variableState: VariableStateType, context: CustomContextType) => {
-    if (!variableState.blockScopeIdentifiers) return statement
+    if (!variableState.blockScopeIdentifiers) return statement;
     const declarationNode = variableStatement([
         [variableState.blockScopeIdentifiers, createObject([])]
     ]);
@@ -33,9 +33,9 @@ const updateStatement = (statement: IterationStatement["statement"], variableSta
         return context.factory.updateBlock(
             statement,
             [declarationNode, ...statement.statements],
-        )
+        );
     }
     return context.factory.createBlock(
         [declarationNode, statement],
-    )
-}
+    );
+};
