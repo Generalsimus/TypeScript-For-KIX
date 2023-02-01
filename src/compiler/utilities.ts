@@ -1491,12 +1491,14 @@ export function isEffectiveExternalModule(node: SourceFile, compilerOptions: Com
  * @internal
  */
 export function isEffectiveStrictModeSourceFile(node: SourceFile, compilerOptions: CompilerOptions) {
-    // We can only verify strict mode for JS/TS files
+    // We can only verify strict mode for JS/TS/KTS/KJS files
     switch (node.scriptKind) {
         case ScriptKind.JS:
         case ScriptKind.TS:
         case ScriptKind.JSX:
         case ScriptKind.TSX:
+        case ScriptKind.KJS:
+        case ScriptKind.KTS: 
             break;
         default:
             return false;
@@ -7915,7 +7917,19 @@ function compareMessageText(t1: string | DiagnosticMessageChain, t2: string | Di
 /** @internal */
 export function getLanguageVariant(scriptKind: ScriptKind) {
     // .tsx and .jsx files are treated as jsx language variant.
-    return scriptKind === ScriptKind.TSX || scriptKind === ScriptKind.JSX || scriptKind === ScriptKind.JS || scriptKind === ScriptKind.JSON ? LanguageVariant.JSX : LanguageVariant.Standard;
+    switch (scriptKind) {
+        case ScriptKind.TSX:
+        case ScriptKind.JSX:
+        case ScriptKind.JS:
+        case ScriptKind.JSON:
+            return LanguageVariant.JSX
+        case ScriptKind.KJS:
+        case ScriptKind.KTS:
+            return LanguageVariant.KJS
+        default:
+            return LanguageVariant.Standard;
+    }
+//  return scriptKind === ScriptKind.TSX || scriptKind === ScriptKind.JSX || scriptKind === ScriptKind.JS || scriptKind === ScriptKind.JSON ? LanguageVariant.JSX : LanguageVariant.Standard;
 }
 
 /**
@@ -8706,8 +8720,12 @@ export function getScriptKindFromFileName(fileName: string): ScriptKind {
         case Extension.Cjs:
         case Extension.Mjs:
             return ScriptKind.JS;
-        case Extension.Jsx:
+            case Extension.Jsx:
             return ScriptKind.JSX;
+        case Extension.Kjs:
+            return ScriptKind.KJS;
+        case Extension.Kts:
+            return ScriptKind.KTS;
         case Extension.Ts:
         case Extension.Cts:
         case Extension.Mts:
@@ -8903,7 +8921,7 @@ export function compareNumberOfDirectorySeparators(path1: string, path2: string)
     );
 }
 
-const extensionsToRemove = [Extension.Dts, Extension.Dmts, Extension.Dcts, Extension.Mjs, Extension.Mts, Extension.Cjs, Extension.Cts, Extension.Ts, Extension.Js, Extension.Tsx, Extension.Jsx, Extension.Json];
+const extensionsToRemove = [Extension.Dts, Extension.Dmts, Extension.Dcts, Extension.Mjs, Extension.Mts, Extension.Cjs, Extension.Cts, Extension.Ts, Extension.Js, Extension.Tsx, Extension.Jsx, Extension.Json, Extension.Kts, Extension.Kjs];
 /** @internal */
 export function removeFileExtension(path: string): string {
     for (const ext of extensionsToRemove) {
@@ -8967,7 +8985,7 @@ export function positionIsSynthesized(pos: number): boolean {
  * @internal
  */
 export function extensionIsTS(ext: string): boolean {
-    return ext === Extension.Ts || ext === Extension.Tsx || ext === Extension.Dts || ext === Extension.Cts || ext === Extension.Mts || ext === Extension.Dmts || ext === Extension.Dcts || (startsWith(ext, ".d.") && endsWith(ext, ".ts"));
+    return ext === Extension.Ts || ext === Extension.Tsx || ext === Extension.Kts || ext === Extension.Dts || ext === Extension.Cts || ext === Extension.Mts || ext === Extension.Dmts || ext === Extension.Dcts || (startsWith(ext, ".d.") && endsWith(ext, ".ts"));
 }
 
 /** @internal */

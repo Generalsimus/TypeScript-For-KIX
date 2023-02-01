@@ -2992,11 +2992,15 @@ namespace Parser {
 
         parsingContext = saveParsingContext;
         return createNodeArray([
-            factory.createExpressionStatement(factory.createJsxFragment(
-                openingTag,
-                list,
-                factory.createJsxJsxClosingFragment()
-            ))
+            factory.createExportAssignment(
+                undefined,
+                undefined,
+                factory.createJsxFragment(
+                    openingTag,
+                    list,
+                    factory.createJsxJsxClosingFragment()
+                )
+            )
         ], listPos);
     }
 

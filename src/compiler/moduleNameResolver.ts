@@ -180,8 +180,9 @@ const enum Extensions {
     JavaScript  = 1 << 1, // '.js', '.jsx', '.mjs', '.cjs'
     Declaration = 1 << 2, // '.d.ts', etc.
     Json        = 1 << 3, // '.json'
+    Kix         = 1 << 4, // '.kts', '.kjs'
 
-    ImplementationFiles = TypeScript | JavaScript,
+    ImplementationFiles = TypeScript | JavaScript | Kix,
 }
 
 function formatExtensions(extensions: Extensions) {
@@ -1963,13 +1964,21 @@ function tryAddingExtensions(candidate: string, extensions: Extensions, original
                 || extensions & Extensions.Declaration && tryExtension(Extension.Dts, originalExtension === Extension.Tsx)
                 || extensions & Extensions.JavaScript && (tryExtension(Extension.Jsx) || tryExtension(Extension.Js))
                 || undefined;
+        case Extension.Kts:
+            return extensions & Extensions.Kix && (tryExtension(Extension.Kts, originalExtension === Extension.Kts))
+            || extensions & Extensions.Declaration && tryExtension(Extension.Dts, originalExtension === Extension.Kts)
+            || undefined;
+        case Extension.Kjs:
+            // basically idendical to the kts/kjs case below, but prefers matching tsx and jsx files exactly before falling back to the ts or js file path
+            return extensions & Extensions.Kix && (tryExtension(Extension.Kjs, originalExtension === Extension.Kjs)) 
+            || undefined;
         case Extension.Ts:
         case Extension.Dts:
         case Extension.Js:
         case "":
             return extensions & Extensions.TypeScript && (tryExtension(Extension.Ts, originalExtension === Extension.Ts || originalExtension === Extension.Dts) || tryExtension(Extension.Tsx, originalExtension === Extension.Ts || originalExtension === Extension.Dts))
                 || extensions & Extensions.Declaration && tryExtension(Extension.Dts, originalExtension === Extension.Ts || originalExtension === Extension.Dts)
-                || extensions & Extensions.JavaScript && (tryExtension(Extension.Js) || tryExtension(Extension.Jsx))
+                || extensions & Extensions.Kix && (tryExtension(Extension.Kjs) || tryExtension(Extension.Kts))
                 || state.isConfigLookup && tryExtension(Extension.Json)
                 || undefined;
         default:
@@ -2989,8 +2998,9 @@ export function classicNameResolver(moduleName: string, containingFile: string, 
 
     const resolved =
         tryResolve(Extensions.TypeScript | Extensions.Declaration) ||
+        tryResolve(Extensions.Kix | Extensions.Declaration) || 
         tryResolve(Extensions.JavaScript | (compilerOptions.resolveJsonModule ? Extensions.Json : 0));
-    // No originalPath because classic resolution doesn't resolve realPath
+    // No originalPath because classic resolution doesn't resolve realPath 
     return createResolvedModuleWithFailedLookupLocations(
         resolved && resolved.value,
         resolved?.value && pathContainsNodeModules(resolved.value.path),

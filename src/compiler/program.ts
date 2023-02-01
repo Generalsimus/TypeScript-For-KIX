@@ -5069,6 +5069,8 @@ export function getResolutionDiagnostic(options: CompilerOptions, { extension }:
         case Extension.Dmts:
         case Extension.Cts:
         case Extension.Dcts:
+        case Extension.Kjs:
+        case Extension.Kts:
             // These are always allowed.
             return undefined;
         case Extension.Tsx:

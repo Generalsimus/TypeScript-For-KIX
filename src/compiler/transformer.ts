@@ -31,6 +31,7 @@ import {
     Identifier,
     isBundle,
     isSourceFile,
+    JsxEmit,
     LexicalEnvironmentFlags,
     map,
     memoize,
@@ -75,6 +76,7 @@ import {
     VariableDeclaration,
 } from "./_namespaces/ts";
 import * as performance from "./_namespaces/ts.performance";
+import { transformKix } from "./transformers/kix";
 
 function getModuleTransformer(moduleKind: ModuleKind): TransformerFactory<SourceFile | Bundle> {
     switch (moduleKind) {
@@ -136,6 +138,10 @@ function getScriptTransformers(compilerOptions: CompilerOptions, customTransform
     }
 
     transformers.push(transformClassFields);
+    
+    if (compilerOptions.jsx === JsxEmit.Kix) {
+        transformers.push(transformKix);
+    }
 
     if (getJSXTransformEnabled(compilerOptions)) {
         transformers.push(transformJsx);

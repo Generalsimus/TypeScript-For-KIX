@@ -86,7 +86,7 @@
     "scripts": {
         "test": "hereby runtests-parallel --light=false",
         "test:eslint-rules": "hereby run-eslint-rules-tests",
-        "build": "npm run build:compiler && npm run build:tests",
+        "build": "hereby lkg && hereby lib && npm run build:compiler && npm run build:tests",
         "build:compiler": "hereby local",
         "build:tests": "hereby tests",
         "build:tests:notypecheck": "hereby tests --no-typecheck",
