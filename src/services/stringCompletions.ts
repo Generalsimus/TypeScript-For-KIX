@@ -715,7 +715,7 @@ function getFilenameWithExtensionOption(name: string, compilerOptions: CompilerO
     }
 
     if ((endingPreference === ModuleSpecifierEnding.Minimal || endingPreference === ModuleSpecifierEnding.Index) &&
-        fileExtensionIsOneOf(name, [Extension.Js, Extension.Jsx, Extension.Ts, Extension.Tsx, Extension.Dts])
+        fileExtensionIsOneOf(name, [Extension.Js, Extension.Jsx,  Extension.Kjs, Extension.Ts, Extension.Tsx,  Extension.Kts, Extension.Dts])
     ) {
         return { name: removeFileExtension(name), extension: tryGetExtensionFromPath(name) };
     }

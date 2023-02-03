@@ -93,6 +93,7 @@ Loading module 'typescript-fsa' from 'node_modules' folder, target file types: T
 Found 'package.json' at '/user/username/projects/myproject/plugin-one/node_modules/typescript-fsa/package.json'.
 File '/user/username/projects/myproject/plugin-one/node_modules/typescript-fsa.ts' does not exist.
 File '/user/username/projects/myproject/plugin-one/node_modules/typescript-fsa.tsx' does not exist.
+File '/user/username/projects/myproject/plugin-one/node_modules/typescript-fsa.kts' does not exist.
 File '/user/username/projects/myproject/plugin-one/node_modules/typescript-fsa.d.ts' does not exist.
 'package.json' does not have a 'typesVersions' field.
 'package.json' does not have a 'typings' field.
@@ -100,6 +101,7 @@ File '/user/username/projects/myproject/plugin-one/node_modules/typescript-fsa.d
 'package.json' does not have a 'main' field.
 File '/user/username/projects/myproject/plugin-one/node_modules/typescript-fsa/index.ts' does not exist.
 File '/user/username/projects/myproject/plugin-one/node_modules/typescript-fsa/index.tsx' does not exist.
+File '/user/username/projects/myproject/plugin-one/node_modules/typescript-fsa/index.kts' does not exist.
 File '/user/username/projects/myproject/plugin-one/node_modules/typescript-fsa/index.d.ts' exists - use it as a name resolution result.
 Resolving real path for '/user/username/projects/myproject/plugin-one/node_modules/typescript-fsa/index.d.ts', result '/user/username/projects/myproject/plugin-one/node_modules/typescript-fsa/index.d.ts'.
 ======== Module name 'typescript-fsa' was successfully resolved to '/user/username/projects/myproject/plugin-one/node_modules/typescript-fsa/index.d.ts' with Package ID 'typescript-fsa/index.d.ts@3.0.0-beta-2'. ========
@@ -109,9 +111,11 @@ Loading module 'plugin-two' from 'node_modules' folder, target file types: TypeS
 File '/user/username/projects/myproject/plugin-one/node_modules/plugin-two/package.json' does not exist.
 File '/user/username/projects/myproject/plugin-one/node_modules/plugin-two.ts' does not exist.
 File '/user/username/projects/myproject/plugin-one/node_modules/plugin-two.tsx' does not exist.
+File '/user/username/projects/myproject/plugin-one/node_modules/plugin-two.kts' does not exist.
 File '/user/username/projects/myproject/plugin-one/node_modules/plugin-two.d.ts' does not exist.
 File '/user/username/projects/myproject/plugin-one/node_modules/plugin-two/index.ts' does not exist.
 File '/user/username/projects/myproject/plugin-one/node_modules/plugin-two/index.tsx' does not exist.
+File '/user/username/projects/myproject/plugin-one/node_modules/plugin-two/index.kts' does not exist.
 File '/user/username/projects/myproject/plugin-one/node_modules/plugin-two/index.d.ts' exists - use it as a name resolution result.
 Resolving real path for '/user/username/projects/myproject/plugin-one/node_modules/plugin-two/index.d.ts', result '/user/username/projects/myproject/plugin-two/index.d.ts'.
 ======== Module name 'plugin-two' was successfully resolved to '/user/username/projects/myproject/plugin-two/index.d.ts'. ========
@@ -121,6 +125,7 @@ Loading module 'typescript-fsa' from 'node_modules' folder, target file types: T
 Found 'package.json' at '/user/username/projects/myproject/plugin-two/node_modules/typescript-fsa/package.json'.
 File '/user/username/projects/myproject/plugin-two/node_modules/typescript-fsa.ts' does not exist.
 File '/user/username/projects/myproject/plugin-two/node_modules/typescript-fsa.tsx' does not exist.
+File '/user/username/projects/myproject/plugin-two/node_modules/typescript-fsa.kts' does not exist.
 File '/user/username/projects/myproject/plugin-two/node_modules/typescript-fsa.d.ts' does not exist.
 'package.json' does not have a 'typesVersions' field.
 'package.json' does not have a 'typings' field.
@@ -128,6 +133,7 @@ File '/user/username/projects/myproject/plugin-two/node_modules/typescript-fsa.d
 'package.json' does not have a 'main' field.
 File '/user/username/projects/myproject/plugin-two/node_modules/typescript-fsa/index.ts' does not exist.
 File '/user/username/projects/myproject/plugin-two/node_modules/typescript-fsa/index.tsx' does not exist.
+File '/user/username/projects/myproject/plugin-two/node_modules/typescript-fsa/index.kts' does not exist.
 File '/user/username/projects/myproject/plugin-two/node_modules/typescript-fsa/index.d.ts' exists - use it as a name resolution result.
 Resolving real path for '/user/username/projects/myproject/plugin-two/node_modules/typescript-fsa/index.d.ts', result '/user/username/projects/myproject/plugin-two/node_modules/typescript-fsa/index.d.ts'.
 ======== Module name 'typescript-fsa' was successfully resolved to '/user/username/projects/myproject/plugin-two/node_modules/typescript-fsa/index.d.ts' with Package ID 'typescript-fsa/index.d.ts@3.0.0-beta-2'. ========

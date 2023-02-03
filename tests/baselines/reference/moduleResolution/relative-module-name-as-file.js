@@ -69,6 +69,46 @@ Resolution:: {
   ]
 }
 
+Resolving "./foo" from /foo/bar/baz.ts when module has extension: .kts
+//// [/foo/bar/baz.ts]
+
+
+//// [/foo/bar/foo.kts]
+
+
+Resolution:: {
+  "resolvedModule": {
+    "resolvedFileName": "/foo/bar/foo.kts",
+    "extension": ".kts",
+    "isExternalLibraryImport": false,
+    "resolvedUsingTsExtension": false
+  },
+  "failedLookupLocations": [
+    "/foo/bar/foo.ts",
+    "/foo/bar/foo.tsx"
+  ]
+}
+
+Resolving "./foo" from /foo/bar/baz.ts when module has extension: .kts with host that doesnt have directoryExists
+//// [/foo/bar/baz.ts]
+
+
+//// [/foo/bar/foo.kts]
+
+
+Resolution:: {
+  "resolvedModule": {
+    "resolvedFileName": "/foo/bar/foo.kts",
+    "extension": ".kts",
+    "isExternalLibraryImport": false,
+    "resolvedUsingTsExtension": false
+  },
+  "failedLookupLocations": [
+    "/foo/bar/foo.ts",
+    "/foo/bar/foo.tsx"
+  ]
+}
+
 Resolving "./foo" from /foo/bar/baz.ts when module has extension: .d.ts
 //// [/foo/bar/baz.ts]
 
@@ -85,7 +125,8 @@ Resolution:: {
   },
   "failedLookupLocations": [
     "/foo/bar/foo.ts",
-    "/foo/bar/foo.tsx"
+    "/foo/bar/foo.tsx",
+    "/foo/bar/foo.kts"
   ]
 }
 
@@ -105,7 +146,8 @@ Resolution:: {
   },
   "failedLookupLocations": [
     "/foo/bar/foo.ts",
-    "/foo/bar/foo.tsx"
+    "/foo/bar/foo.tsx",
+    "/foo/bar/foo.kts"
   ]
 }
 
@@ -181,6 +223,46 @@ Resolution:: {
   ]
 }
 
+Resolving "../foo" from /foo/bar/baz.ts when module has extension: .kts
+//// [/foo/bar/baz.ts]
+
+
+//// [/foo/foo.kts]
+
+
+Resolution:: {
+  "resolvedModule": {
+    "resolvedFileName": "/foo/foo.kts",
+    "extension": ".kts",
+    "isExternalLibraryImport": false,
+    "resolvedUsingTsExtension": false
+  },
+  "failedLookupLocations": [
+    "/foo/foo.ts",
+    "/foo/foo.tsx"
+  ]
+}
+
+Resolving "../foo" from /foo/bar/baz.ts when module has extension: .kts with host that doesnt have directoryExists
+//// [/foo/bar/baz.ts]
+
+
+//// [/foo/foo.kts]
+
+
+Resolution:: {
+  "resolvedModule": {
+    "resolvedFileName": "/foo/foo.kts",
+    "extension": ".kts",
+    "isExternalLibraryImport": false,
+    "resolvedUsingTsExtension": false
+  },
+  "failedLookupLocations": [
+    "/foo/foo.ts",
+    "/foo/foo.tsx"
+  ]
+}
+
 Resolving "../foo" from /foo/bar/baz.ts when module has extension: .d.ts
 //// [/foo/bar/baz.ts]
 
@@ -197,7 +279,8 @@ Resolution:: {
   },
   "failedLookupLocations": [
     "/foo/foo.ts",
-    "/foo/foo.tsx"
+    "/foo/foo.tsx",
+    "/foo/foo.kts"
   ]
 }
 
@@ -217,7 +300,8 @@ Resolution:: {
   },
   "failedLookupLocations": [
     "/foo/foo.ts",
-    "/foo/foo.tsx"
+    "/foo/foo.tsx",
+    "/foo/foo.kts"
   ]
 }
 
@@ -293,6 +377,46 @@ Resolution:: {
   ]
 }
 
+Resolving "/foo" from /foo/bar/baz.ts when module has extension: .kts
+//// [/foo/bar/baz.ts]
+
+
+//// [/foo.kts]
+
+
+Resolution:: {
+  "resolvedModule": {
+    "resolvedFileName": "/foo.kts",
+    "extension": ".kts",
+    "isExternalLibraryImport": false,
+    "resolvedUsingTsExtension": false
+  },
+  "failedLookupLocations": [
+    "/foo.ts",
+    "/foo.tsx"
+  ]
+}
+
+Resolving "/foo" from /foo/bar/baz.ts when module has extension: .kts with host that doesnt have directoryExists
+//// [/foo/bar/baz.ts]
+
+
+//// [/foo.kts]
+
+
+Resolution:: {
+  "resolvedModule": {
+    "resolvedFileName": "/foo.kts",
+    "extension": ".kts",
+    "isExternalLibraryImport": false,
+    "resolvedUsingTsExtension": false
+  },
+  "failedLookupLocations": [
+    "/foo.ts",
+    "/foo.tsx"
+  ]
+}
+
 Resolving "/foo" from /foo/bar/baz.ts when module has extension: .d.ts
 //// [/foo/bar/baz.ts]
 
@@ -309,7 +433,8 @@ Resolution:: {
   },
   "failedLookupLocations": [
     "/foo.ts",
-    "/foo.tsx"
+    "/foo.tsx",
+    "/foo.kts"
   ]
 }
 
@@ -329,7 +454,8 @@ Resolution:: {
   },
   "failedLookupLocations": [
     "/foo.ts",
-    "/foo.tsx"
+    "/foo.tsx",
+    "/foo.kts"
   ]
 }
 
@@ -405,6 +531,46 @@ Resolution:: {
   ]
 }
 
+Resolving "c:/foo" from c:/foo/bar/baz.ts when module has extension: .kts
+//// [c:/foo/bar/baz.ts]
+
+
+//// [c:/foo.kts]
+
+
+Resolution:: {
+  "resolvedModule": {
+    "resolvedFileName": "c:/foo.kts",
+    "extension": ".kts",
+    "isExternalLibraryImport": false,
+    "resolvedUsingTsExtension": false
+  },
+  "failedLookupLocations": [
+    "c:/foo.ts",
+    "c:/foo.tsx"
+  ]
+}
+
+Resolving "c:/foo" from c:/foo/bar/baz.ts when module has extension: .kts with host that doesnt have directoryExists
+//// [c:/foo/bar/baz.ts]
+
+
+//// [c:/foo.kts]
+
+
+Resolution:: {
+  "resolvedModule": {
+    "resolvedFileName": "c:/foo.kts",
+    "extension": ".kts",
+    "isExternalLibraryImport": false,
+    "resolvedUsingTsExtension": false
+  },
+  "failedLookupLocations": [
+    "c:/foo.ts",
+    "c:/foo.tsx"
+  ]
+}
+
 Resolving "c:/foo" from c:/foo/bar/baz.ts when module has extension: .d.ts
 //// [c:/foo/bar/baz.ts]
 
@@ -421,7 +587,8 @@ Resolution:: {
   },
   "failedLookupLocations": [
     "c:/foo.ts",
-    "c:/foo.tsx"
+    "c:/foo.tsx",
+    "c:/foo.kts"
   ]
 }
 
@@ -441,7 +608,8 @@ Resolution:: {
   },
   "failedLookupLocations": [
     "c:/foo.ts",
-    "c:/foo.tsx"
+    "c:/foo.tsx",
+    "c:/foo.kts"
   ]
 }
 

@@ -11,6 +11,7 @@
     "File '/node_modules/@restart/hooks/package.json' exists according to earlier cached lookups.",
     "File '/node_modules/@restart/hooks/useMergedRefs.ts' does not exist.",
     "File '/node_modules/@restart/hooks/useMergedRefs.tsx' does not exist.",
+    "File '/node_modules/@restart/hooks/useMergedRefs.kts' does not exist.",
     "File '/node_modules/@restart/hooks/useMergedRefs.d.ts' does not exist.",
     "'package.json' does not have a 'typesVersions' field.",
     "'package.json' does not have a 'typings' field.",

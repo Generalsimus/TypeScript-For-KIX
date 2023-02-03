@@ -52,6 +52,7 @@ Loading module 'yargs' from 'node_modules' folder, target file types: TypeScript
 Directory '/Users/name/projects/web/src/node_modules' does not exist, skipping all lookups in it.
 File '/Users/name/projects/web/node_modules/yargs.ts' does not exist.
 File '/Users/name/projects/web/node_modules/yargs.tsx' does not exist.
+File '/Users/name/projects/web/node_modules/yargs.kts' does not exist.
 File '/Users/name/projects/web/node_modules/yargs.d.ts' does not exist.
 Found 'package.json' at '/Users/name/projects/web/node_modules/@types/yargs/package.json'.
 Matched 'exports' condition 'types'.

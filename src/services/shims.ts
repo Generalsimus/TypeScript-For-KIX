@@ -1264,7 +1264,7 @@ class CoreServicesShimObject extends ShimBase implements CoreServicesShim {
             const compilerOptions = JSON.parse(compilerOptionsJson) as CompilerOptions;
             const result = resolveModuleName(moduleName, normalizeSlashes(fileName), compilerOptions, this.host);
             let resolvedFileName = result.resolvedModule ? result.resolvedModule.resolvedFileName : undefined;
-            if (result.resolvedModule && result.resolvedModule.extension !== Extension.Ts && result.resolvedModule.extension !== Extension.Tsx && result.resolvedModule.extension !== Extension.Dts) {
+            if (result.resolvedModule && result.resolvedModule.extension !== Extension.Ts && result.resolvedModule.extension !== Extension.Tsx && result.resolvedModule.extension !== Extension.Dts && result.resolvedModule.extension !== Extension.Kts && result.resolvedModule.extension !== Extension.Kjs) {
                 resolvedFileName = undefined;
             }
 

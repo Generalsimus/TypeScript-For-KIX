@@ -37,10 +37,12 @@ Resolution:: {
   "failedLookupLocations": [
     "/root/m2.ts",
     "/root/m2.tsx",
+    "/root/m2.kts",
     "/root/m2.d.ts",
     "/root/m2/package.json",
     "/root/m2/index.ts",
-    "/root/m2/index.tsx"
+    "/root/m2/index.tsx",
+    "/root/m2/index.kts"
   ]
 }
 
@@ -55,6 +57,7 @@ Resolution:: {
   "failedLookupLocations": [
     "/root/m3.ts",
     "/root/m3.tsx",
+    "/root/m3.kts",
     "/root/m3.d.ts"
   ],
   "affectingLocations": [
@@ -73,17 +76,21 @@ Resolution:: {
   "failedLookupLocations": [
     "/root/m4.ts",
     "/root/m4.tsx",
+    "/root/m4.kts",
     "/root/m4.d.ts",
     "/root/m4/package.json",
     "/root/m4/index.ts",
     "/root/m4/index.tsx",
+    "/root/m4/index.kts",
     "/root/m4/index.d.ts",
     "/root/a/b/node_modules/m4/package.json",
     "/root/a/b/node_modules/m4.ts",
     "/root/a/b/node_modules/m4.tsx",
+    "/root/a/b/node_modules/m4.kts",
     "/root/a/b/node_modules/m4.d.ts",
     "/root/a/b/node_modules/m4/index.ts",
     "/root/a/b/node_modules/m4/index.tsx",
+    "/root/a/b/node_modules/m4/index.kts",
     "/root/a/b/node_modules/m4/index.d.ts",
     "/root/a/b/node_modules/@types/m4/package.json",
     "/root/a/b/node_modules/@types/m4.d.ts",
@@ -91,9 +98,11 @@ Resolution:: {
     "/root/a/node_modules/m4/package.json",
     "/root/a/node_modules/m4.ts",
     "/root/a/node_modules/m4.tsx",
+    "/root/a/node_modules/m4.kts",
     "/root/a/node_modules/m4.d.ts",
     "/root/a/node_modules/m4/index.ts",
     "/root/a/node_modules/m4/index.tsx",
+    "/root/a/node_modules/m4/index.kts",
     "/root/a/node_modules/m4/index.d.ts",
     "/root/a/node_modules/@types/m4/package.json",
     "/root/a/node_modules/@types/m4.d.ts",
@@ -141,10 +150,12 @@ Resolution:: {
   "failedLookupLocations": [
     "/root/m2.ts",
     "/root/m2.tsx",
+    "/root/m2.kts",
     "/root/m2.d.ts",
     "/root/m2/package.json",
     "/root/m2/index.ts",
-    "/root/m2/index.tsx"
+    "/root/m2/index.tsx",
+    "/root/m2/index.kts"
   ]
 }
 
@@ -159,6 +170,7 @@ Resolution:: {
   "failedLookupLocations": [
     "/root/m3.ts",
     "/root/m3.tsx",
+    "/root/m3.kts",
     "/root/m3.d.ts"
   ],
   "affectingLocations": [
@@ -177,17 +189,21 @@ Resolution:: {
   "failedLookupLocations": [
     "/root/m4.ts",
     "/root/m4.tsx",
+    "/root/m4.kts",
     "/root/m4.d.ts",
     "/root/m4/package.json",
     "/root/m4/index.ts",
     "/root/m4/index.tsx",
+    "/root/m4/index.kts",
     "/root/m4/index.d.ts",
     "/root/a/b/node_modules/m4/package.json",
     "/root/a/b/node_modules/m4.ts",
     "/root/a/b/node_modules/m4.tsx",
+    "/root/a/b/node_modules/m4.kts",
     "/root/a/b/node_modules/m4.d.ts",
     "/root/a/b/node_modules/m4/index.ts",
     "/root/a/b/node_modules/m4/index.tsx",
+    "/root/a/b/node_modules/m4/index.kts",
     "/root/a/b/node_modules/m4/index.d.ts",
     "/root/a/b/node_modules/@types/m4/package.json",
     "/root/a/b/node_modules/@types/m4.d.ts",
@@ -195,9 +211,11 @@ Resolution:: {
     "/root/a/node_modules/m4/package.json",
     "/root/a/node_modules/m4.ts",
     "/root/a/node_modules/m4.tsx",
+    "/root/a/node_modules/m4.kts",
     "/root/a/node_modules/m4.d.ts",
     "/root/a/node_modules/m4/index.ts",
     "/root/a/node_modules/m4/index.tsx",
+    "/root/a/node_modules/m4/index.kts",
     "/root/a/node_modules/m4/index.d.ts",
     "/root/a/node_modules/@types/m4/package.json",
     "/root/a/node_modules/@types/m4.d.ts",

@@ -71,6 +71,7 @@ Using 'exports' subpath '.' with target './import.js'.
 File name '/user/username/projects/myproject/node_modules/pkg/import.js' has a '.js' extension - stripping it.
 File '/user/username/projects/myproject/node_modules/pkg/import.ts' does not exist.
 File '/user/username/projects/myproject/node_modules/pkg/import.tsx' does not exist.
+File '/user/username/projects/myproject/node_modules/pkg/import.kts' does not exist.
 File '/user/username/projects/myproject/node_modules/pkg/import.d.ts' exists - use it as a name resolution result.
 Resolving real path for '/user/username/projects/myproject/node_modules/pkg/import.d.ts', result '/user/username/projects/myproject/node_modules/pkg/import.d.ts'.
 ======== Module name 'pkg' was successfully resolved to '/user/username/projects/myproject/node_modules/pkg/import.d.ts' with Package ID 'pkg/import.d.ts@0.0.1'. ========
@@ -90,6 +91,7 @@ Using 'exports' subpath '.' with target './require.js'.
 File name '/user/username/projects/myproject/node_modules/pkg1/require.js' has a '.js' extension - stripping it.
 File '/user/username/projects/myproject/node_modules/pkg1/require.ts' does not exist.
 File '/user/username/projects/myproject/node_modules/pkg1/require.tsx' does not exist.
+File '/user/username/projects/myproject/node_modules/pkg1/require.kts' does not exist.
 File '/user/username/projects/myproject/node_modules/pkg1/require.d.ts' does not exist.
 Directory '/user/username/projects/myproject/node_modules/@types' does not exist, skipping all lookups in it.
 Directory '/user/username/projects/node_modules' does not exist, skipping all lookups in it.
@@ -103,6 +105,7 @@ Using 'exports' subpath '.' with target './require.js'.
 File name '/user/username/projects/myproject/node_modules/pkg1/require.js' has a '.js' extension - stripping it.
 File '/user/username/projects/myproject/node_modules/pkg1/require.js' does not exist.
 File '/user/username/projects/myproject/node_modules/pkg1/require.jsx' does not exist.
+File '/user/username/projects/myproject/node_modules/pkg1/require.kjs' does not exist.
 Directory '/user/username/projects/node_modules' does not exist, skipping all lookups in it.
 Directory '/user/username/node_modules' does not exist, skipping all lookups in it.
 Directory '/user/node_modules' does not exist, skipping all lookups in it.
@@ -241,6 +244,7 @@ Using 'exports' subpath '.' with target './import.js'.
 File name '/user/username/projects/myproject/node_modules/pkg/import.js' has a '.js' extension - stripping it.
 File '/user/username/projects/myproject/node_modules/pkg/import.ts' does not exist.
 File '/user/username/projects/myproject/node_modules/pkg/import.tsx' does not exist.
+File '/user/username/projects/myproject/node_modules/pkg/import.kts' does not exist.
 File '/user/username/projects/myproject/node_modules/pkg/import.d.ts' exists - use it as a name resolution result.
 Resolving real path for '/user/username/projects/myproject/node_modules/pkg/import.d.ts', result '/user/username/projects/myproject/node_modules/pkg/import.d.ts'.
 ======== Module name 'pkg' was successfully resolved to '/user/username/projects/myproject/node_modules/pkg/import.d.ts' with Package ID 'pkg/import.d.ts@0.0.1'. ========

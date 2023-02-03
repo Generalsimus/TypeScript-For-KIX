@@ -18,6 +18,7 @@ Resolution:: {
   "failedLookupLocations": [
     "/a/b/c/bar.ts",
     "/a/b/c/bar.tsx",
+    "/a/b/c/bar.kts",
     "/a/b/c/bar.d.ts"
   ],
   "affectingLocations": [
@@ -45,6 +46,7 @@ Resolution:: {
   "failedLookupLocations": [
     "/a/b/c/bar.ts",
     "/a/b/c/bar.tsx",
+    "/a/b/c/bar.kts",
     "/a/b/c/bar.d.ts"
   ],
   "affectingLocations": [
@@ -72,6 +74,7 @@ Resolution:: {
   "failedLookupLocations": [
     "/a/bar.ts",
     "/a/bar.tsx",
+    "/a/bar.kts",
     "/a/bar.d.ts"
   ],
   "affectingLocations": [
@@ -99,6 +102,7 @@ Resolution:: {
   "failedLookupLocations": [
     "/a/bar.ts",
     "/a/bar.tsx",
+    "/a/bar.kts",
     "/a/bar.d.ts"
   ],
   "affectingLocations": [
@@ -126,6 +130,7 @@ Resolution:: {
   "failedLookupLocations": [
     "/bar.ts",
     "/bar.tsx",
+    "/bar.kts",
     "/bar.d.ts"
   ],
   "affectingLocations": [
@@ -153,6 +158,7 @@ Resolution:: {
   "failedLookupLocations": [
     "/bar.ts",
     "/bar.tsx",
+    "/bar.kts",
     "/bar.d.ts"
   ],
   "affectingLocations": [
@@ -180,6 +186,7 @@ Resolution:: {
   "failedLookupLocations": [
     "c:/bar.ts",
     "c:/bar.tsx",
+    "c:/bar.kts",
     "c:/bar.d.ts"
   ],
   "affectingLocations": [
@@ -207,6 +214,7 @@ Resolution:: {
   "failedLookupLocations": [
     "c:/bar.ts",
     "c:/bar.tsx",
+    "c:/bar.kts",
     "c:/bar.d.ts"
   ],
   "affectingLocations": [

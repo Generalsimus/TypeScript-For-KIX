@@ -14,6 +14,7 @@
     "File name '/node_modules/acorn-walk/dist/walk.js' has a '.js' extension - stripping it.",
     "File '/node_modules/acorn-walk/dist/walk.ts' does not exist.",
     "File '/node_modules/acorn-walk/dist/walk.tsx' does not exist.",
+    "File '/node_modules/acorn-walk/dist/walk.kts' does not exist.",
     "File '/node_modules/acorn-walk/dist/walk.d.ts' exists - use it as a name resolution result.",
     "Resolving real path for '/node_modules/acorn-walk/dist/walk.d.ts', result '/node_modules/acorn-walk/dist/walk.d.ts'.",
     "======== Module name 'acorn-walk' was successfully resolved to '/node_modules/acorn-walk/dist/walk.d.ts' with Package ID 'acorn-walk/dist/walk.d.ts@8.2.0'. ========",
@@ -33,6 +34,7 @@
     "File name '/node_modules/acorn-walk/dist/walk.js' has a '.js' extension - stripping it.",
     "File '/node_modules/acorn-walk/dist/walk.ts' does not exist.",
     "File '/node_modules/acorn-walk/dist/walk.tsx' does not exist.",
+    "File '/node_modules/acorn-walk/dist/walk.kts' does not exist.",
     "File '/node_modules/acorn-walk/dist/walk.d.ts' exists - use it as a name resolution result.",
     "Resolving real path for '/node_modules/acorn-walk/dist/walk.d.ts', result '/node_modules/acorn-walk/dist/walk.d.ts'.",
     "======== Module name 'acorn-walk' was successfully resolved to '/node_modules/acorn-walk/dist/walk.d.ts' with Package ID 'acorn-walk/dist/walk.d.ts@8.2.0'. ========"

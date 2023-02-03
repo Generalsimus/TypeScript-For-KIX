@@ -70,22 +70,28 @@ src/child/child.ts
 Module resolution kind is not specified, using 'Classic'.
 File '/src/main/child.ts' does not exist.
 File '/src/main/child.tsx' does not exist.
+File '/src/main/child.kts' does not exist.
 File '/src/main/child.d.ts' does not exist.
 File '/src/child.ts' does not exist.
 File '/src/child.tsx' does not exist.
+File '/src/child.kts' does not exist.
 File '/src/child.d.ts' does not exist.
 File '/child.ts' does not exist.
 File '/child.tsx' does not exist.
+File '/child.kts' does not exist.
 File '/child.d.ts' does not exist.
 Directory '/src/main/node_modules' does not exist, skipping all lookups in it.
 Directory '/src/node_modules' does not exist, skipping all lookups in it.
 Directory '/node_modules' does not exist, skipping all lookups in it.
 File '/src/main/child.js' does not exist.
 File '/src/main/child.jsx' does not exist.
+File '/src/main/child.kjs' does not exist.
 File '/src/child.js' does not exist.
 File '/src/child.jsx' does not exist.
+File '/src/child.kjs' does not exist.
 File '/child.js' does not exist.
 File '/child.jsx' does not exist.
+File '/child.kjs' does not exist.
 ======== Module name 'child' was not resolved. ========
 lib/lib.d.ts
   Default library for target 'es5'
@@ -352,9 +358,11 @@ Output::
 Module resolution kind is not specified, using 'Classic'.
 File '/src/child/child2.ts' does not exist.
 File '/src/child/child2.tsx' does not exist.
+File '/src/child/child2.kts' does not exist.
 File '/src/child/child2.d.ts' does not exist.
 File '/src/child/child2.js' does not exist.
 File '/src/child/child2.jsx' does not exist.
+File '/src/child/child2.kjs' does not exist.
 ======== Module name '../child/child2' was not resolved. ========
 [96msrc/child/child.ts[0m:[93m1[0m:[93m24[0m - [91merror[0m[90m TS2792: [0mCannot find module '../child/child2'. Did you mean to set the 'moduleResolution' option to 'nodenext', or to add aliases to the 'paths' option?
 

@@ -1955,30 +1955,31 @@ function tryAddingExtensions(candidate: string, extensions: Extensions, original
             return extensions & Extensions.Declaration && tryExtension(".d.json.ts")
                 || extensions & Extensions.Json && tryExtension(Extension.Json)
                 || undefined;
-        case Extension.Tsx:
-        case Extension.Jsx:
+                case Extension.Tsx:
+                case Extension.Jsx:
+                    // basically idendical to the ts/js case below, but prefers matching tsx and jsx files exactly before falling back to the ts or js file path
+                    // (historically, we disallow having both a a.ts and a.tsx file in the same compilation, since their outputs clash)
+                    // TODO: We should probably error if `"./a.tsx"` resolved to `"./a.ts"`, right?
+                    return extensions & Extensions.TypeScript && (tryExtension(Extension.Tsx, originalExtension === Extension.Tsx) || tryExtension(Extension.Ts, originalExtension === Extension.Tsx))
+                        || extensions & Extensions.Declaration && tryExtension(Extension.Dts, originalExtension === Extension.Tsx)
+                        || extensions & Extensions.JavaScript && (tryExtension(Extension.Jsx) || tryExtension(Extension.Js))
+                        || undefined;
+        case Extension.Kts:
+        case Extension.Kjs:
             // basically idendical to the ts/js case below, but prefers matching tsx and jsx files exactly before falling back to the ts or js file path
             // (historically, we disallow having both a a.ts and a.tsx file in the same compilation, since their outputs clash)
             // TODO: We should probably error if `"./a.tsx"` resolved to `"./a.ts"`, right?
-            return extensions & Extensions.TypeScript && (tryExtension(Extension.Tsx, originalExtension === Extension.Tsx) || tryExtension(Extension.Ts, originalExtension === Extension.Tsx))
-                || extensions & Extensions.Declaration && tryExtension(Extension.Dts, originalExtension === Extension.Tsx)
-                || extensions & Extensions.JavaScript && (tryExtension(Extension.Jsx) || tryExtension(Extension.Js))
+            return extensions & Extensions.TypeScript && (tryExtension(Extension.Kts, originalExtension === Extension.Kts) || tryExtension(Extension.Ts, originalExtension === Extension.Kts))
+                || extensions & Extensions.Declaration && tryExtension(Extension.Dts, originalExtension === Extension.Kts)
+                || extensions & Extensions.JavaScript && (tryExtension(Extension.Kjs) || tryExtension(Extension.Js))
                 || undefined;
-        case Extension.Kts:
-            return extensions & Extensions.Kix && (tryExtension(Extension.Kts, originalExtension === Extension.Kts))
-            || extensions & Extensions.Declaration && tryExtension(Extension.Dts, originalExtension === Extension.Kts)
-            || undefined;
-        case Extension.Kjs:
-            // basically idendical to the kts/kjs case below, but prefers matching tsx and jsx files exactly before falling back to the ts or js file path
-            return extensions & Extensions.Kix && (tryExtension(Extension.Kjs, originalExtension === Extension.Kjs))
-            || undefined;
         case Extension.Ts:
         case Extension.Dts:
         case Extension.Js:
         case "":
-            return extensions & Extensions.TypeScript && (tryExtension(Extension.Ts, originalExtension === Extension.Ts || originalExtension === Extension.Dts) || tryExtension(Extension.Tsx, originalExtension === Extension.Ts || originalExtension === Extension.Dts))
+            return extensions & Extensions.TypeScript && (tryExtension(Extension.Ts, originalExtension === Extension.Ts || originalExtension === Extension.Dts) || tryExtension(Extension.Tsx, originalExtension === Extension.Ts || originalExtension === Extension.Dts) || tryExtension(Extension.Kts, originalExtension === Extension.Ts || originalExtension === Extension.Dts))
                 || extensions & Extensions.Declaration && tryExtension(Extension.Dts, originalExtension === Extension.Ts || originalExtension === Extension.Dts)
-                || extensions & Extensions.Kix && (tryExtension(Extension.Kjs) || tryExtension(Extension.Kts))
+                || extensions & Extensions.JavaScript && (tryExtension(Extension.Js) || tryExtension(Extension.Jsx) || tryExtension(Extension.Kjs))
                 || state.isConfigLookup && tryExtension(Extension.Json)
                 || undefined;
         default:
@@ -2001,7 +2002,10 @@ function tryFile(fileName: string, onlyRecordFailures: boolean, state: ModuleRes
 
     const ext = tryGetExtensionFromPath(fileName) ?? "";
     const fileNameNoExtension = ext ? removeExtension(fileName, ext) : fileName;
-    return forEach(state.compilerOptions.moduleSuffixes, suffix => tryFileLookup(fileNameNoExtension + suffix + ext, onlyRecordFailures, state));
+    const res = forEach(state.compilerOptions.moduleSuffixes, suffix => tryFileLookup(fileNameNoExtension + suffix + ext, onlyRecordFailures, state))
+    // console.log("🚀 --> file: moduleNameResolver.ts:2006 --> tryFile --> res", {fileName,res});
+    
+    return res
 }
 
 function tryFileLookup(fileName: string, onlyRecordFailures: boolean, state: ModuleResolutionState): string | undefined {
@@ -2318,9 +2322,10 @@ function resolvedIfExtensionMatches(extensions: Extensions, path: string, resolv
 
 /** True if `extension` is one of the supported `extensions`. */
 function extensionIsOk(extensions: Extensions, extension: string): boolean {
-    return extensions & Extensions.JavaScript && (extension === Extension.Js || extension === Extension.Jsx || extension === Extension.Mjs || extension === Extension.Cjs)
-        || extensions & Extensions.TypeScript && (extension === Extension.Ts || extension === Extension.Tsx || extension === Extension.Mts || extension === Extension.Cts)
+    return extensions & Extensions.JavaScript && (extension === Extension.Js || extension === Extension.Jsx ||  extension === Extension.Kjs || extension === Extension.Mjs || extension === Extension.Cjs)
+        || extensions & Extensions.TypeScript && (extension === Extension.Ts || extension === Extension.Tsx ||  extension === Extension.Kts || extension === Extension.Mts || extension === Extension.Cts)
         || extensions & Extensions.Declaration && (extension === Extension.Dts || extension === Extension.Dmts || extension === Extension.Dcts)
+        || extensions & Extensions.Kix && (extension === Extension.Kts || extension === Extension.Kjs)
         || extensions & Extensions.Json && extension === Extension.Json
         || false;
 }
@@ -2693,7 +2698,7 @@ function getLoadModuleFromTargetImportOrExport(extensions: Extensions, state: Mo
                             // The matched export is looking up something in either the out declaration or js dir, now map the written path back into the source dir and source extension
                             const pathFragment = finalPath.slice(candidateDir.length + 1); // +1 to also remove directory seperator
                             const possibleInputBase = combinePaths(commonSourceDirGuess, pathFragment);
-                            const jsAndDtsExtensions = [Extension.Mjs, Extension.Cjs, Extension.Js, Extension.Json, Extension.Dmts, Extension.Dcts, Extension.Dts];
+                            const jsAndDtsExtensions = [Extension.Mjs, Extension.Cjs, Extension.Js, Extension.Kjs, Extension.Kjs, Extension.Json, Extension.Dmts, Extension.Dcts, Extension.Dts];
                             for (const ext of jsAndDtsExtensions) {
                                 if (fileExtensionIs(possibleInputBase, ext)) {
                                     const inputExts = getPossibleOriginalInputExtensionForExtension(possibleInputBase);
@@ -2997,9 +3002,10 @@ export function classicNameResolver(moduleName: string, containingFile: string, 
     };
 
     const resolved =
-        tryResolve(Extensions.TypeScript | Extensions.Declaration) ||
-        tryResolve(Extensions.Kix | Extensions.Declaration) ||
-        tryResolve(Extensions.JavaScript | (compilerOptions.resolveJsonModule ? Extensions.Json : 0));
+    tryResolve(Extensions.TypeScript | Extensions.Declaration) ||
+    tryResolve(Extensions.JavaScript | (compilerOptions.resolveJsonModule ? Extensions.Json : 0));
+    // tryResolve(Extensions.Kix);
+
     // No originalPath because classic resolution doesn't resolve realPath
     return createResolvedModuleWithFailedLookupLocations(
         resolved && resolved.value,

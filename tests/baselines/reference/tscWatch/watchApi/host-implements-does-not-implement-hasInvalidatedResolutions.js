@@ -39,6 +39,7 @@ Module resolution kind is not specified, using 'Node10'.
 Loading module as file / folder, candidate module location '/user/username/projects/myproject/other', target file types: TypeScript, Declaration.
 File '/user/username/projects/myproject/other.ts' does not exist.
 File '/user/username/projects/myproject/other.tsx' does not exist.
+File '/user/username/projects/myproject/other.kts' does not exist.
 File '/user/username/projects/myproject/other.d.ts' exists - use it as a name resolution result.
 ======== Module name './other' was successfully resolved to '/user/username/projects/myproject/other.d.ts'. ========
 FileWatcher:: Added:: WatchInfo: /user/username/projects/myproject/other.d.ts 250 undefined Source file
@@ -111,6 +112,7 @@ Module resolution kind is not specified, using 'Node10'.
 Loading module as file / folder, candidate module location '/user/username/projects/myproject/other', target file types: TypeScript, Declaration.
 File '/user/username/projects/myproject/other.ts' does not exist.
 File '/user/username/projects/myproject/other.tsx' does not exist.
+File '/user/username/projects/myproject/other.kts' does not exist.
 File '/user/username/projects/myproject/other.d.ts' exists - use it as a name resolution result.
 ======== Module name './other' was successfully resolved to '/user/username/projects/myproject/other.d.ts'. ========
 [[90m12:00:30 AM[0m] Found 0 errors. Watching for file changes.
@@ -170,6 +172,7 @@ Module resolution kind is not specified, using 'Node10'.
 Loading module as file / folder, candidate module location '/user/username/projects/myproject/other', target file types: TypeScript, Declaration.
 File '/user/username/projects/myproject/other.ts' does not exist.
 File '/user/username/projects/myproject/other.tsx' does not exist.
+File '/user/username/projects/myproject/other.kts' does not exist.
 File '/user/username/projects/myproject/other.d.ts' exists - use it as a name resolution result.
 ======== Module name './other' was successfully resolved to '/user/username/projects/myproject/other.d.ts'. ========
 [[90m12:00:37 AM[0m] Found 0 errors. Watching for file changes.

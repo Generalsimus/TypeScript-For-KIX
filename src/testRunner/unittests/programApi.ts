@@ -85,7 +85,7 @@ describe("unittests:: programApi:: Program.getMissingFilePaths", () => {
 
     it("handles missing triple slash references", () => {
         const program = ts.createProgram([referenceFileRelativePath], options, testCompilerHost);
-        const missing = program.getMissingFilePaths();
+        const missing = program.getMissingFilePaths();       
         verifyMissingFilePaths(missing, [
             // From absolute reference
             "d:/imaginary/nonexistent1.ts",
@@ -99,7 +99,8 @@ describe("unittests:: programApi:: Program.getMissingFilePaths", () => {
             // From no-extension reference
             "d:/pretend/nonexistent4.d.ts",
             "d:/pretend/nonexistent4.ts",
-            "d:/pretend/nonexistent4.tsx"
+            "d:/pretend/nonexistent4.tsx",
+            "d:/pretend/nonexistent4.kts"
         ]);
     });
 

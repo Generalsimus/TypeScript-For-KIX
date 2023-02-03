@@ -8,6 +8,9 @@
     "File '/foo-ios.tsx' does not exist.",
     "File '/foo__native.tsx' does not exist.",
     "File '/foo.tsx' does not exist.",
+    "File '/foo-ios.kts' does not exist.",
+    "File '/foo__native.kts' does not exist.",
+    "File '/foo.kts' does not exist.",
     "File '/foo-ios.d.ts' does not exist.",
     "File '/foo__native.d.ts' does not exist.",
     "File '/foo.d.ts' does not exist.",
@@ -19,6 +22,9 @@
     "File '/foo-ios.jsx' does not exist.",
     "File '/foo__native.jsx' does not exist.",
     "File '/foo.jsx' does not exist.",
+    "File '/foo-ios.kjs' does not exist.",
+    "File '/foo__native.kjs' does not exist.",
+    "File '/foo.kjs' does not exist.",
     "Directory '/foo' does not exist, skipping all lookups in it.",
     "======== Module name './foo' was not resolved. ========"
 ]

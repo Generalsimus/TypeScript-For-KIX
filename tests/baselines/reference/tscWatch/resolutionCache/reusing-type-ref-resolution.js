@@ -51,9 +51,11 @@ Loading module 'pkg0' from 'node_modules' folder, target file types: TypeScript,
 File '/src/project/node_modules/pkg0/package.json' does not exist.
 File '/src/project/node_modules/pkg0.ts' does not exist.
 File '/src/project/node_modules/pkg0.tsx' does not exist.
+File '/src/project/node_modules/pkg0.kts' does not exist.
 File '/src/project/node_modules/pkg0.d.ts' does not exist.
 File '/src/project/node_modules/pkg0/index.ts' does not exist.
 File '/src/project/node_modules/pkg0/index.tsx' does not exist.
+File '/src/project/node_modules/pkg0/index.kts' does not exist.
 File '/src/project/node_modules/pkg0/index.d.ts' exists - use it as a name resolution result.
 Resolving real path for '/src/project/node_modules/pkg0/index.d.ts', result '/src/project/node_modules/pkg0/index.d.ts'.
 ======== Module name 'pkg0' was successfully resolved to '/src/project/node_modules/pkg0/index.d.ts'. ========
@@ -62,6 +64,7 @@ Module resolution kind is not specified, using 'Node10'.
 Loading module 'pkg1' from 'node_modules' folder, target file types: TypeScript, Declaration.
 File '/src/project/node_modules/pkg1.ts' does not exist.
 File '/src/project/node_modules/pkg1.tsx' does not exist.
+File '/src/project/node_modules/pkg1.kts' does not exist.
 File '/src/project/node_modules/pkg1.d.ts' does not exist.
 Directory '/src/project/node_modules/@types' does not exist, skipping all lookups in it.
 Directory '/src/node_modules' does not exist, skipping all lookups in it.
@@ -69,6 +72,7 @@ Directory '/node_modules' does not exist, skipping all lookups in it.
 Loading module 'pkg1' from 'node_modules' folder, target file types: JavaScript.
 File '/src/project/node_modules/pkg1.js' does not exist.
 File '/src/project/node_modules/pkg1.jsx' does not exist.
+File '/src/project/node_modules/pkg1.kjs' does not exist.
 Directory '/src/node_modules' does not exist, skipping all lookups in it.
 Directory '/node_modules' does not exist, skipping all lookups in it.
 ======== Module name 'pkg1' was not resolved. ========
@@ -354,9 +358,11 @@ Loading module 'pkg1' from 'node_modules' folder, target file types: TypeScript,
 File '/src/project/node_modules/pkg1/package.json' does not exist.
 File '/src/project/node_modules/pkg1.ts' does not exist.
 File '/src/project/node_modules/pkg1.tsx' does not exist.
+File '/src/project/node_modules/pkg1.kts' does not exist.
 File '/src/project/node_modules/pkg1.d.ts' does not exist.
 File '/src/project/node_modules/pkg1/index.ts' does not exist.
 File '/src/project/node_modules/pkg1/index.tsx' does not exist.
+File '/src/project/node_modules/pkg1/index.kts' does not exist.
 File '/src/project/node_modules/pkg1/index.d.ts' exists - use it as a name resolution result.
 Resolving real path for '/src/project/node_modules/pkg1/index.d.ts', result '/src/project/node_modules/pkg1/index.d.ts'.
 ======== Module name 'pkg1' was successfully resolved to '/src/project/node_modules/pkg1/index.d.ts'. ========

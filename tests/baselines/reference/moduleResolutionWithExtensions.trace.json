@@ -16,6 +16,7 @@
     "File name '/src/jquery.js' has a '.js' extension - stripping it.",
     "File '/src/jquery.ts' does not exist.",
     "File '/src/jquery.tsx' does not exist.",
+    "File '/src/jquery.kts' does not exist.",
     "File '/src/jquery.d.ts' exists - use it as a name resolution result.",
     "======== Module name './jquery.js' was successfully resolved to '/src/jquery.d.ts'. ========"
 ]

@@ -28,15 +28,19 @@ Resolution:: {
   "failedLookupLocations": [
     "/root/x/m2.ts",
     "/root/x/m2.tsx",
+    "/root/x/m2.kts",
     "/root/x/m2.d.ts",
     "/root/a/b/m2.ts",
     "/root/a/b/m2.tsx",
+    "/root/a/b/m2.kts",
     "/root/a/b/m2.d.ts",
     "/root/a/m2.ts",
     "/root/a/m2.tsx",
+    "/root/a/m2.kts",
     "/root/a/m2.d.ts",
     "/root/m2.ts",
     "/root/m2.tsx",
+    "/root/m2.kts",
     "/root/m2.d.ts"
   ]
 }
@@ -71,15 +75,19 @@ Resolution:: {
   "failedLookupLocations": [
     "/root/x/m2.ts",
     "/root/x/m2.tsx",
+    "/root/x/m2.kts",
     "/root/x/m2.d.ts",
     "/root/a/b/m2.ts",
     "/root/a/b/m2.tsx",
+    "/root/a/b/m2.kts",
     "/root/a/b/m2.d.ts",
     "/root/a/m2.ts",
     "/root/a/m2.tsx",
+    "/root/a/m2.kts",
     "/root/a/m2.d.ts",
     "/root/m2.ts",
     "/root/m2.tsx",
+    "/root/m2.kts",
     "/root/m2.d.ts"
   ]
 }

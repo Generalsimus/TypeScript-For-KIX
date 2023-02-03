@@ -287,11 +287,13 @@ Module resolution kind is not specified, using 'Node10'.
 Loading module as file / folder, candidate module location '/src/child/child2', target file types: TypeScript, Declaration.
 File '/src/child/child2.ts' does not exist.
 File '/src/child/child2.tsx' does not exist.
+File '/src/child/child2.kts' does not exist.
 File '/src/child/child2.d.ts' does not exist.
 Directory '/src/child/child2' does not exist, skipping all lookups in it.
 Loading module as file / folder, candidate module location '/src/child/child2', target file types: JavaScript.
 File '/src/child/child2.js' does not exist.
 File '/src/child/child2.jsx' does not exist.
+File '/src/child/child2.kjs' does not exist.
 Directory '/src/child/child2' does not exist, skipping all lookups in it.
 ======== Module name '../child/child2' was not resolved. ========
 [96msrc/child/child.ts[0m:[93m1[0m:[93m24[0m - [91merror[0m[90m TS2307: [0mCannot find module '../child/child2' or its corresponding type declarations.

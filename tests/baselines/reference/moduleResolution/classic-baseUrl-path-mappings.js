@@ -28,6 +28,7 @@ Resolution:: {
   "failedLookupLocations": [
     "/root/folder1/file2.ts",
     "/root/folder1/file2.tsx",
+    "/root/folder1/file2.kts",
     "/root/folder1/file2.d.ts"
   ]
 }
@@ -53,15 +54,19 @@ Resolution:: {
   "failedLookupLocations": [
     "/root/folder1/file3.ts",
     "/root/folder1/file3.tsx",
+    "/root/folder1/file3.kts",
     "/root/folder1/file3.d.ts",
     "/root/generated/folder1/file3.ts",
     "/root/generated/folder1/file3.tsx",
+    "/root/generated/folder1/file3.kts",
     "/root/generated/folder1/file3.d.ts",
     "/root/folder1/folder1/file3.ts",
     "/root/folder1/folder1/file3.tsx",
+    "/root/folder1/folder1/file3.kts",
     "/root/folder1/folder1/file3.d.ts",
     "/root/folder1/file3.ts",
     "/root/folder1/file3.tsx",
+    "/root/folder1/file3.kts",
     "/root/folder1/file3.d.ts"
   ]
 }

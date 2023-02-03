@@ -99,12 +99,14 @@ c: {
   "failedLookupLocations": [
     "c.ts",
     "c.tsx",
+    "c.kts",
     "c.d.ts",
     "node_modules/@types/c/package.json",
     "node_modules/@types/c.d.ts",
     "node_modules/@types/c/index.d.ts",
     "c.js",
-    "c.jsx"
+    "c.jsx",
+    "c.kjs"
   ]
 }
 resolvedTypeReferenceDirectiveNames: undefined

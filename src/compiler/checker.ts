@@ -4866,7 +4866,7 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
                             // CJS file resolving to an ESM file
                             let diagnosticDetails;
                             const ext = tryGetExtensionFromPath(currentSourceFile.fileName);
-                            if (ext === Extension.Ts || ext === Extension.Js || ext === Extension.Tsx || ext === Extension.Jsx) {
+                            if (ext === Extension.Ts || ext === Extension.Js || ext === Extension.Tsx || ext === Extension.Jsx || ext === Extension.Kjs || ext === Extension.Kts) {
                                 const scope = currentSourceFile.packageJsonScope;
                                 const targetExt = ext === Extension.Ts ? Extension.Mts : ext === Extension.Js ? Extension.Mjs : undefined;
                                 if (scope && !scope.contents.packageJsonContent.type) {

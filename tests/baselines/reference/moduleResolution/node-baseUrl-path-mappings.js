@@ -40,10 +40,12 @@ Resolution:: {
   "failedLookupLocations": [
     "/root/folder1/file2.ts",
     "/root/folder1/file2.tsx",
+    "/root/folder1/file2.kts",
     "/root/folder1/file2.d.ts",
     "/root/folder1/file2/package.json",
     "/root/folder1/file2/index.ts",
     "/root/folder1/file2/index.tsx",
+    "/root/folder1/file2/index.kts",
     "/root/folder1/file2/index.d.ts"
   ]
 }
@@ -69,17 +71,21 @@ Resolution:: {
   "failedLookupLocations": [
     "/root/folder2/file3.ts",
     "/root/folder2/file3.tsx",
+    "/root/folder2/file3.kts",
     "/root/folder2/file3.d.ts",
     "/root/folder2/file3/package.json",
     "/root/folder2/file3/index.ts",
     "/root/folder2/file3/index.tsx",
+    "/root/folder2/file3/index.kts",
     "/root/folder2/file3/index.d.ts",
     "/root/generated/folder2/file3.ts",
     "/root/generated/folder2/file3.tsx",
+    "/root/generated/folder2/file3.kts",
     "/root/generated/folder2/file3.d.ts",
     "/root/generated/folder2/file3/package.json",
     "/root/generated/folder2/file3/index.ts",
-    "/root/generated/folder2/file3/index.tsx"
+    "/root/generated/folder2/file3/index.tsx",
+    "/root/generated/folder2/file3/index.kts"
   ]
 }
 
@@ -94,13 +100,16 @@ Resolution:: {
   "failedLookupLocations": [
     "/root/folder2/file4.ts",
     "/root/folder2/file4.tsx",
+    "/root/folder2/file4.kts",
     "/root/folder2/file4.d.ts",
     "/root/folder2/file4/package.json",
     "/root/folder2/file4/index.ts",
     "/root/folder2/file4/index.tsx",
+    "/root/folder2/file4/index.kts",
     "/root/folder2/file4/index.d.ts",
     "/root/generated/folder2/file4.ts",
     "/root/generated/folder2/file4.tsx",
+    "/root/generated/folder2/file4.kts",
     "/root/generated/folder2/file4.d.ts"
   ],
   "affectingLocations": [
@@ -119,10 +128,12 @@ Resolution:: {
   "failedLookupLocations": [
     "/root/someanotherfolder/file5.ts",
     "/root/someanotherfolder/file5.tsx",
+    "/root/someanotherfolder/file5.kts",
     "/root/someanotherfolder/file5.d.ts",
     "/root/someanotherfolder/file5/package.json",
     "/root/someanotherfolder/file5/index.ts",
-    "/root/someanotherfolder/file5/index.tsx"
+    "/root/someanotherfolder/file5/index.tsx",
+    "/root/someanotherfolder/file5/index.kts"
   ]
 }
 
@@ -137,24 +148,30 @@ Resolution:: {
   "failedLookupLocations": [
     "/root/file6.ts",
     "/root/file6.tsx",
+    "/root/file6.kts",
     "/root/file6.d.ts",
     "/root/file6/package.json",
     "/root/file6/index.ts",
     "/root/file6/index.tsx",
+    "/root/file6/index.kts",
     "/root/file6/index.d.ts",
     "/root/generated/file6.ts",
     "/root/generated/file6.tsx",
+    "/root/generated/file6.kts",
     "/root/generated/file6.d.ts",
     "/root/generated/file6/package.json",
     "/root/generated/file6/index.ts",
     "/root/generated/file6/index.tsx",
+    "/root/generated/file6/index.kts",
     "/root/generated/file6/index.d.ts",
     "/root/folder1/node_modules/file6/package.json",
     "/root/folder1/node_modules/file6.ts",
     "/root/folder1/node_modules/file6.tsx",
+    "/root/folder1/node_modules/file6.kts",
     "/root/folder1/node_modules/file6.d.ts",
     "/root/folder1/node_modules/file6/index.ts",
     "/root/folder1/node_modules/file6/index.tsx",
+    "/root/folder1/node_modules/file6/index.kts",
     "/root/folder1/node_modules/file6/index.d.ts",
     "/root/folder1/node_modules/@types/file6/package.json",
     "/root/folder1/node_modules/@types/file6.d.ts",
@@ -205,10 +222,12 @@ Resolution:: {
   "failedLookupLocations": [
     "/root/folder1/file2.ts",
     "/root/folder1/file2.tsx",
+    "/root/folder1/file2.kts",
     "/root/folder1/file2.d.ts",
     "/root/folder1/file2/package.json",
     "/root/folder1/file2/index.ts",
     "/root/folder1/file2/index.tsx",
+    "/root/folder1/file2/index.kts",
     "/root/folder1/file2/index.d.ts"
   ]
 }
@@ -234,17 +253,21 @@ Resolution:: {
   "failedLookupLocations": [
     "/root/folder2/file3.ts",
     "/root/folder2/file3.tsx",
+    "/root/folder2/file3.kts",
     "/root/folder2/file3.d.ts",
     "/root/folder2/file3/package.json",
     "/root/folder2/file3/index.ts",
     "/root/folder2/file3/index.tsx",
+    "/root/folder2/file3/index.kts",
     "/root/folder2/file3/index.d.ts",
     "/root/generated/folder2/file3.ts",
     "/root/generated/folder2/file3.tsx",
+    "/root/generated/folder2/file3.kts",
     "/root/generated/folder2/file3.d.ts",
     "/root/generated/folder2/file3/package.json",
     "/root/generated/folder2/file3/index.ts",
-    "/root/generated/folder2/file3/index.tsx"
+    "/root/generated/folder2/file3/index.tsx",
+    "/root/generated/folder2/file3/index.kts"
   ]
 }
 
@@ -259,13 +282,16 @@ Resolution:: {
   "failedLookupLocations": [
     "/root/folder2/file4.ts",
     "/root/folder2/file4.tsx",
+    "/root/folder2/file4.kts",
     "/root/folder2/file4.d.ts",
     "/root/folder2/file4/package.json",
     "/root/folder2/file4/index.ts",
     "/root/folder2/file4/index.tsx",
+    "/root/folder2/file4/index.kts",
     "/root/folder2/file4/index.d.ts",
     "/root/generated/folder2/file4.ts",
     "/root/generated/folder2/file4.tsx",
+    "/root/generated/folder2/file4.kts",
     "/root/generated/folder2/file4.d.ts"
   ],
   "affectingLocations": [
@@ -284,10 +310,12 @@ Resolution:: {
   "failedLookupLocations": [
     "/root/someanotherfolder/file5.ts",
     "/root/someanotherfolder/file5.tsx",
+    "/root/someanotherfolder/file5.kts",
     "/root/someanotherfolder/file5.d.ts",
     "/root/someanotherfolder/file5/package.json",
     "/root/someanotherfolder/file5/index.ts",
-    "/root/someanotherfolder/file5/index.tsx"
+    "/root/someanotherfolder/file5/index.tsx",
+    "/root/someanotherfolder/file5/index.kts"
   ]
 }
 
@@ -302,24 +330,30 @@ Resolution:: {
   "failedLookupLocations": [
     "/root/file6.ts",
     "/root/file6.tsx",
+    "/root/file6.kts",
     "/root/file6.d.ts",
     "/root/file6/package.json",
     "/root/file6/index.ts",
     "/root/file6/index.tsx",
+    "/root/file6/index.kts",
     "/root/file6/index.d.ts",
     "/root/generated/file6.ts",
     "/root/generated/file6.tsx",
+    "/root/generated/file6.kts",
     "/root/generated/file6.d.ts",
     "/root/generated/file6/package.json",
     "/root/generated/file6/index.ts",
     "/root/generated/file6/index.tsx",
+    "/root/generated/file6/index.kts",
     "/root/generated/file6/index.d.ts",
     "/root/folder1/node_modules/file6/package.json",
     "/root/folder1/node_modules/file6.ts",
     "/root/folder1/node_modules/file6.tsx",
+    "/root/folder1/node_modules/file6.kts",
     "/root/folder1/node_modules/file6.d.ts",
     "/root/folder1/node_modules/file6/index.ts",
     "/root/folder1/node_modules/file6/index.tsx",
+    "/root/folder1/node_modules/file6/index.kts",
     "/root/folder1/node_modules/file6/index.d.ts",
     "/root/folder1/node_modules/@types/file6/package.json",
     "/root/folder1/node_modules/@types/file6.d.ts",

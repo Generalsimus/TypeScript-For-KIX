@@ -18,6 +18,7 @@ Resolution:: {
   "failedLookupLocations": [
     "/root/src/libs/guid.ts",
     "/root/src/libs/guid.tsx",
+    "/root/src/libs/guid.kts",
     "/root/src/libs/guid.d.ts"
   ],
   "affectingLocations": [
@@ -45,6 +46,7 @@ Resolution:: {
   "failedLookupLocations": [
     "/root/src/libs/guid.ts",
     "/root/src/libs/guid.tsx",
+    "/root/src/libs/guid.kts",
     "/root/src/libs/guid.d.ts"
   ],
   "affectingLocations": [

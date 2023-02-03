@@ -228,6 +228,7 @@ Trying substitution './refs/*', candidate module location: './refs/a'.
 Loading module as file / folder, candidate module location '/user/username/projects/transitiveReferences/refs/a', target file types: TypeScript, Declaration.
 File '/user/username/projects/transitiveReferences/refs/a.ts' does not exist.
 File '/user/username/projects/transitiveReferences/refs/a.tsx' does not exist.
+File '/user/username/projects/transitiveReferences/refs/a.kts' does not exist.
 File '/user/username/projects/transitiveReferences/refs/a.d.ts' exists - use it as a name resolution result.
 ======== Module name '@ref/a' was successfully resolved to '/user/username/projects/transitiveReferences/refs/a.d.ts'. ========
 ======== Resolving module 'a' from '/user/username/projects/transitiveReferences/b.ts'. ========
