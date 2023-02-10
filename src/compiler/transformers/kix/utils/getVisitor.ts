@@ -1,9 +1,10 @@
 import { CustomContextType } from "..";
 import { Node, VisitResult } from "../../../types";
 import { visitEachChild } from "../../../visitorPublic";
+import { declarationTransformers } from "../declarations";
 import { jsxTransformers } from "../jsx";
 
-export const getVisitor = (transforms: typeof jsxTransformers) => (context: CustomContextType) => {
+export const getVisitor = (transforms: typeof jsxTransformers | typeof declarationTransformers) => (context: CustomContextType) => {
 
 
     const visitor = <N extends Node>(node: N): VisitResult<N> => {

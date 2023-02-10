@@ -6055,6 +6055,7 @@ declare namespace ts {
         readonly kind: SyntaxKind.SourceFile;
         readonly statements: NodeArray<Statement>;
         readonly endOfFileToken: Token<SyntaxKind.EndOfFileToken>;
+        kixExportedProps: Map<string, VariableStatement> | undefined;
         fileName: string;
         text: string;
         amdDependencies: readonly AmdDependency[];

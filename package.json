@@ -23,6 +23,7 @@
     "typings": "./lib/typescript.d.ts",
     "bin": {
         "tsc": "./bin/tsc",
+        "tscc": "./bin/tscc",
         "tsserver": "./bin/tsserver"
     },
     "engines": {
@@ -95,7 +96,8 @@
         "clean": "hereby clean",
         "gulp": "hereby",
         "lint": "hereby lint",
-        "setup-hooks": "node scripts/link-hooks.mjs"
+        "setup-hooks": "node scripts/link-hooks.mjs",
+        "dev":"hereby watch-local"
     },
     "browser": {
         "fs": false,

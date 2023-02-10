@@ -1003,6 +1003,8 @@ class SourceFileObject extends NodeObject implements SourceFile {
     public scriptSnapshot!: IScriptSnapshot;
     public lineMap!: readonly number[];
 
+    public kixExportedProps: Map<string, ts.VariableStatement> | undefined;
+
     public statements!: NodeArray<Statement>;
     public endOfFileToken!: Token<SyntaxKind.EndOfFileToken>;
 

@@ -74,6 +74,7 @@ import {
     transformSystemModule,
     transformTypeScript,
     VariableDeclaration,
+    getPreEmitDiagnostics,
 } from "./_namespaces/ts";
 import * as performance from "./_namespaces/ts.performance";
 import { transformKix } from "./transformers/kix";
@@ -125,9 +126,12 @@ function getScriptTransformers(compilerOptions: CompilerOptions, customTransform
     const moduleKind = getEmitModuleKind(compilerOptions);
     const useDefineForClassFields = getUseDefineForClassFields(compilerOptions);
     const transformers: TransformerFactory<SourceFile | Bundle>[] = [];
-
+    if (compilerOptions.jsx === JsxEmit.Kix) {
+        transformers.push(transformKix);
+        getPreEmitDiagnostics
+    }
     addRange(transformers, customTransformers && map(customTransformers.before, wrapScriptTransformerFactory));
-
+    
     transformers.push(transformTypeScript);
 
     if (compilerOptions.experimentalDecorators) {
@@ -139,10 +143,7 @@ function getScriptTransformers(compilerOptions: CompilerOptions, customTransform
 
     transformers.push(transformClassFields);
 
-    if (compilerOptions.jsx === JsxEmit.Kix) {
-        transformers.push(transformKix);
-    }
-
+    
     if (getJSXTransformEnabled(compilerOptions)) {
         transformers.push(transformJsx);
     }

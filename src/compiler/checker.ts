@@ -1453,6 +1453,7 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
     undefinedSymbol.declarations = [];
 
     const globalThisSymbol = createSymbol(SymbolFlags.Module, "globalThis" as __String, CheckFlags.Readonly);
+    // console.log("🚀 --> file: checker.ts:1456 --> globalThisSymbol", globalThisSymbol.escapedName);
     globalThisSymbol.exports = globals;
     globalThisSymbol.declarations = [];
     globals.set(globalThisSymbol.escapedName, globalThisSymbol);
@@ -2169,6 +2170,8 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
     const suggestedExtensions: [string, string][] = [
         [".mts", ".mjs"],
         [".ts", ".js"],
+        [".kts", ".js"],
+        [".kjs", ".js"],
         [".cts", ".cjs"],
         [".mjs", ".mjs"],
         [".js", ".js"],
@@ -4319,6 +4322,7 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
             case SyntaxKind.BindingElement:
                 return getTargetOfImportSpecifier(node as ImportSpecifier | BindingElement, dontRecursivelyResolve);
             case SyntaxKind.ExportSpecifier:
+                // console.log({node222:{node}});
                 return getTargetOfExportSpecifier(node as ExportSpecifier, SymbolFlags.Value | SymbolFlags.Type | SymbolFlags.Namespace, dontRecursivelyResolve);
             case SyntaxKind.ExportAssignment:
             case SyntaxKind.BinaryExpression:
@@ -4803,6 +4807,7 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
     }
 
     function resolveExternalModule(location: Node, moduleReference: string, moduleNotFoundError: DiagnosticMessage | undefined, errorNode: Node, isForAugmentation = false): Symbol | undefined {
+        // console.log({location1:{location2:(location as any)?.name}})
         if (startsWith(moduleReference, "@types/")) {
             const diag = Diagnostics.Cannot_import_type_declaration_files_Consider_importing_0_instead_of_1;
             const withoutAtTypePrefix = removePrefix(moduleReference, "@types/");
@@ -4829,7 +4834,13 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
         const sourceFile = resolvedModule
             && (!resolutionDiagnostic || resolutionDiagnostic === Diagnostics.Module_0_was_resolved_to_1_but_jsx_is_not_set)
             && host.getSourceFile(resolvedModule.resolvedFileName);
+       
         if (sourceFile) {
+            if(sourceFile && sourceFile.languageVariant === ts.LanguageVariant.KJS){
+                console.log("🚀 --> file: checker.ts:4835 --> resolveExternalModule --> sourceFile",  sourceFile);
+                
+             }
+            // console.log("🚀 --> file: checker.ts:4837 --> resolveExternalModule --> sourceFile.symbol", sourceFile.sy/mbol?.exports);
             // If there's a resolutionDiagnostic we need to report it even if a sourceFile is found.
             if (resolutionDiagnostic) {
                 error(errorNode, resolutionDiagnostic, moduleReference, resolvedModule.resolvedFileName);
@@ -5057,6 +5068,7 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
         if (moduleSymbol?.exports) {
             const exportEquals = resolveSymbol(moduleSymbol.exports.get(InternalSymbolName.ExportEquals), dontResolveAlias);
             const exported = getCommonJsExportEquals(getMergedSymbol(exportEquals), getMergedSymbol(moduleSymbol));
+            // console.log("🚀 --> file: checker.ts:5068 --> resolveExternalModuleSymbol --> exported",{ exported,moduleSymbol});
             return getMergedSymbol(exported) || moduleSymbol;
         }
         return undefined;
@@ -5077,6 +5089,7 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
         }
         moduleSymbol.exports!.forEach((s, name) => {
             if (name === InternalSymbolName.ExportEquals) return;
+            // console.log("🚀 --> file: checker.ts:5087 --> moduleSymbol.exports!.forEach --> name", name);
             merged.exports!.set(name, merged.exports!.has(name) ? mergeSymbol(merged.exports!.get(name)!, s) : s);
         });
         getSymbolLinks(merged).cjsExportMerged = merged;
@@ -5088,6 +5101,7 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
     // combine other declarations with the module or variable (e.g. a class/module, function/module, interface/variable).
     function resolveESModuleSymbol(moduleSymbol: Symbol | undefined, referencingLocation: Node, dontResolveAlias: boolean, suppressInteropError: boolean): Symbol | undefined {
         const symbol = resolveExternalModuleSymbol(moduleSymbol, dontResolveAlias);
+        // console.log("🚀 --> file: checker.ts:5100 --> resolveESModuleSymbol --> symbol", {symbol});
 
         if (!dontResolveAlias && symbol) {
             if (!suppressInteropError && !(symbol.flags & (SymbolFlags.Module | SymbolFlags.Variable)) && !getDeclarationOfKind(symbol, SyntaxKind.SourceFile)) {
@@ -8269,6 +8283,7 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
                 },
             };
             context.tracker = new SymbolTrackerImpl(context, tracker, oldcontext.tracker.moduleResolverHost);
+            // console.log("🚀 --> file: checker.ts:8286 --> symbolTableToDeclarationStatements --> context", context);
             forEachEntry(symbolTable, (symbol, name) => {
                 const baseName = unescapeLeadingUnderscores(name);
                 void getInternalSymbolName(symbol, baseName); // Called to cache values into `usedSymbolNames` and `remappedSymbolNames`
@@ -8296,8 +8311,10 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
             }
 
             function flattenExportAssignedNamespace(statements: Statement[]) {
+                // console.log("🚀 --> file: checker.ts:8313 --> flattenExportAssignedNamespace --> statements", statements);
                 const exportAssignment = find(statements, isExportAssignment);
                 const nsIndex = findIndex(statements, isModuleDeclaration);
+                console.log("🚀 --> file: checker.ts:8315 --> flattenExportAssignedNamespace --> nsIndex", nsIndex);
                 let ns = nsIndex !== -1 ? statements[nsIndex] as ModuleDeclaration : undefined;
                 if (ns && exportAssignment && exportAssignment.isExportEquals &&
                     isIdentifier(exportAssignment.expression) && isIdentifier(ns.name) && idText(ns.name) === idText(exportAssignment.expression) &&
@@ -46090,6 +46107,7 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
         };
 
         function isImportRequiredByAugmentation(node: ImportDeclaration) {
+            // ts.visitNode
             const file = getSourceFileOfNode(node);
             if (!file.symbol) return false;
             const importTarget = getExternalModuleFileFromDeclaration(node);

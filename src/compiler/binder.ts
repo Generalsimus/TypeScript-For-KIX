@@ -63,6 +63,7 @@ import {
     ExportSpecifier,
     Expression,
     ExpressionStatement,
+    // factory,
     findAncestor,
     FlowFlags,
     FlowLabel,
@@ -233,6 +234,7 @@ import {
     JsxAttribute,
     JsxAttributes,
     LabeledStatement,
+    LanguageVariant,
     length,
     LiteralLikeElementAccessExpression,
     MappedTypeNode,
@@ -567,6 +569,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
         // Attach debugging information if necessary
         Debug.attachFlowNodeDebugInfo(unreachableFlow);
         Debug.attachFlowNodeDebugInfo(reportedUnreachableFlow);
+// addDeclarationToSymbol
 
         if (!file.locals) {
             tracing?.push(tracing.Phase.Bind, "bindSourceFile", { path: file.path }, /*separateBeginAndEnd*/ true);
@@ -576,7 +579,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
             file.classifiableNames = classifiableNames;
             delayedBindJSDocTypedefTag();
         }
-
+// bind({})
         file = undefined!;
         options = undefined!;
         languageVersion = undefined!;
@@ -625,6 +628,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
 
         if (symbolFlags & (SymbolFlags.Class | SymbolFlags.Enum | SymbolFlags.Module | SymbolFlags.Variable) && !symbol.exports) {
             symbol.exports = createSymbolTable();
+            // console.log("🚀 --> file: binder.ts:628 --> addDeclarationToSymbol --> symbol.exports",  {ss:{exports:symbol.exports,node} });
         }
 
         if (symbolFlags & (SymbolFlags.Class | SymbolFlags.Interface | SymbolFlags.TypeLiteral | SymbolFlags.ObjectLiteral) && !symbol.members) {
@@ -3005,6 +3009,9 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
     }
 
     function bindExportAssignment(node: ExportAssignment) {
+        if(file.languageVariant === LanguageVariant.KJS){
+            console.log({...node,parent:undefined},SyntaxKind[274])
+        }
         if (!container.symbol || !container.symbol.exports) {
             // Incorrect export assignment in some sort of block construct
             bindAnonymousDeclaration(node, SymbolFlags.Value, getDeclarationName(node)!);
@@ -3024,6 +3031,9 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
                 setValueDeclaration(symbol, node);
             }
         }
+        // if(file.languageVariant === LanguageVariant.KJS){
+        //     console.log({...node,parent:undefined},SyntaxKind[274])
+        // }
     }
 
     function bindNamespaceExportDeclaration(node: NamespaceExportDeclaration) {
@@ -3041,6 +3051,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
             file.symbol.globalExports = file.symbol.globalExports || createSymbolTable();
             declareSymbol(file.symbol.globalExports, file.symbol, node, SymbolFlags.Alias, SymbolFlags.AliasExcludes);
         }
+       
     }
 
     function bindExportDeclaration(node: ExportDeclaration) {

@@ -1,4 +1,5 @@
 import { CustomContextType } from "../..";
+import { factory } from "../../../../factory/nodeFactory";
 import { SourceFile, Visitor } from "../../../../types";
 import { visitEachChild } from "../../../../visitorPublic";
 import { createObject } from "../../factoryCode/createObject";
@@ -24,9 +25,14 @@ export const moduleSourceFileBodyVisitor = (
             [variableState.globalScopeIdentifiers, createObject([])]
         ]);
 
-        return context.factory.updateSourceFile(
+        return  factory.updateSourceFile(
             sourceFileNode,
             [
+                factory.createExportAssignment(
+                    undefined,
+                    undefined,
+                    factory.createNumericLiteral("5")
+                  ),
                 declarationNode,
                 ...visitedStatements.statements
             ],

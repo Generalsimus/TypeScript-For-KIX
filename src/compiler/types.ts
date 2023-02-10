@@ -38,7 +38,7 @@ export interface ReadonlyTextRange {
 
 // token > SyntaxKind.Identifier => token is a keyword
 // Also, If you add a new SyntaxKind be sure to keep the `Markers` section at the bottom in sync
-export const enum SyntaxKind {
+export   enum SyntaxKind {
     Unknown,
     EndOfFileToken,
     SingleLineCommentTrivia,
@@ -4225,7 +4225,7 @@ export interface SourceFile extends Declaration, LocalsContainer {
     readonly kind: SyntaxKind.SourceFile;
     readonly statements: NodeArray<Statement>;
     readonly endOfFileToken: Token<SyntaxKind.EndOfFileToken>;
-
+    kixExportedProps: Map<string, VariableStatement> | undefined;
     fileName: string;
     /** @internal */ path: Path;
     text: string;
@@ -7198,7 +7198,7 @@ export interface LineAndCharacter {
     character: number;
 }
 
-export const enum ScriptKind {
+export   enum ScriptKind {
     Unknown = 0,
     JS = 1,
     JSX = 2,
@@ -7231,7 +7231,7 @@ export const enum ScriptTarget {
     Latest = ESNext,
 }
 
-export const enum LanguageVariant {
+export   enum LanguageVariant {
     Standard,
     JSX,
     KJS,
