@@ -3053,7 +3053,12 @@ namespace Parser {
             //         // return Reflect.get(target, prop   );
             //     }
             // });
-
+                                    //     factory.createPropertySignature(
+                                    //     undefined,
+                                    //     factory.createIdentifier("ss"),
+                                    //     undefined,
+                                    //     factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword)
+                                    // )
 
 
             propertyDeclarationList.push(factory.createPropertySignature(
@@ -3208,15 +3213,15 @@ namespace Parser {
         //             )
         //         )])
         // )
-        // const setTextPos = <N extends Node>(node: N): N => {
-        // forEachChildRecursively(node, (child) => {
-        //     if (child.pos <= 0) {
-        //         setTextRangePosEnd(child, 1, 2)
-        //     }
-        // })
-        //     return node
-        // }
-
+        const setTextPos = <N extends Node>(node: N): N => {
+        forEachChildRecursively(newClass, (child) => {
+            if (child.pos <= 0) {
+                setTextRangePosEnd(child, 1, 8)
+            }
+        })
+            return node
+        }
+        setTextPos(newClass)
         // 
         // console.log({ propertyDeclarationList })
         return createNodeArray([
@@ -3234,7 +3239,21 @@ namespace Parser {
             //     factory.createStringLiteral("kix"),
             //     undefined
             // ),
-            newClass,
+            // newClass,/
+            factory.createExpressionStatement(factory.createJsxFragment(
+                openingTag,
+                list,
+                factory.createJsxJsxClosingFragment()
+            ))
+            // factory.createExportAssignment(
+            //     undefined,
+            //     undefined,
+            //     factory.createJsxFragment(
+            //         openingTag,
+            //         list,
+            //         factory.createJsxJsxClosingFragment()
+            //     )
+            // )
             // setTextPos(importNode),
             // setTextPos(classNode)
             ////////////////////////////////////////////////////////////////////////////////////

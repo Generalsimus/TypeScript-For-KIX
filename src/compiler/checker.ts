@@ -4019,6 +4019,7 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
     }
 
     function reportNonDefaultExport(moduleSymbol: Symbol, node: ImportClause) {
+        // console.log({aaa:{node,moduleSymbol}})
         if (moduleSymbol.exports?.has(node.symbol.escapedName)) {
             error(
                 node.name,
@@ -29203,7 +29204,7 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
         return propsType;
     }
 
-    function getJsxPropsTypeForSignatureFromMember(sig: Signature, forcedLookupLocation: __String) {
+    function getJsxPropsTypeForSignatureFromMember(sig: Signature, forcedLookupLocation: __String) { 
         if (sig.compositeSignatures) {
             // JSX Elements using the legacy `props`-field based lookup (eg, react class components) need to treat the `props` member as an input
             // instead of an output position when resolving the signature. We need to go back to the input signatures of the composite signature,
@@ -29211,6 +29212,7 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
             // for a union signature). It's an unfortunate quirk of looking in the output of the signature for the type we want to use for the input.
             // The default behavior of `getTypeOfFirstParameterOfSignatureWithFallback` when no `props` member name is defined is much more sane.
             const results: Type[] = [];
+            
             for (const signature of sig.compositeSignatures) {
                 const instance = getReturnTypeOfSignature(signature);
                 if (isTypeAny(instance)) {
@@ -29269,6 +29271,7 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
     function getJsxPropsTypeFromClassType(sig: Signature, context: JsxOpeningLikeElement) {
         const ns = getJsxNamespaceAt(context);
         const forcedLookupLocation = getJsxElementPropertiesName(ns);
+       
         let attributesType = forcedLookupLocation === undefined
             // If there is no type ElementAttributesProperty, return the type of the first parameter of the signature, which should be the props type
             ? getTypeOfFirstParameterOfSignatureWithFallback(sig, unknownType)
@@ -33587,7 +33590,7 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
         if (isErrorType(apparentType)) {
             return resolveErrorCall(node);
         }
-
+        // console.log({exprTypes, node})
         const signatures = getUninstantiatedJsxSignaturesOfType(exprTypes, node);
         if (isUntypedFunctionCall(exprTypes, apparentType, signatures.length, /*constructSignatures*/ 0)) {
             return resolveUntypedCall(node);
