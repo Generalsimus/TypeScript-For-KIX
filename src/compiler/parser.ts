@@ -390,6 +390,7 @@ import {
     YieldExpression,
 } from "./_namespaces/ts";
 import * as performance from "./_namespaces/ts.performance";
+import { getVariableDeclarationIdentifiers } from "./transformers/kix/utils/getVariableDeclarationIdentifiers";
 
 const enum SignatureFlags {
     None = 0,
@@ -458,7 +459,7 @@ export function isFileProbablyExternalModule(sourceFile: SourceFile) {
     // Try to use the first top-level import/export when available, then
     // fall back to looking for an 'import.meta' somewhere in the tree if necessary.
     return forEach(sourceFile.statements, isAnExternalModuleIndicatorNode) ||
-        getImportMetaIfNecessary(sourceFile);
+        getImportMetaIfNecessary(sourceFile) || (sourceFile.languageVariant === LanguageVariant.KJS ? true : undefined);
 }
 
 function isAnExternalModuleIndicatorNode(node: Node) {
@@ -1336,14 +1337,14 @@ export function createSourceFile(fileName: string, sourceText: string, languageV
         };
         result = Parser.parseSourceFile(fileName, sourceText, languageVersion, /*syntaxCursor*/ undefined, setParentNodes, scriptKind, setIndicator);
     }
-    
+
     perfLogger.logStopParseSourceFile();
 
     performance.mark("afterParse");
     performance.measure("Parse", "beforeParse", "afterParse");
     tracing?.pop();
 
-    
+
     return result;
 }
 
@@ -1443,7 +1444,7 @@ namespace Parser {
     let parseDiagnostics: DiagnosticWithDetachedLocation[];
     let jsDocDiagnostics: DiagnosticWithDetachedLocation[];
     let syntaxCursor: IncrementalParser.SyntaxCursor | undefined;
-    let kixExportedVariableStatements: VariableStatement[]=[];
+    let kixExportedVariableStatements: (VariableStatement | ClassDeclaration | FunctionDeclaration)[] = [];
 
     let currentToken: SyntaxKind;
     let nodeCount: number;
@@ -1551,29 +1552,29 @@ namespace Parser {
         initializeState(fileName, sourceText, languageVersion, syntaxCursor, scriptKind);
 
         const result = parseSourceFileWorker(languageVersion, setParentNodes, scriptKind, setExternalModuleIndicatorOverride || setExternalModuleIndicator);
-       
+
 
         clearState();
-        
-if(scriptKind === ScriptKind.KJS || scriptKind === ScriptKind.KTS){
 
-    // console.log("🚀 --> file: parser.ts:1552 --> parseSourceFile --> result", result);
-    // debugger;
-    // ts.visitEachChild
-    // console.log("🚀 --> file: --> fileName", fileName ,LanguageVariant[languageVariant],ScriptKind[scriptKind])
-    // console.log("🚀 --> file: parser.ts:1564 --> parseSourceFile --> fileName", fileName )
-    // const visitNode =  (n:Node):Node|undefined=>{
-    //         console.log(SyntaxKind[n.kind])
-    //        return forEachChildRecursively(n,visitNode)
-    // }
-    // visitNode(result)
-// ts.transformNodes
-    // forEachChildRecursively(result, (n)=>{
-    //     console.log(SyntaxKind[n.kind])
-    //     return n
-    // });
-    // throw Error("SSSSS")
-}
+        if (scriptKind === ScriptKind.KJS || scriptKind === ScriptKind.KTS) {
+
+            // console.log("🚀 --> file: parser.ts:1552 --> parseSourceFile --> result", result);
+            // debugger;
+            // ts.visitEachChild
+            // console.log("🚀 --> file: --> fileName", fileName ,LanguageVariant[languageVariant],ScriptKind[scriptKind])
+            // console.log("🚀 --> file: parser.ts:1564 --> parseSourceFile --> fileName", fileName )
+            // const visitNode =  (n:Node):Node|undefined=>{
+            //         console.log(SyntaxKind[n.kind])
+            //        return forEachChildRecursively(n,visitNode)
+            // }
+            // visitNode(result)
+            // ts.transformNodes
+            // forEachChildRecursively(result, (n)=>{
+            //     console.log(SyntaxKind[n.kind])
+            //     return n
+            // });
+            // throw Error("SSSSS")
+        }
         return result;
     }
 
@@ -1740,6 +1741,7 @@ if(scriptKind === ScriptKind.KJS || scriptKind === ScriptKind.KTS){
         identifiers = undefined!;
         notParenthesizedArrow = undefined;
         topLevel = true;
+        kixExportedVariableStatements = [];
     }
 
     function parseSourceFileWorker(languageVersion: ScriptTarget, setParentNodes: boolean, scriptKind: ScriptKind, setExternalModuleIndicator: (file: SourceFile) => void): SourceFile {
@@ -1772,19 +1774,31 @@ if(scriptKind === ScriptKind.KJS || scriptKind === ScriptKind.KTS){
         if (jsDocDiagnostics) {
             sourceFile.jsDocDiagnostics = attachFileToDiagnostics(jsDocDiagnostics, sourceFile);
         }
-        if(languageVariant === LanguageVariant.KJS){
+        if (languageVariant === LanguageVariant.KJS) {
             const kixExportedProps = sourceFile.kixExportedProps = new Map();
-            for(const kixExportedDeclaration of kixExportedVariableStatements){
-                const names = ts.filter(map(kixExportedDeclaration.declarationList.declarations, ts.getNameOfDeclaration), function isIdentifierAndNotUndefined(node: Node | undefined): node is Identifier {
-                    return !!node && node.kind === SyntaxKind.Identifier;
-                });
-                for(const declarationIdentifier of names){
-                    kixExportedProps.set(idText(declarationIdentifier),kixExportedDeclaration);
+            for (let kixExportedDeclaration of kixExportedVariableStatements) {
+                switch (kixExportedDeclaration.kind) {
+                    case SyntaxKind.VariableStatement:
+                        kixExportedDeclaration = kixExportedDeclaration as VariableStatement
+                        for (const declaration of kixExportedDeclaration.declarationList.declarations) {
+                            const declarations = getVariableDeclarationIdentifiers(declaration)
+                            for (const declarationName in declarations) {
+                                kixExportedProps.set(declarationName, declarations[declarationName].declarationIdentifier);
+                            }
+                        }
+                        break;
+                    case SyntaxKind.FunctionDeclaration:
+                    case SyntaxKind.ClassDeclaration:
+                        kixExportedDeclaration = kixExportedDeclaration as (FunctionDeclaration | ClassDeclaration)
+                        if (kixExportedDeclaration.name) {
+                            kixExportedProps.set(idText(kixExportedDeclaration.name), kixExportedDeclaration.name);
+                        }
+                        break;
                 }
-    
+
             }
         }
-       
+
         if (setParentNodes) {
             fixupParentReferences(sourceFile);
         }
@@ -3026,26 +3040,301 @@ if(scriptKind === ScriptKind.KJS || scriptKind === ScriptKind.KTS){
             list.push(child);
         }
 
-        parsingContext = saveParsingContext; 
-        return createNodeArray([
-            // factory.createExpressionStatement(factory.createJsxFragment(
-            //     openingTag,
-            //     list,
-            //     factory.createJsxJsxClosingFragment()
-            // ))
-            factory.createExportAssignment(
+        parsingContext = saveParsingContext;
+
+        const propertyDeclarationList: PropertySignature[] = [];
+        const catcher = (identifierL: Identifier) => {
+            // const proxyIdentifier = new Proxy(identifierL, {
+            //     get(target, prop, receiver) {
+            //         return Reflect.get(target, prop, receiver);
+            //     },
+            //     set() {
+            //         return true
+            //         // return Reflect.get(target, prop   );
+            //     }
+            // });
+
+
+
+            propertyDeclarationList.push(factory.createPropertySignature(
                 undefined,
+                factory.createIdentifier(idText(identifierL)),
                 undefined,
-                factory.createJsxFragment(
-                    openingTag,
-                    list,
-                    factory.createJsxJsxClosingFragment()
+                factory.createTypeQueryNode(
+                    identifierL,
+                    undefined
                 )
-            )
+            ))
+
+        }
+        for (let kixExportedDeclaration of kixExportedVariableStatements) {
+            switch (kixExportedDeclaration.kind) {
+                case SyntaxKind.VariableStatement:
+                    kixExportedDeclaration = kixExportedDeclaration as VariableStatement
+                    for (const declaration of kixExportedDeclaration.declarationList.declarations) {
+                        const declarations = getVariableDeclarationIdentifiers(declaration)
+                        for (const declarationName in declarations) {
+                            catcher(declarations[declarationName].declarationIdentifier)
+                        }
+                    }
+                    break;
+                case SyntaxKind.FunctionDeclaration:
+                case SyntaxKind.ClassDeclaration:
+                    kixExportedDeclaration = kixExportedDeclaration as (FunctionDeclaration | ClassDeclaration)
+                    if (kixExportedDeclaration.name) {
+                        catcher(kixExportedDeclaration.name)
+                    }
+                    break;
+            }
+
+        } 
+        //////////////////////////////////////////////////////////////////
+        const newClass = factory.createClassDeclaration(
+            factory.createNodeArray([
+                factory.createToken(ts.SyntaxKind.ExportKeyword),
+                factory.createToken(ts.SyntaxKind.DefaultKeyword)
+            ]),
+            undefined,
+            undefined,
+            factory.createNodeArray([factory.createHeritageClause(
+                ts.SyntaxKind.ExtendsKeyword,
+                factory.createNodeArray([factory.createExpressionWithTypeArguments(
+                    factory.createParenthesizedExpression(factory.createAsExpression(
+                        factory.createClassExpression(
+                            undefined,
+                            undefined,
+                            undefined,
+                            undefined,
+                            factory.createNodeArray([])
+                        ),
+                        factory.createConstructorTypeNode(
+                            undefined,
+                            factory.createNodeArray([factory.createTypeParameterDeclaration(
+                                undefined,
+                                factory.createIdentifier("Props"),
+                                undefined,
+                                factory.createTypeLiteralNode(factory.createNodeArray([
+                                    ...propertyDeclarationList
+                                    //     factory.createPropertySignature(
+                                    //     undefined,
+                                    //     factory.createIdentifier("ss"),
+                                    //     undefined,
+                                    //     factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword)
+                                    // )
+                                ]))
+                            )]),
+                            factory.createNodeArray([]),
+                            factory.createIntersectionTypeNode(factory.createNodeArray([
+                                factory.createTypeReferenceNode(
+                                    factory.createIdentifier("Props"),
+                                    undefined
+                                ),
+                                factory.createTypeLiteralNode(factory.createNodeArray([
+                                    factory.createPropertySignature(
+                                        undefined,
+                                        factory.createIdentifier("____$$$$$$$$$$$Props"),
+                                        undefined,
+                                        factory.createTypeReferenceNode(
+                                            factory.createIdentifier("Props"),
+                                            undefined
+                                        )
+                                    ),
+                                    factory.createPropertySignature(
+                                        undefined,
+                                        factory.createIdentifier("children"),
+                                        undefined,
+                                        factory.createKeywordTypeNode(ts.SyntaxKind.AnyKeyword)
+                                    )
+                                ]))
+                            ]))
+                        )
+                    )),
+                    undefined
+                )])
+            )]),
+            factory.createNodeArray([factory.createMethodDeclaration(
+                undefined,
+                undefined,
+                factory.createIdentifier("render"),
+                undefined,
+                undefined,
+                factory.createNodeArray([]),
+                factory.createKeywordTypeNode(ts.SyntaxKind.AnyKeyword),
+                factory.createBlock(
+                    factory.createNodeArray([factory.createReturnStatement(factory.createJsxFragment(
+                        openingTag,
+                        factory.createNodeArray(list),
+                        factory.createJsxJsxClosingFragment()
+                    ))]),
+                    true
+                )
+            )])
+        )
+        /////////////////////////////////////////////////////////////////////////////////
+        // const classNode = factory.createClassDeclaration(
+        //     factory.createNodeArray([
+        //         factory.createToken(SyntaxKind.ExportKeyword),
+        //         factory.createToken(SyntaxKind.DefaultKeyword)
+        //     ]),
+
+        //     // undefined,
+        //     undefined,
+        //     undefined,
+        //     factory.createNodeArray([factory.createHeritageClause(
+        //         SyntaxKind.ExtendsKeyword,
+        //         factory.createNodeArray([factory.createExpressionWithTypeArguments(
+        //             factory.createIdentifier("Component"),
+        //             factory.createNodeArray([factory.createTypeLiteralNode(factory.createNodeArray([
+        //                 ...propertyDeclarationList
+        //             ]))])
+        //         )])
+        //     )]),
+        //     factory.createNodeArray([
+        //         factory.createMethodDeclaration(
+        //             undefined,
+        //             undefined,
+        //             factory.createIdentifier("render"),
+        //             undefined,
+        //             undefined,
+        //             factory.createNodeArray( []),
+        //             undefined,
+        //             factory.createBlock(
+        //                 factory.createNodeArray([factory.createReturnStatement(factory.createJsxFragment(
+        //                     openingTag,
+        //                     factory.createNodeArray(list),
+        //                     factory.createJsxJsxClosingFragment()
+        //                 ))]),
+        //                 true
+        //             )
+        //         )])
+        // )
+        // const setTextPos = <N extends Node>(node: N): N => {
+        // forEachChildRecursively(node, (child) => {
+        //     if (child.pos <= 0) {
+        //         setTextRangePosEnd(child, 1, 2)
+        //     }
+        // })
+        //     return node
+        // }
+
+        // 
+        // console.log({ propertyDeclarationList })
+        return createNodeArray([
+            // factory.createImportDeclaration(
+            //     undefined,
+            //     factory.createImportClause(
+            //       false,
+            //       undefined,
+            //       factory.createNamedImports([factory.createImportSpecifier(
+            //         false,
+            //         undefined,
+            //         factory.createIdentifier("Component")
+            //       )])
+            //     ),
+            //     factory.createStringLiteral("kix"),
+            //     undefined
+            // ),
+            newClass,
+            // setTextPos(importNode),
+            // setTextPos(classNode)
+            ////////////////////////////////////////////////////////////////////////////////////
+            // factory.createImportDeclaration(
+            //     undefined,
+            //     factory.createImportClause(
+            //       false,
+            //       undefined,
+            //       factory.createNamedImports([factory.createImportSpecifier(
+            //         false,
+            //         undefined,
+            //         factory.createIdentifier("Component")
+            //       )])
+            //     ),
+            //     factory.createStringLiteral("kix"),
+            //     undefined
+            //   ),
+            //   factory.createClassDeclaration(
+            //     [
+            //       factory.createToken(SyntaxKind.ExportKeyword),
+            //       factory.createToken(SyntaxKind.DefaultKeyword)
+            //     ],
+            //     undefined,
+            //     undefined,
+            //     [factory.createHeritageClause(
+            //       SyntaxKind.ExtendsKeyword,
+            //       [factory.createExpressionWithTypeArguments(
+            //         factory.createIdentifier("Component"),
+            //         [factory.createTypeLiteralNode([factory.createPropertySignature(
+            //           undefined,
+            //           factory.createIdentifier("index"),
+            //           undefined,
+            //           factory.createKeywordTypeNode(SyntaxKind.AnyKeyword)
+            //         )])]
+            //       )]
+            //     )],
+            //     [factory.createMethodDeclaration(
+            //       undefined,
+            //       undefined,
+            //       factory.createIdentifier("render"),
+            //       undefined,
+            //       undefined,
+            //       [],
+            //       undefined,
+            //       factory.createBlock(
+            //         [factory.createReturnStatement(factory.createJsxFragment(
+            //             openingTag,
+            //             list,
+            //             factory.createJsxJsxClosingFragment()
+            //         ))],
+            //         true
+            //       )
+            //     )]
+            //   )
+            ////////////////////////////////////////////////////////////////////////////////////
+            // factory.createExportAssignment(
+            //     undefined,
+            //     undefined,
+            //     factory.createJsxFragment(
+            //         openingTag,
+            //         list,
+            //         factory.createJsxJsxClosingFragment()
+            //     )
+            // )
+            /////////////////////////////////////////
+            //   factory.createClassDeclaration(
+            //     [
+            //       factory.createToken(ts.SyntaxKind.ExportKeyword),
+            //       factory.createToken(ts.SyntaxKind.DefaultKeyword),
+            //       factory.createToken(ts.SyntaxKind.AbstractKeyword)
+            //     ],
+            //     undefined,
+            //     undefined,
+            //     undefined,
+            //     [factory.createMethodDeclaration(
+            //       undefined,
+            //       undefined,
+            //       factory.createIdentifier("render"),
+            //       undefined,
+            //       undefined,
+            //       [],
+            //       factory.createKeywordTypeNode(ts.SyntaxKind.AnyKeyword),
+            //       factory.createBlock(
+            //         [factory.createReturnStatement(factory.createJsxFragment(
+            //             openingTag,
+            //             list,
+            //             factory.createJsxJsxClosingFragment()
+            //         ))],
+            //         true
+            //       )
+            //     )]
+            //   )
         ], listPos);
     }
 
     function ParseMainStatements() {
+        // return parseList(
+        //     ParsingContext.SourceElements,
+        //     parseStatement
+        // )
         return languageVariant === LanguageVariant.KJS ? parseJsxOpeningOrSelfClosingElementOrOpeningFragmentForStatement() : parseList(
             ParsingContext.SourceElements,
             parseStatement
@@ -5727,6 +6016,11 @@ if(scriptKind === ScriptKind.KJS || scriptKind === ScriptKind.KTS){
             case SyntaxKind.VoidKeyword:
                 return parseVoidExpression();
             case SyntaxKind.LessThanToken:
+                // Just like in parseUpdateExpression, we need to avoid parsing type assertions when
+                // in JSX and we see an expression like "+ <foo> bar".
+                if (languageVariant === LanguageVariant.JSX || languageVariant === LanguageVariant.KJS) {
+                    return parseJsxElementOrSelfClosingElementOrFragment(/*inExpressionContext*/ true);
+                }
                 // This is modified UnaryExpression grammar in TypeScript
                 //  UnaryExpression (modified):
                 //      < type > UnaryExpression
@@ -6071,7 +6365,8 @@ if(scriptKind === ScriptKind.KJS || scriptKind === ScriptKind.KTS){
         const list: ts.Statement[] = [];
         const listPos = getNodePos();
 
-        while (currentToken !== SyntaxKind.EndOfFileToken) {
+        // console.log("🚀 --> file: parser.ts:6083 --> AAAAAAAAAA --> token", SyntaxKind[currentToken]);
+        while (currentToken !== SyntaxKind.EndOfFileToken && currentToken !== ts.SyntaxKind.LessThanSlashToken) {
             const token = scanner.reScanScriptTagToken();
 
             // console.log("🚀 --> file: parser.ts:6083 --> parseJsxTagJsChildren --> token", token, SyntaxKind[token as any]);
@@ -6084,6 +6379,7 @@ if(scriptKind === ScriptKind.KJS || scriptKind === ScriptKind.KTS){
             }
             if (token == undefined) {
                 nextToken();
+                //   console.log("🚀 --> file: paOOOOOOOOOOOOOOOOsChildren --> token", nesss, SyntaxKind[nesss]);/
             }
 
             list.push(consumeNode(parseStatement()));
@@ -6336,6 +6632,7 @@ if(scriptKind === ScriptKind.KJS || scriptKind === ScriptKind.KTS){
     }
 
     function parseTypeAssertion(): TypeAssertion {
+        Debug.assert(scriptKind === ScriptKind.TS, "Type assertions should never be parsed outside of TS; they should either be comparisons or JSX.");
         const pos = getNodePos();
         parseExpected(SyntaxKind.LessThanToken);
         const type = parseType();
@@ -7881,20 +8178,36 @@ if(scriptKind === ScriptKind.KJS || scriptKind === ScriptKind.KTS){
     function parseModifiers(allowDecorators: boolean, permitConstAsModifier?: boolean, stopOnStartOfClassStaticBlock?: boolean): NodeArray<ModifierLike> | undefined {
         const pos = getNodePos();
         let list: ModifierLike[] | undefined;
-        let modifier, hasSeenStaticModifier = false;
-        while (modifier = tryParseModifier(hasSeenStaticModifier, permitConstAsModifier, stopOnStartOfClassStaticBlock)) {
-            if (modifier.kind === SyntaxKind.StaticKeyword) hasSeenStaticModifier = true;
-            list = append(list, modifier);
-        }
+        let decorator, modifier, hasSeenStaticModifier = false, hasLeadingModifier = false, hasTrailingDecorator = false;
 
-        // Decorators should be contiguous in a list of modifiers (i.e., `[...leadingModifiers, ...decorators, ...trailingModifiers]`).
-        // The leading modifiers *should* only contain `export` and `default` when decorators are present, but we'll handle errors for any other leading modifiers in the checker.
+        // Decorators should be contiguous in a list of modifiers but can potentially appear in two places (i.e., `[...leadingDecorators, ...leadingModifiers, ...trailingDecorators, ...trailingModifiers]`).
+        // The leading modifiers *should* only contain `export` and `default` when trailingDecorators are present, but we'll handle errors for any other leading modifiers in the checker.
+        // It is illegal to have both leadingDecorators and trailingDecorators, but we will report that as a grammar check in the checker.
+
+        // parse leading decorators
         if (allowDecorators && token() === SyntaxKind.AtToken) {
-            let decorator;
             while (decorator = tryParseDecorator()) {
                 list = append(list, decorator);
             }
+        }
 
+        // parse leading modifiers
+        while (modifier = tryParseModifier(hasSeenStaticModifier, permitConstAsModifier, stopOnStartOfClassStaticBlock)) {
+            if (modifier.kind === SyntaxKind.StaticKeyword) hasSeenStaticModifier = true;
+            list = append(list, modifier);
+            hasLeadingModifier = true;
+        }
+
+        // parse trailing decorators, but only if we parsed any leading modifiers
+        if (hasLeadingModifier && allowDecorators && token() === SyntaxKind.AtToken) {
+            while (decorator = tryParseDecorator()) {
+                list = append(list, decorator);
+                hasTrailingDecorator = true;
+            }
+        }
+
+        // parse trailing modifiers, but only if we parsed any trailing decorators
+        if (hasTrailingDecorator) {
             while (modifier = tryParseModifier(hasSeenStaticModifier, permitConstAsModifier, stopOnStartOfClassStaticBlock)) {
                 if (modifier.kind === SyntaxKind.StaticKeyword) hasSeenStaticModifier = true;
                 list = append(list, modifier);
@@ -8499,16 +8812,21 @@ if(scriptKind === ScriptKind.KJS || scriptKind === ScriptKind.KTS){
     }
     function parseExportKeywordDeclaration() {
         // const pos = getNodePos();
-    const exportedDeclaration =  parseDeclaration();
-    if(languageVariant === LanguageVariant.KJS && ts.isVariableStatement(exportedDeclaration)){ 
-        kixExportedVariableStatements.push(exportedDeclaration);
-        // console.log("🚀 --> file: --> exportedDeclaration", exportedDeclaration.modifiers,SyntaxKind[93]);
-// 
-        // const names = ts.filter(map(declart.declarationList.declarations, ts.getNameOfDeclaration), function isIdentifierAndNotUndefined(node: Node | undefined): node is Identifier {
-        //     return !!node && node.kind === SyntaxKind.Identifier;
-        // }); 
-    }
-      return exportedDeclaration
+        const exportedDeclaration = parseDeclaration();
+        if (languageVariant === LanguageVariant.KJS &&
+            (ts.isVariableStatement(exportedDeclaration)
+                || ts.isClassDeclaration(exportedDeclaration)
+                || ts.isFunctionDeclaration(exportedDeclaration)
+            )
+        ) {
+            kixExportedVariableStatements.push(exportedDeclaration);
+            // console.log("🚀 --> file: --> exportedDeclaration", exportedDeclaration.modifiers,SyntaxKind[93]);
+            // 
+            // const names = ts.filter(map(declart.declarationList.declarations, ts.getNameOfDeclaration), function isIdentifierAndNotUndefined(node: Node | undefined): node is Identifier {
+            //     return !!node && node.kind === SyntaxKind.Identifier;
+            // }); 
+        }
+        return exportedDeclaration
     }
     function parseExportDeclaration(pos: number, hasJSDoc: boolean, modifiers: NodeArray<ModifierLike> | undefined): ExportDeclaration {
         const savedAwaitContext = inAwaitContext();
@@ -8548,14 +8866,14 @@ if(scriptKind === ScriptKind.KJS || scriptKind === ScriptKind.KTS){
         const savedAwaitContext = inAwaitContext();
         setAwaitContext(/*value*/ true);
         let isExportEquals: boolean | undefined;
-        
+
         if (parseOptional(SyntaxKind.EqualsToken)) {
             isExportEquals = true;
         }
         else {
             parseExpected(SyntaxKind.DefaultKeyword);
         }
-        
+
         const expression = parseAssignmentExpressionOrHigher(/*allowReturnTypeInArrowFunction*/ true);
         parseSemicolon();
         setAwaitContext(savedAwaitContext);

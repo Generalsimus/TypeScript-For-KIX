@@ -4225,7 +4225,7 @@ export interface SourceFile extends Declaration, LocalsContainer {
     readonly kind: SyntaxKind.SourceFile;
     readonly statements: NodeArray<Statement>;
     readonly endOfFileToken: Token<SyntaxKind.EndOfFileToken>;
-    kixExportedProps: Map<string, VariableStatement> | undefined;
+    kixExportedProps:  Map<string, Identifier> | undefined;
     fileName: string;
     /** @internal */ path: Path;
     text: string;
@@ -4950,6 +4950,8 @@ export interface TypeChecker {
     getPromisedTypeOfPromise(promise: Type, errorNode?: Node): Type | undefined;
     /** @internal */
     getAwaitedType(type: Type): Type | undefined;
+    /** @internal */
+    isEmptyAnonymousObjectType(type: Type): boolean;
     getReturnTypeOfSignature(signature: Signature): Type;
     /**
      * Gets the type of a parameter at a given position in a signature.
@@ -7372,7 +7374,7 @@ export interface CommandLineOptionOfListType extends CommandLineOptionBase {
 export type CommandLineOption = CommandLineOptionOfCustomType | CommandLineOptionOfStringType | CommandLineOptionOfNumberType | CommandLineOptionOfBooleanType | TsConfigOnlyOption | CommandLineOptionOfListType;
 
 /** @internal */
-export const enum CharacterCodes {
+export   enum CharacterCodes {
     nullCharacter = 0,
     maxAsciiCharacter = 0x7F,
 

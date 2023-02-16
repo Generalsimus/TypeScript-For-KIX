@@ -7,7 +7,6 @@ import {
     CancellationToken,
     canUsePropertyAccess,
     CaseBlock,
-    CaseClause,
     cast,
     CharacterCodes,
     ClassElement,
@@ -37,19 +36,16 @@ import {
     createPackageJsonImportFilter,
     createPrinter,
     createSortedArray,
-    createTextRangeFromSpan,
     createTextSpanFromBounds,
     createTextSpanFromNode,
     createTextSpanFromRange,
     Debug,
     Declaration,
-    DefaultClause,
     Diagnostics,
     diagnosticToString,
     displayPart,
     EmitHint,
     EmitTextWriter,
-    endsWith,
     EntityName,
     EnumMember,
     escapeSnippetText,
@@ -140,7 +136,6 @@ import {
     isConstructorDeclaration,
     isContextualKeyword,
     isDeclarationName,
-    isDefaultClause,
     isDeprecatedDeclaration,
     isEntityName,
     isEnumMember,
@@ -185,7 +180,6 @@ import {
     isKeyword,
     isKnownSymbol,
     isLabeledStatement,
-    isLiteralExpression,
     isLiteralImportTypeNode,
     isMemberName,
     isMethodDeclaration,
@@ -218,6 +212,7 @@ import {
     isStatement,
     isStatic,
     isString,
+    isStringAndEmptyAnonymousObjectIntersection,
     isStringANonContextualKeyword,
     isStringLiteralLike,
     isStringLiteralOrTemplate,
@@ -275,6 +270,7 @@ import {
     ModuleReference,
     moduleResolutionSupportsPackageJsonExportsAndImports,
     NamedImportBindings,
+    newCaseClauseTracker,
     Node,
     NodeArray,
     NodeBuilderFlags,
@@ -287,7 +283,6 @@ import {
     ObjectTypeDeclaration,
     or,
     ParenthesizedTypeNode,
-    parseBigInt,
     positionBelongsToNode,
     positionIsASICandidate,
     positionsAreOnSameLine,
@@ -1104,75 +1099,6 @@ function getExhaustiveCaseSnippets(
     return undefined;
 }
 
-interface CaseClauseTracker {
-    addValue(value: string | number): void;
-    hasValue(value: string | number | PseudoBigInt): boolean;
-}
-
-function newCaseClauseTracker(checker: TypeChecker, clauses: readonly (CaseClause | DefaultClause)[]): CaseClauseTracker {
-    const existingStrings = new Set<string>();
-    const existingNumbers = new Set<number>();
-    const existingBigInts = new Set<string>();
-
-    for (const clause of clauses) {
-        if (!isDefaultClause(clause)) {
-            if (isLiteralExpression(clause.expression)) {
-                const expression = clause.expression;
-                switch (expression.kind) {
-                    case SyntaxKind.NoSubstitutionTemplateLiteral:
-                    case SyntaxKind.StringLiteral:
-                        existingStrings.add(expression.text);
-                        break;
-                    case SyntaxKind.NumericLiteral:
-                        existingNumbers.add(parseInt(expression.text));
-                        break;
-                    case SyntaxKind.BigIntLiteral:
-                        const parsedBigInt = parseBigInt(endsWith(expression.text, "n") ? expression.text.slice(0, -1) : expression.text);
-                        if (parsedBigInt) {
-                            existingBigInts.add(pseudoBigIntToString(parsedBigInt));
-                        }
-                        break;
-                }
-            }
-            else {
-                const symbol = checker.getSymbolAtLocation(clause.expression);
-                if (symbol && symbol.valueDeclaration && isEnumMember(symbol.valueDeclaration)) {
-                    const enumValue = checker.getConstantValue(symbol.valueDeclaration);
-                    if (enumValue !== undefined) {
-                        addValue(enumValue);
-                    }
-                }
-            }
-        }
-    }
-
-    return {
-        addValue,
-        hasValue,
-    };
-
-    function addValue(value: string | number) {
-        switch (typeof value) {
-            case "string":
-                existingStrings.add(value);
-                break;
-            case "number":
-                existingNumbers.add(value);
-        }
-    }
-
-    function hasValue(value: string | number | PseudoBigInt): boolean {
-        switch (typeof value) {
-            case "string":
-                return existingStrings.has(value);
-            case "number":
-                return existingNumbers.has(value);
-            case "object":
-                return existingBigInts.has(pseudoBigIntToString(value));
-        }
-    }
-}
-
 function typeNodeToExpression(typeNode: TypeNode, languageVersion: ScriptTarget, quotePreference: QuotePreference): Expression | undefined {
     switch (typeNode.kind) {
         case SyntaxKind.TypeReference:
@@ -1442,7 +1368,7 @@ function createCompletionEntry(
             && !(type.flags & TypeFlags.BooleanLike)
             && !(type.flags & TypeFlags.Union && find((type as UnionType).types, type => !!(type.flags & TypeFlags.BooleanLike)))
         ) {
-            if (type.flags & TypeFlags.StringLike || (type.flags & TypeFlags.Union && every((type as UnionType).types, type => !!(type.flags & (TypeFlags.StringLike | TypeFlags.Undefined))))) {
+            if (type.flags & TypeFlags.StringLike || (type.flags & TypeFlags.Union && every((type as UnionType).types, type => !!(type.flags & (TypeFlags.StringLike | TypeFlags.Undefined) || isStringAndEmptyAnonymousObjectIntersection(type))))) {
                 // If is string like or undefined use quotes
                 insertText = `${escapeSnippetText(name)}=${quote(sourceFile, preferences, "$1")}`;
                 isSnippet = true;
@@ -2898,7 +2824,8 @@ function getCompletionData(
                     // First case is for `<div foo={true} [||] />` or `<div foo={true} [||] ></div>`,
                     // `parent` will be `{true}` and `previousToken` will be `}`
                     // Second case is for `<div foo={true} t[||] ></div>`
-                    if (previousToken.kind === SyntaxKind.CloseBraceToken || (previousToken.kind === SyntaxKind.Identifier || previousToken.parent.kind === SyntaxKind.JsxAttribute)) {
+                    // Second case must not match for `<div foo={undefine[||]}></div>`
+                    if (previousToken.kind === SyntaxKind.CloseBraceToken || (previousToken.kind === SyntaxKind.Identifier && previousToken.parent.kind === SyntaxKind.JsxAttribute)) {
                         isJsxIdentifierExpected = true;
                     }
                     break;
@@ -3769,7 +3696,7 @@ function getCompletionData(
         //   2. at the end position of an unterminated token.
         //   3. at the end of a regular expression (due to trailing flags like '/foo/g').
         return (isRegularExpressionLiteral(contextToken) || isStringTextContainingNode(contextToken)) && (
-            rangeContainsPositionExclusive(createTextRangeFromSpan(createTextSpanFromNode(contextToken)), position) ||
+            rangeContainsPositionExclusive(contextToken, position) ||
             position === contextToken.end && (!!contextToken.isUnterminated || isRegularExpressionLiteral(contextToken)));
     }
 

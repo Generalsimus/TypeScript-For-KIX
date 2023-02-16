@@ -27,6 +27,7 @@ import {
     CaseClause,
     cast,
     CatchClause,
+    // ClassElement,
     ClassLikeDeclaration,
     ClassStaticBlockDeclaration,
     CompilerOptions,
@@ -63,6 +64,7 @@ import {
     ExportSpecifier,
     Expression,
     ExpressionStatement,
+    factory,
     // factory,
     findAncestor,
     FlowFlags,
@@ -569,7 +571,6 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
         // Attach debugging information if necessary
         Debug.attachFlowNodeDebugInfo(unreachableFlow);
         Debug.attachFlowNodeDebugInfo(reportedUnreachableFlow);
-// addDeclarationToSymbol
 
         if (!file.locals) {
             tracing?.push(tracing.Phase.Bind, "bindSourceFile", { path: file.path }, /*separateBeginAndEnd*/ true);
@@ -579,7 +580,11 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
             file.classifiableNames = classifiableNames;
             delayedBindJSDocTypedefTag();
         }
-// bind({})
+
+
+
+
+
         file = undefined!;
         options = undefined!;
         languageVersion = undefined!;
@@ -740,7 +745,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
         // The exported symbol for an export default function/class node is always named "default"
         const name = isComputedName ? InternalSymbolName.Computed
             : isDefaultExport && parent ? InternalSymbolName.Default
-            : getDeclarationName(node);
+                : getDeclarationName(node);
 
         let symbol: Symbol | undefined;
         if (name === undefined) {
@@ -1166,7 +1171,105 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
                 break;
             // In source files and blocks, bind functions first to match hoisting that occurs at runtime
             case SyntaxKind.SourceFile: {
+
+
                 bindEachFunctionsFirst((node as SourceFile).statements);
+
+                /////////////////////////////////////////////////////////////////////
+                if ((node as SourceFile).languageVariant === LanguageVariant.KJS && (node as SourceFile).kixExportedProps && false) {
+                    // const sourceFileSymbol = (node as SourceFile).symbol;
+
+                    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                    const propertyDeclarationList: PropertySignature[] = [];
+                    for (const [declarationName, declarationIdentifier] of (file as SourceFile).kixExportedProps!) {
+
+                        //   const handler2 = ;
+
+                        const proxyIdentifier = new Proxy(declarationIdentifier, {
+                            get(target, prop, receiver) {
+                                return Reflect.get(target, prop, receiver);
+                            },
+                            set() {
+                                return true
+                                // return Reflect.get(target, prop   );
+                            }
+                        });
+
+
+
+                        propertyDeclarationList.push(factory.createPropertySignature(
+                            undefined,
+                            factory.createIdentifier(declarationName),
+                            undefined,
+                            factory.createTypeQueryNode(
+                                proxyIdentifier,
+                                undefined
+                            )
+                        ))
+
+                        // const identifier = Object.assign(factory.createIdentifier(declarationName),declarationIdentifier)
+
+                        // propertyDeclarationList.push(factory.createPropertyDeclaration( 
+                        //     undefined,
+                        //     factory.createIdentifier(declarationName),
+                        //     undefined,
+                        //     factory.createTypeQueryNode(
+                        //         proxyIdentifier,
+                        //         // factory.createIdentifier(declarationName),
+                        //       undefined
+                        //     ),
+                        //     undefined
+                        //   ));
+                    }
+                    // printNode
+                    ///////////////////////////////////////////////////////////////
+                    //   console.log(classnode,propertyDeclarationList.length,(node as SourceFile).kixExportedProps?.keys())
+                    // bind();
+                    const classNode = factory.createClassDeclaration(
+                        [
+                          factory.createToken(SyntaxKind.ExportKeyword),
+                          factory.createToken(SyntaxKind.DefaultKeyword)
+                        ],
+
+                        // undefined,
+                        undefined,
+                        undefined,
+                        [factory.createHeritageClause(
+                            SyntaxKind.ExtendsKeyword,
+                            [factory.createExpressionWithTypeArguments(
+                                factory.createIdentifier("Component"),
+                                [factory.createTypeLiteralNode([
+                                    ...propertyDeclarationList
+                                ])]
+                            )]
+                        )],
+                        [
+                            factory.createMethodDeclaration(
+                                undefined,
+                                undefined,
+                                factory.createIdentifier("render"),
+                                undefined,
+                                undefined,
+                                [],
+                                undefined,
+                                factory.createBlock(
+                                    [factory.createReturnStatement(factory.createJsxFragment(
+                                        factory.createJsxOpeningFragment(),
+                                        [],
+                                        factory.createJsxJsxClosingFragment()
+                                    ))],
+                                    true
+                                )
+                            )]
+                    )
+                    bind(classNode);
+                    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                    // sourceFileSymbol.exports!.set("default" as __String, classNode.symbol)
+
+                    // console.log("🚀 --> file: binder.ts:590 --> bindSourceFile --> file", file.symbol);
+                    // }
+                }
+
                 bind((node as SourceFile).endOfFileToken);
                 break;
             }
@@ -1187,7 +1290,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
                 // Carry over whether we are in an assignment pattern of Object and Array literals
                 // as well as their children that are valid assignment targets.
                 inAssignmentPattern = saveInAssignmentPattern;
-                // falls through
+            // falls through
             default:
                 bindEachChild(node);
                 break;
@@ -2331,7 +2434,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
                     declareModuleMember(node, symbolFlags, symbolExcludes);
                     break;
                 }
-                // falls through
+            // falls through
             default:
                 Debug.assertNode(blockScopeContainer, canHaveLocals);
                 if (!blockScopeContainer.locals) {
@@ -2385,7 +2488,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
                         case AssignmentDeclarationKind.Property:
                             container = isExportsOrModuleExportsOrAlias(file, declName.parent.expression) ? file
                                 : isPropertyAccessExpression(declName.parent.expression) ? declName.parent.expression.name
-                                : declName.parent.expression;
+                                    : declName.parent.expression;
                             break;
                         case AssignmentDeclarationKind.None:
                             return Debug.fail("Shouldn't have detected typedef or enum on non-assignment declaration");
@@ -2746,7 +2849,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
                     bindBlockScopedDeclaration(parentNode as Declaration, SymbolFlags.TypeAlias, SymbolFlags.TypeAliasExcludes);
                     break;
                 }
-                // falls through
+            // falls through
             case SyntaxKind.ThisKeyword:
                 // TODO: Why use `isExpression` here? both Identifier and ThisKeyword are expressions.
                 if (currentFlow && (isExpression(node) || parent.kind === SyntaxKind.ShorthandPropertyAssignment)) {
@@ -2952,7 +3055,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
                 if (!isFunctionLikeOrClassStaticBlockDeclaration(node.parent)) {
                     return;
                 }
-                // falls through
+            // falls through
             case SyntaxKind.ModuleBlock:
                 return updateStrictModeStatementList((node as Block | ModuleBlock).statements);
 
@@ -2963,7 +3066,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
                 if (node.parent.kind !== SyntaxKind.JSDocTypeLiteral) {
                     break;
                 }
-                // falls through
+            // falls through
             case SyntaxKind.JSDocPropertyTag:
                 const propTag = node as JSDocPropertyLikeTag;
                 const flags = propTag.isBracketed || propTag.typeExpression && propTag.typeExpression.type.kind === SyntaxKind.JSDocOptionalType ?
@@ -2993,6 +3096,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
     function bindSourceFileIfExternalModule() {
         setExportContextFlag(file);
         if (isExternalModule(file)) {
+            // || (file as SourceFile).languageVariant === LanguageVariant.KJS
             bindSourceFileAsExternalModule();
         }
         else if (isJsonSourceFile(file)) {
@@ -3009,11 +3113,9 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
     }
 
     function bindExportAssignment(node: ExportAssignment) {
-        if(file.languageVariant === LanguageVariant.KJS){
-            console.log({...node,parent:undefined},SyntaxKind[274])
-        }
         if (!container.symbol || !container.symbol.exports) {
             // Incorrect export assignment in some sort of block construct
+
             bindAnonymousDeclaration(node, SymbolFlags.Value, getDeclarationName(node)!);
         }
         else {
@@ -3042,8 +3144,8 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
         }
         const diag = !isSourceFile(node.parent) ? Diagnostics.Global_module_exports_may_only_appear_at_top_level
             : !isExternalModule(node.parent) ? Diagnostics.Global_module_exports_may_only_appear_in_module_files
-            : !node.parent.isDeclarationFile ? Diagnostics.Global_module_exports_may_only_appear_in_declaration_files
-            : undefined;
+                : !node.parent.isDeclarationFile ? Diagnostics.Global_module_exports_may_only_appear_in_declaration_files
+                    : undefined;
         if (diag) {
             file.bindDiagnostics.push(createDiagnosticForNode(node, diag));
         }
@@ -3051,7 +3153,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
             file.symbol.globalExports = file.symbol.globalExports || createSymbolTable();
             declareSymbol(file.symbol.globalExports, file.symbol, node, SymbolFlags.Alias, SymbolFlags.AliasExcludes);
         }
-       
+
     }
 
     function bindExportDeclaration(node: ExportDeclaration) {
@@ -3294,7 +3396,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
 
     function bindSpecialPropertyAssignment(node: BindablePropertyAssignmentExpression) {
         // Class declarations in Typescript do not allow property declarations
-        const parentSymbol = lookupSymbolForPropertyAccess(node.left.expression, container) || lookupSymbolForPropertyAccess(node.left.expression, blockScopeContainer) ;
+        const parentSymbol = lookupSymbolForPropertyAccess(node.left.expression, container) || lookupSymbolForPropertyAccess(node.left.expression, blockScopeContainer);
         if (!isInJSFile(node) && !isFunctionSymbol(parentSymbol)) {
             return;
         }
@@ -3435,9 +3537,9 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
         }
         let init = !node ? undefined :
             isVariableDeclaration(node) ? node.initializer :
-            isBinaryExpression(node) ? node.right :
-            isPropertyAccessExpression(node) && isBinaryExpression(node.parent) ? node.parent.right :
-            undefined;
+                isBinaryExpression(node) ? node.right :
+                    isPropertyAccessExpression(node) && isBinaryExpression(node.parent) ? node.parent.right :
+                        undefined;
         init = init && getRightMostAssignedExpression(init);
         if (init) {
             const isPrototypeAssignment = isPrototypeAccess(isVariableDeclaration(node!) ? node.name : isBinaryExpression(node!) ? node.left : node!);
@@ -3807,7 +3909,7 @@ function getContainerFlags(node: Node): ContainerFlags {
             if (isObjectLiteralOrClassExpressionMethodOrAccessor(node)) {
                 return ContainerFlags.IsContainer | ContainerFlags.IsControlFlowContainer | ContainerFlags.HasLocals | ContainerFlags.IsFunctionLike | ContainerFlags.IsObjectLiteralOrClassExpressionMethodOrAccessor;
             }
-            // falls through
+        // falls through
         case SyntaxKind.Constructor:
         case SyntaxKind.FunctionDeclaration:
         case SyntaxKind.MethodSignature:

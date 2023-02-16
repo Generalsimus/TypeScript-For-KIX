@@ -2303,6 +2303,7 @@ export function createScanner(languageVersion: ScriptTarget,
         pos = tokenPos = startPos;
         while (pos < end) {
             const char = text.charCodeAt(pos);
+            // console.log("🚀 --> file: scanner.ts:2306 --> reScanScriptTagToken --> char",CharacterCodes[char],CharacterCodes[text.charCodeAt(pos + 1)] );
 
             if (char === CharacterCodes.lessThan) {
                 if (text.charCodeAt(pos + 1) === CharacterCodes.slash) {
