@@ -4031,6 +4031,7 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
 
     function reportNonDefaultExport(moduleSymbol: Symbol, node: ImportClause) {
         // console.log({aaa:{node,moduleSymbol}})
+        // 
         if (moduleSymbol.exports?.has(node.symbol.escapedName)) {
             error(
                 node.name,
@@ -11513,6 +11514,10 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
 
     // The outer type parameters are those defined by enclosing generic classes, methods, or functions.
     function getOuterTypeParametersOfClassOrInterface(symbol: Symbol): TypeParameter[] | undefined {
+        console.log({symbol},(symbol.flags & SymbolFlags.Class || symbol.flags & SymbolFlags.Function))
+        if(symbol.flags & SymbolFlags.KJSModule){
+
+        }
         const declaration = (symbol.flags & SymbolFlags.Class || symbol.flags & SymbolFlags.Function)
             ? symbol.valueDeclaration
             : symbol.declarations?.find(decl => {
@@ -11873,6 +11878,8 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
 
             const type = originalLinks.declaredType = links.declaredType = createObjectType(kind, symbol) as InterfaceType;
             const outerTypeParameters = getOuterTypeParametersOfClassOrInterface(symbol);
+            console.log({outerTypeParameters})
+            console.log("🚀 --> file: checker.ts:11878 --> getDeclaredTypeOfClassOrInterface --> outerTypeParameters", outerTypeParameters);
             const localTypeParameters = getLocalTypeParametersOfClassOrInterfaceOrTypeAlias(symbol);
             // A class or interface is generic if it has type parameters or a "this" type. We always give classes a "this" type
             // because it is not feasible to analyze all members to determine if the "this" type escapes the class (in particular,
@@ -30402,6 +30409,7 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
     }
 
     function getUninstantiatedJsxSignaturesOfType(elementType: Type, caller: JsxOpeningLikeElement): readonly Signature[] {
+      
         if (elementType.flags & TypeFlags.String) {
             return [anySignature];
         }
@@ -30417,6 +30425,7 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
             }
         }
         const apparentElemType = getApparentType(elementType);
+        console.log({apparentElemType})
         // Resolve the signatures, preferring constructor
         let signatures = getSignaturesOfType(apparentElemType, SignatureKind.Construct);
         if (signatures.length === 0) {
@@ -33665,6 +33674,7 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
         }
         // console.log({exprTypes, node})
         const signatures = getUninstantiatedJsxSignaturesOfType(exprTypes, node);
+        console.log("🚀 --> file: checker.ts:33672 --> resolveJsxOpeningLikeElement --> signatures", signatures);
         if (isUntypedFunctionCall(exprTypes, apparentType, signatures.length, /*constructSignatures*/ 0)) {
             return resolveUntypedCall(node);
         }

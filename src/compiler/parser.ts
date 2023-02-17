@@ -390,7 +390,7 @@ import {
     YieldExpression,
 } from "./_namespaces/ts";
 import * as performance from "./_namespaces/ts.performance";
-import { getVariableDeclarationIdentifiers } from "./transformers/kix/utils/getVariableDeclarationIdentifiers";
+// import { getVariableDeclarationIdentifiers } from "./transformers/kix/utils/getVariableDeclarationIdentifiers";
 
 const enum SignatureFlags {
     None = 0,
@@ -1444,7 +1444,7 @@ namespace Parser {
     let parseDiagnostics: DiagnosticWithDetachedLocation[];
     let jsDocDiagnostics: DiagnosticWithDetachedLocation[];
     let syntaxCursor: IncrementalParser.SyntaxCursor | undefined;
-    let kixExportedVariableStatements: (VariableStatement | ClassDeclaration | FunctionDeclaration)[] = [];
+    let kixExportedVariableStatements: (VariableDeclaration | ClassDeclaration | FunctionDeclaration)[] = [];
 
     let currentToken: SyntaxKind;
     let nodeCount: number;
@@ -1775,26 +1775,29 @@ namespace Parser {
             sourceFile.jsDocDiagnostics = attachFileToDiagnostics(jsDocDiagnostics, sourceFile);
         }
         if (languageVariant === LanguageVariant.KJS) {
-            const kixExportedProps = sourceFile.kixExportedProps = new Map();
+            const kixExportedProps:ts.Declaration[] = sourceFile.kixExportedProps =  []
+            //  new Map();
+            // ts.isDeclaration
             for (let kixExportedDeclaration of kixExportedVariableStatements) {
-                switch (kixExportedDeclaration.kind) {
-                    case SyntaxKind.VariableStatement:
-                        kixExportedDeclaration = kixExportedDeclaration as VariableStatement
-                        for (const declaration of kixExportedDeclaration.declarationList.declarations) {
-                            const declarations = getVariableDeclarationIdentifiers(declaration)
-                            for (const declarationName in declarations) {
-                                kixExportedProps.set(declarationName, declarations[declarationName].declarationIdentifier);
-                            }
-                        }
-                        break;
-                    case SyntaxKind.FunctionDeclaration:
-                    case SyntaxKind.ClassDeclaration:
-                        kixExportedDeclaration = kixExportedDeclaration as (FunctionDeclaration | ClassDeclaration)
-                        if (kixExportedDeclaration.name) {
-                            kixExportedProps.set(idText(kixExportedDeclaration.name), kixExportedDeclaration.name);
-                        }
-                        break;
-                }
+                kixExportedProps.push(kixExportedDeclaration);
+            //     switch (kixExportedDeclaration.kind) {
+            //         case SyntaxKind.VariableStatement:
+            //             kixExportedDeclaration = kixExportedDeclaration as VariableStatement
+            //             for (const declaration of kixExportedDeclaration.declarationList.declarations) {
+            //                 const declarations = getVariableDeclarationIdentifiers(declaration)
+            //                 for (const declarationName in declarations) {
+            //                     kixExportedProps.set(declarationName, declarations[declarationName].declarationIdentifier);
+            //                 }
+            //             }
+            //             break;
+            //         case SyntaxKind.FunctionDeclaration:
+            //         case SyntaxKind.ClassDeclaration:
+            //             kixExportedDeclaration = kixExportedDeclaration as (FunctionDeclaration | ClassDeclaration)
+            //             if (kixExportedDeclaration.name) {
+            //                 kixExportedProps.set(idText(kixExportedDeclaration.name), kixExportedDeclaration.name);
+            //             }
+            //             break;
+            //     }
 
             }
         }
@@ -3040,311 +3043,13 @@ namespace Parser {
         }
 
         parsingContext = saveParsingContext;
-
-        const propertyDeclarationList: PropertySignature[] = [];
-        const catcher = (identifierL: Identifier) => {
-            // const proxyIdentifier = new Proxy(identifierL, {
-            //     get(target, prop, receiver) {
-            //         return Reflect.get(target, prop, receiver);
-            //     },
-            //     set() {
-            //         return true
-            //         // return Reflect.get(target, prop   );
-            //     }
-            // });
-                                    //     factory.createPropertySignature(
-                                    //     undefined,
-                                    //     factory.createIdentifier("ss"),
-                                    //     undefined,
-                                    //     factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword)
-                                    // )
-
-
-            propertyDeclarationList.push(factory.createPropertySignature(
-                undefined,
-                factory.createIdentifier(idText(identifierL)),
-                undefined,
-                factory.createTypeQueryNode(
-                    identifierL,
-                    undefined
-                )
-            ))
-
-        }
-        for (let kixExportedDeclaration of kixExportedVariableStatements) {
-            switch (kixExportedDeclaration.kind) {
-                case SyntaxKind.VariableStatement:
-                    kixExportedDeclaration = kixExportedDeclaration as VariableStatement
-                    for (const declaration of kixExportedDeclaration.declarationList.declarations) {
-                        const declarations = getVariableDeclarationIdentifiers(declaration)
-                        for (const declarationName in declarations) {
-                            catcher(declarations[declarationName].declarationIdentifier)
-                        }
-                    }
-                    break;
-                case SyntaxKind.FunctionDeclaration:
-                case SyntaxKind.ClassDeclaration:
-                    kixExportedDeclaration = kixExportedDeclaration as (FunctionDeclaration | ClassDeclaration)
-                    if (kixExportedDeclaration.name) {
-                        catcher(kixExportedDeclaration.name)
-                    }
-                    break;
-            }
-
-        } 
-        //////////////////////////////////////////////////////////////////
-        const newClass = factory.createClassDeclaration(
-            factory.createNodeArray([
-                factory.createToken(ts.SyntaxKind.ExportKeyword),
-                factory.createToken(ts.SyntaxKind.DefaultKeyword)
-            ]),
-            undefined,
-            undefined,
-            factory.createNodeArray([factory.createHeritageClause(
-                ts.SyntaxKind.ExtendsKeyword,
-                factory.createNodeArray([factory.createExpressionWithTypeArguments(
-                    factory.createParenthesizedExpression(factory.createAsExpression(
-                        factory.createClassExpression(
-                            undefined,
-                            undefined,
-                            undefined,
-                            undefined,
-                            factory.createNodeArray([])
-                        ),
-                        factory.createConstructorTypeNode(
-                            undefined,
-                            factory.createNodeArray([factory.createTypeParameterDeclaration(
-                                undefined,
-                                factory.createIdentifier("Props"),
-                                undefined,
-                                factory.createTypeLiteralNode(factory.createNodeArray([
-                                    ...propertyDeclarationList
-                                    //     factory.createPropertySignature(
-                                    //     undefined,
-                                    //     factory.createIdentifier("ss"),
-                                    //     undefined,
-                                    //     factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword)
-                                    // )
-                                ]))
-                            )]),
-                            factory.createNodeArray([]),
-                            factory.createIntersectionTypeNode(factory.createNodeArray([
-                                factory.createTypeReferenceNode(
-                                    factory.createIdentifier("Props"),
-                                    undefined
-                                ),
-                                factory.createTypeLiteralNode(factory.createNodeArray([
-                                    factory.createPropertySignature(
-                                        undefined,
-                                        factory.createIdentifier("____$$$$$$$$$$$Props"),
-                                        undefined,
-                                        factory.createTypeReferenceNode(
-                                            factory.createIdentifier("Props"),
-                                            undefined
-                                        )
-                                    ),
-                                    factory.createPropertySignature(
-                                        undefined,
-                                        factory.createIdentifier("children"),
-                                        undefined,
-                                        factory.createKeywordTypeNode(ts.SyntaxKind.AnyKeyword)
-                                    )
-                                ]))
-                            ]))
-                        )
-                    )),
-                    undefined
-                )])
-            )]),
-            factory.createNodeArray([factory.createMethodDeclaration(
-                undefined,
-                undefined,
-                factory.createIdentifier("render"),
-                undefined,
-                undefined,
-                factory.createNodeArray([]),
-                factory.createKeywordTypeNode(ts.SyntaxKind.AnyKeyword),
-                factory.createBlock(
-                    factory.createNodeArray([factory.createReturnStatement(factory.createJsxFragment(
-                        openingTag,
-                        factory.createNodeArray(list),
-                        factory.createJsxJsxClosingFragment()
-                    ))]),
-                    true
-                )
-            )])
-        )
-        /////////////////////////////////////////////////////////////////////////////////
-        // const classNode = factory.createClassDeclaration(
-        //     factory.createNodeArray([
-        //         factory.createToken(SyntaxKind.ExportKeyword),
-        //         factory.createToken(SyntaxKind.DefaultKeyword)
-        //     ]),
-
-        //     // undefined,
-        //     undefined,
-        //     undefined,
-        //     factory.createNodeArray([factory.createHeritageClause(
-        //         SyntaxKind.ExtendsKeyword,
-        //         factory.createNodeArray([factory.createExpressionWithTypeArguments(
-        //             factory.createIdentifier("Component"),
-        //             factory.createNodeArray([factory.createTypeLiteralNode(factory.createNodeArray([
-        //                 ...propertyDeclarationList
-        //             ]))])
-        //         )])
-        //     )]),
-        //     factory.createNodeArray([
-        //         factory.createMethodDeclaration(
-        //             undefined,
-        //             undefined,
-        //             factory.createIdentifier("render"),
-        //             undefined,
-        //             undefined,
-        //             factory.createNodeArray( []),
-        //             undefined,
-        //             factory.createBlock(
-        //                 factory.createNodeArray([factory.createReturnStatement(factory.createJsxFragment(
-        //                     openingTag,
-        //                     factory.createNodeArray(list),
-        //                     factory.createJsxJsxClosingFragment()
-        //                 ))]),
-        //                 true
-        //             )
-        //         )])
-        // )
-        const setTextPos = <N extends Node>(node: N): N => {
-        forEachChildRecursively(newClass, (child) => {
-            if (child.pos <= 0) {
-                setTextRangePosEnd(child, 1, 8)
-            }
-        })
-            return node
-        }
-        setTextPos(newClass)
-        // 
-        // console.log({ propertyDeclarationList })
-        return createNodeArray([
-            // factory.createImportDeclaration(
-            //     undefined,
-            //     factory.createImportClause(
-            //       false,
-            //       undefined,
-            //       factory.createNamedImports([factory.createImportSpecifier(
-            //         false,
-            //         undefined,
-            //         factory.createIdentifier("Component")
-            //       )])
-            //     ),
-            //     factory.createStringLiteral("kix"),
-            //     undefined
-            // ),
-            // newClass,/
+        return createNodeArray([ 
             factory.createExpressionStatement(factory.createJsxFragment(
                 openingTag,
                 list,
                 factory.createJsxJsxClosingFragment()
-            ))
-            // factory.createExportAssignment(
-            //     undefined,
-            //     undefined,
-            //     factory.createJsxFragment(
-            //         openingTag,
-            //         list,
-            //         factory.createJsxJsxClosingFragment()
-            //     )
-            // )
-            // setTextPos(importNode),
-            // setTextPos(classNode)
-            ////////////////////////////////////////////////////////////////////////////////////
-            // factory.createImportDeclaration(
-            //     undefined,
-            //     factory.createImportClause(
-            //       false,
-            //       undefined,
-            //       factory.createNamedImports([factory.createImportSpecifier(
-            //         false,
-            //         undefined,
-            //         factory.createIdentifier("Component")
-            //       )])
-            //     ),
-            //     factory.createStringLiteral("kix"),
-            //     undefined
-            //   ),
-            //   factory.createClassDeclaration(
-            //     [
-            //       factory.createToken(SyntaxKind.ExportKeyword),
-            //       factory.createToken(SyntaxKind.DefaultKeyword)
-            //     ],
-            //     undefined,
-            //     undefined,
-            //     [factory.createHeritageClause(
-            //       SyntaxKind.ExtendsKeyword,
-            //       [factory.createExpressionWithTypeArguments(
-            //         factory.createIdentifier("Component"),
-            //         [factory.createTypeLiteralNode([factory.createPropertySignature(
-            //           undefined,
-            //           factory.createIdentifier("index"),
-            //           undefined,
-            //           factory.createKeywordTypeNode(SyntaxKind.AnyKeyword)
-            //         )])]
-            //       )]
-            //     )],
-            //     [factory.createMethodDeclaration(
-            //       undefined,
-            //       undefined,
-            //       factory.createIdentifier("render"),
-            //       undefined,
-            //       undefined,
-            //       [],
-            //       undefined,
-            //       factory.createBlock(
-            //         [factory.createReturnStatement(factory.createJsxFragment(
-            //             openingTag,
-            //             list,
-            //             factory.createJsxJsxClosingFragment()
-            //         ))],
-            //         true
-            //       )
-            //     )]
-            //   )
-            ////////////////////////////////////////////////////////////////////////////////////
-            // factory.createExportAssignment(
-            //     undefined,
-            //     undefined,
-            //     factory.createJsxFragment(
-            //         openingTag,
-            //         list,
-            //         factory.createJsxJsxClosingFragment()
-            //     )
-            // )
-            /////////////////////////////////////////
-            //   factory.createClassDeclaration(
-            //     [
-            //       factory.createToken(ts.SyntaxKind.ExportKeyword),
-            //       factory.createToken(ts.SyntaxKind.DefaultKeyword),
-            //       factory.createToken(ts.SyntaxKind.AbstractKeyword)
-            //     ],
-            //     undefined,
-            //     undefined,
-            //     undefined,
-            //     [factory.createMethodDeclaration(
-            //       undefined,
-            //       undefined,
-            //       factory.createIdentifier("render"),
-            //       undefined,
-            //       undefined,
-            //       [],
-            //       factory.createKeywordTypeNode(ts.SyntaxKind.AnyKeyword),
-            //       factory.createBlock(
-            //         [factory.createReturnStatement(factory.createJsxFragment(
-            //             openingTag,
-            //             list,
-            //             factory.createJsxJsxClosingFragment()
-            //         ))],
-            //         true
-            //       )
-            //     )]
-            //   )
+            )) 
+ 
         ], listPos);
     }
 
@@ -8837,7 +8542,15 @@ namespace Parser {
                 || ts.isFunctionDeclaration(exportedDeclaration)
             )
         ) {
+            if(ts.isVariableStatement(exportedDeclaration)){
+                for(const declaration of exportedDeclaration.declarationList.declarations){
+                    kixExportedVariableStatements.push(declaration);
+                    
+                }
+            // kixExportedVariableStatements.push(exportedDeclaration.de);
+            }else{ 
             kixExportedVariableStatements.push(exportedDeclaration);
+            }
             // console.log("🚀 --> file: --> exportedDeclaration", exportedDeclaration.modifiers,SyntaxKind[93]);
             // 
             // const names = ts.filter(map(declart.declarationList.declarations, ts.getNameOfDeclaration), function isIdentifierAndNotUndefined(node: Node | undefined): node is Identifier {

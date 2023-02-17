@@ -64,8 +64,6 @@ import {
     ExportSpecifier,
     Expression,
     ExpressionStatement,
-    factory,
-    // factory,
     findAncestor,
     FlowFlags,
     FlowLabel,
@@ -582,7 +580,16 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
         }
 
 
-
+        if (file.languageVariant === LanguageVariant.KJS) {
+            const defaultSymbol = createSymbol(SymbolFlags.ExportSupportsDefaultModifier | SymbolFlags.KJSModule, "default" as __String);
+            // declareSymbol(defaultSymbol)
+            for(const exportedPropNode of (file.kixExportedProps || [])){
+                addDeclarationToSymbol(defaultSymbol,exportedPropNode,SymbolFlags.Value | SymbolFlags.Variable)
+            }
+            // addDeclarationToSymbol()
+            file.symbol.exports?.set("default" as __String, defaultSymbol)
+            console.log({defaultSymbol})
+        }
 
 
         file = undefined!;
@@ -1171,105 +1178,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
                 break;
             // In source files and blocks, bind functions first to match hoisting that occurs at runtime
             case SyntaxKind.SourceFile: {
-
-
                 bindEachFunctionsFirst((node as SourceFile).statements);
-
-                /////////////////////////////////////////////////////////////////////
-                if ((node as SourceFile).languageVariant === LanguageVariant.KJS && (node as SourceFile).kixExportedProps && false) {
-                    // const sourceFileSymbol = (node as SourceFile).symbol;
-
-                    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                    const propertyDeclarationList: PropertySignature[] = [];
-                    for (const [declarationName, declarationIdentifier] of (file as SourceFile).kixExportedProps!) {
-
-                        //   const handler2 = ;
-
-                        const proxyIdentifier = new Proxy(declarationIdentifier, {
-                            get(target, prop, receiver) {
-                                return Reflect.get(target, prop, receiver);
-                            },
-                            set() {
-                                return true
-                                // return Reflect.get(target, prop   );
-                            }
-                        });
-
-
-
-                        propertyDeclarationList.push(factory.createPropertySignature(
-                            undefined,
-                            factory.createIdentifier(declarationName),
-                            undefined,
-                            factory.createTypeQueryNode(
-                                proxyIdentifier,
-                                undefined
-                            )
-                        ))
-
-                        // const identifier = Object.assign(factory.createIdentifier(declarationName),declarationIdentifier)
-
-                        // propertyDeclarationList.push(factory.createPropertyDeclaration( 
-                        //     undefined,
-                        //     factory.createIdentifier(declarationName),
-                        //     undefined,
-                        //     factory.createTypeQueryNode(
-                        //         proxyIdentifier,
-                        //         // factory.createIdentifier(declarationName),
-                        //       undefined
-                        //     ),
-                        //     undefined
-                        //   ));
-                    }
-                    // printNode
-                    ///////////////////////////////////////////////////////////////
-                    //   console.log(classnode,propertyDeclarationList.length,(node as SourceFile).kixExportedProps?.keys())
-                    // bind();
-                    const classNode = factory.createClassDeclaration(
-                        [
-                          factory.createToken(SyntaxKind.ExportKeyword),
-                          factory.createToken(SyntaxKind.DefaultKeyword)
-                        ],
-
-                        // undefined,
-                        undefined,
-                        undefined,
-                        [factory.createHeritageClause(
-                            SyntaxKind.ExtendsKeyword,
-                            [factory.createExpressionWithTypeArguments(
-                                factory.createIdentifier("Component"),
-                                [factory.createTypeLiteralNode([
-                                    ...propertyDeclarationList
-                                ])]
-                            )]
-                        )],
-                        [
-                            factory.createMethodDeclaration(
-                                undefined,
-                                undefined,
-                                factory.createIdentifier("render"),
-                                undefined,
-                                undefined,
-                                [],
-                                undefined,
-                                factory.createBlock(
-                                    [factory.createReturnStatement(factory.createJsxFragment(
-                                        factory.createJsxOpeningFragment(),
-                                        [],
-                                        factory.createJsxJsxClosingFragment()
-                                    ))],
-                                    true
-                                )
-                            )]
-                    )
-                    bind(classNode);
-                    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                    // sourceFileSymbol.exports!.set("default" as __String, classNode.symbol)
-
-                    // console.log("🚀 --> file: binder.ts:590 --> bindSourceFile --> file", file.symbol);
-                    // }
-                }
-
                 bind((node as SourceFile).endOfFileToken);
                 break;
             }
@@ -3115,7 +3024,6 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
     function bindExportAssignment(node: ExportAssignment) {
         if (!container.symbol || !container.symbol.exports) {
             // Incorrect export assignment in some sort of block construct
-
             bindAnonymousDeclaration(node, SymbolFlags.Value, getDeclarationName(node)!);
         }
         else {
