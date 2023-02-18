@@ -1775,7 +1775,7 @@ namespace Parser {
             sourceFile.jsDocDiagnostics = attachFileToDiagnostics(jsDocDiagnostics, sourceFile);
         }
         if (languageVariant === LanguageVariant.KJS) {
-            const kixExportedProps:ts.Declaration[] = sourceFile.kixExportedProps =  []
+            const kixExportedProps:ts.Declaration[] = (sourceFile.kixExportedProps = []);
             //  new Map();
             // ts.isDeclaration
             for (let kixExportedDeclaration of kixExportedVariableStatements) {

@@ -583,12 +583,35 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
         if (file.languageVariant === LanguageVariant.KJS) {
             const defaultSymbol = createSymbol(SymbolFlags.ExportSupportsDefaultModifier | SymbolFlags.KJSModule, "default" as __String);
             // declareSymbol(defaultSymbol)
-            for(const exportedPropNode of (file.kixExportedProps || [])){
-                addDeclarationToSymbol(defaultSymbol,exportedPropNode,SymbolFlags.Value | SymbolFlags.Variable)
+            const propsKeyPropertyName = "_____$$$$$$$$$$$Props" as __String
+            // defaultSymbol.declarations =  [];
+            // createSymbolTable();
+            const propsSymbol = createSymbol(SymbolFlags.ClassMember  | SymbolFlags.KJSModule , propsKeyPropertyName)
+            // https://www.facebook.com/100085457903371/videos/521825519937445/
+            defaultSymbol.members = createSymbolTable();
+            // propsSymbol.members = createSymbolTable();
+            propsSymbol.exports = createSymbolTable();
+            for (const exportedPropNode of (file.kixExportedProps || [])) {
+                const declarationName = getDeclarationName(exportedPropNode)
+                if(declarationName !== undefined){
+                    
+                    // console.log("🚀 --> file: binder.ts:597 --> bindSourceFile --> declarationName", declarationName,propsKeyPropertyName,declarationName===propsKeyPropertyName);
+                    // const methodSymbol = createSymbol(SymbolFlags.ClassMember , declarationName);
+                    // propsSymbol.declarations=[exportedPropNode];
+                    // propsSymbol.valueDeclaration = exportedPropNode
+                    // propsSymbol.members?.set(declarationName as __String, exportedPropNode.symbol)
+                    // propsSymbol.members?.set(declarationName as __String, methodSymbol)
+                    defaultSymbol.members?.set(declarationName as __String, exportedPropNode.symbol)
+                }
+                // console.log("🚀 --> file: binder.ts:589 --> bindSourceFile --> exportedPropNode", getDeclarationName(exportedPropNode));
+                // getDeclarationName()
+                // file.symbol.exports?.set("default" as __String, defaultSymbol)
+                // addDeclarationToSymbol(defaultSymbol, exportedPropNode, SymbolFlags.Value | SymbolFlags.Variable)
             }
+            // defaultSymbol.members?.set(propsKeyPropertyName, propsSymbol)
             // addDeclarationToSymbol()
             file.symbol.exports?.set("default" as __String, defaultSymbol)
-            console.log({defaultSymbol})
+            console.log({ defaultSymbol,propsSymbol })
         }
 
 
