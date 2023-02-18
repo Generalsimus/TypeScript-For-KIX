@@ -112,6 +112,7 @@ Using 'exports' subpath '.' with target './require.js'.
 File name '/user/username/projects/myproject/node_modules/pkg1/require.js' has a '.js' extension - stripping it.
 File '/user/username/projects/myproject/node_modules/pkg1/require.js' does not exist.
 File '/user/username/projects/myproject/node_modules/pkg1/require.jsx' does not exist.
+File '/user/username/projects/myproject/node_modules/pkg1/require.kjs' does not exist.
 Failed to resolve under condition 'require'.
 Exiting conditional exports.
 Directory '/user/username/projects/node_modules' does not exist, skipping all lookups in it.

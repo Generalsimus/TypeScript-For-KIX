@@ -38,7 +38,7 @@ export interface ReadonlyTextRange {
 
 // token > SyntaxKind.Identifier => token is a keyword
 // Also, If you add a new SyntaxKind be sure to keep the `Markers` section at the bottom in sync
-export   enum SyntaxKind {
+export const enum SyntaxKind {
     Unknown,
     EndOfFileToken,
     SingleLineCommentTrivia,
@@ -4224,6 +4224,7 @@ export interface SourceFile extends Declaration, LocalsContainer {
     readonly kind: SyntaxKind.SourceFile;
     readonly statements: NodeArray<Statement>;
     readonly endOfFileToken: Token<SyntaxKind.EndOfFileToken>;
+
     kixExportedProps: Declaration[] | undefined;
     fileName: string;
     /** @internal */ path: Path;
@@ -5685,7 +5686,7 @@ export const enum SymbolFlags {
     Transient               = 1 << 25,  // Transient symbol (created during type check)
     Assignment              = 1 << 26,  // Assignment treated as declaration (eg `this.prop = 1`)
     ModuleExports           = 1 << 27,  // Symbol for CommonJS `module` of `module.exports`
-    KJSModule               = 1 << 28,  // Symbol for KJS default class export 
+    KJSModule               = 1 << 28,  // Symbol for KJS default class export
     /** @internal */
     All = FunctionScopedVariable | BlockScopedVariable | Property | EnumMember | Function | Class | Interface | ConstEnum | RegularEnum | ValueModule | NamespaceModule | TypeLiteral
         | ObjectLiteral | Method | Constructor | GetAccessor | SetAccessor | Signature | TypeParameter | TypeAlias | ExportValue | Alias | Prototype | ExportStar | Optional | Transient,
@@ -7201,7 +7202,7 @@ export interface LineAndCharacter {
     character: number;
 }
 
-export   enum ScriptKind {
+export const enum ScriptKind {
     Unknown = 0,
     JS = 1,
     JSX = 2,
@@ -7234,7 +7235,7 @@ export const enum ScriptTarget {
     Latest = ESNext,
 }
 
-export   enum LanguageVariant {
+export const enum LanguageVariant {
     Standard,
     JSX,
     KJS,
@@ -7375,7 +7376,7 @@ export interface CommandLineOptionOfListType extends CommandLineOptionBase {
 export type CommandLineOption = CommandLineOptionOfCustomType | CommandLineOptionOfStringType | CommandLineOptionOfNumberType | CommandLineOptionOfBooleanType | TsConfigOnlyOption | CommandLineOptionOfListType;
 
 /** @internal */
-export   enum CharacterCodes {
+export const enum CharacterCodes {
     nullCharacter = 0,
     maxAsciiCharacter = 0x7F,
 

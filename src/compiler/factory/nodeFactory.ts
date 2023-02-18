@@ -1227,7 +1227,8 @@ export function createNodeFactory(flags: NodeFactoryFlags, baseFactory: BaseNode
         Debug.assert(!(flags & GeneratedIdentifierFlags.KindMask), "Argument out of range: flags");
         Debug.assert((flags & (GeneratedIdentifierFlags.Optimistic | GeneratedIdentifierFlags.FileLevel)) !== GeneratedIdentifierFlags.FileLevel, "GeneratedIdentifierFlags.FileLevel cannot be set without also setting GeneratedIdentifierFlags.Optimistic");
         return createBaseGeneratedIdentifier(text, GeneratedIdentifierFlags.Unique | flags, prefix, suffix);
-    } 
+    }
+    
     /** Create a unique name generated for a node. */
     // @api
     function getGeneratedNameForNode(node: Node | undefined, flags: GeneratedIdentifierFlags = 0, prefix?: string | GeneratedNamePart, suffix?: string): Identifier {

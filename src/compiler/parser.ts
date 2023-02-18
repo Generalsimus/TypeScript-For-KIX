@@ -390,13 +390,12 @@ import {
     YieldExpression,
 } from "./_namespaces/ts";
 import * as performance from "./_namespaces/ts.performance";
-// import { getVariableDeclarationIdentifiers } from "./transformers/kix/utils/getVariableDeclarationIdentifiers";
 
 const enum SignatureFlags {
     None = 0,
     Yield = 1 << 0,
     Await = 1 << 1,
-    Type = 1 << 2,
+    Type  = 1 << 2,
     IgnoreMissingOpenBrace = 1 << 4,
     JSDoc = 1 << 5,
 }
@@ -1337,14 +1336,11 @@ export function createSourceFile(fileName: string, sourceText: string, languageV
         };
         result = Parser.parseSourceFile(fileName, sourceText, languageVersion, /*syntaxCursor*/ undefined, setParentNodes, scriptKind, setIndicator);
     }
-
     perfLogger.logStopParseSourceFile();
 
     performance.mark("afterParse");
     performance.measure("Parse", "beforeParse", "afterParse");
     tracing?.pop();
-
-
     return result;
 }
 
@@ -1437,7 +1433,6 @@ namespace Parser {
 
     var factory = createNodeFactory(NodeFactoryFlags.NoParenthesizerRules | NodeFactoryFlags.NoNodeConverters | NodeFactoryFlags.NoOriginalNode, baseNodeFactory);
 
-
     var fileName: string;
     var sourceFlags: NodeFlags;
     var sourceText: string;
@@ -1448,7 +1443,6 @@ namespace Parser {
     var jsDocDiagnostics: DiagnosticWithDetachedLocation[];
     var syntaxCursor: IncrementalParser.SyntaxCursor | undefined;
     let kixExportedVariableStatements: (VariableDeclaration | ClassDeclaration | FunctionDeclaration)[] = [];
-
 
     var currentToken: SyntaxKind;
     var nodeCount: number;
@@ -1558,28 +1552,8 @@ namespace Parser {
 
         const result = parseSourceFileWorker(languageVersion, setParentNodes, scriptKind, setExternalModuleIndicatorOverride || setExternalModuleIndicator);
 
-
         clearState();
 
-        if (scriptKind === ScriptKind.KJS || scriptKind === ScriptKind.KTS) {
-
-            // console.log("🚀 --> file: parser.ts:1552 --> parseSourceFile --> result", result);
-            // debugger;
-            // ts.visitEachChild
-            // console.log("🚀 --> file: --> fileName", fileName ,LanguageVariant[languageVariant],ScriptKind[scriptKind])
-            // console.log("🚀 --> file: parser.ts:1564 --> parseSourceFile --> fileName", fileName )
-            // const visitNode =  (n:Node):Node|undefined=>{
-            //         console.log(SyntaxKind[n.kind])
-            //        return forEachChildRecursively(n,visitNode)
-            // }
-            // visitNode(result)
-            // ts.transformNodes
-            // forEachChildRecursively(result, (n)=>{
-            //     console.log(SyntaxKind[n.kind])
-            //     return n
-            // });
-            // throw Error("SSSSS")
-        }
         return result;
     }
 
@@ -1760,7 +1734,6 @@ namespace Parser {
         // Prime the scanner.
         nextToken();
 
-
         const statements = ParseMainStatements();
         Debug.assert(token() === SyntaxKind.EndOfFileToken);
         const endOfFileToken = addJSDocComment(parseTokenNode<EndOfFileToken>());
@@ -1780,30 +1753,9 @@ namespace Parser {
             sourceFile.jsDocDiagnostics = attachFileToDiagnostics(jsDocDiagnostics, sourceFile);
         }
         if (languageVariant === LanguageVariant.KJS) {
-            const kixExportedProps:(VariableDeclaration | ClassDeclaration | FunctionDeclaration)[] = (sourceFile.kixExportedProps = []);
-            //  new Map();
-            // ts.isDeclaration
-            for (let kixExportedDeclaration of kixExportedVariableStatements) {
+            const kixExportedProps: (VariableDeclaration | ClassDeclaration | FunctionDeclaration)[] = (sourceFile.kixExportedProps = []);
+            for (const kixExportedDeclaration of kixExportedVariableStatements) {
                 kixExportedProps.push(kixExportedDeclaration);
-            //     switch (kixExportedDeclaration.kind) {
-            //         case SyntaxKind.VariableStatement:
-            //             kixExportedDeclaration = kixExportedDeclaration as VariableStatement
-            //             for (const declaration of kixExportedDeclaration.declarationList.declarations) {
-            //                 const declarations = getVariableDeclarationIdentifiers(declaration)
-            //                 for (const declarationName in declarations) {
-            //                     kixExportedProps.set(declarationName, declarations[declarationName].declarationIdentifier);
-            //                 }
-            //             }
-            //             break;
-            //         case SyntaxKind.FunctionDeclaration:
-            //         case SyntaxKind.ClassDeclaration:
-            //             kixExportedDeclaration = kixExportedDeclaration as (FunctionDeclaration | ClassDeclaration)
-            //             if (kixExportedDeclaration.name) {
-            //                 kixExportedProps.set(idText(kixExportedDeclaration.name), kixExportedDeclaration.name);
-            //             }
-            //             break;
-            //     }
-
             }
         }
 
@@ -3048,21 +3000,17 @@ namespace Parser {
         }
 
         parsingContext = saveParsingContext;
-        return createNodeArray([ 
+        return createNodeArray([
             factory.createExpressionStatement(factory.createJsxFragment(
                 openingTag,
                 list,
                 factory.createJsxJsxClosingFragment()
-            )) 
- 
+            ))
+
         ], listPos);
     }
 
     function ParseMainStatements() {
-        // return parseList(
-        //     ParsingContext.SourceElements,
-        //     parseStatement
-        // )
         return languageVariant === LanguageVariant.KJS ? parseJsxOpeningOrSelfClosingElementOrOpeningFragmentForStatement() : parseList(
             ParsingContext.SourceElements,
             parseStatement
@@ -6093,21 +6041,14 @@ namespace Parser {
         const list: ts.Statement[] = [];
         const listPos = getNodePos();
 
-        // console.log("🚀 --> file: parser.ts:6083 --> AAAAAAAAAA --> token", SyntaxKind[currentToken]);
         while (currentToken !== SyntaxKind.EndOfFileToken && currentToken !== ts.SyntaxKind.LessThanSlashToken) {
             const token = scanner.reScanScriptTagToken();
 
-            // console.log("🚀 --> file: parser.ts:6083 --> parseJsxTagJsChildren --> token", token, SyntaxKind[token as any]);
             if (token === ts.SyntaxKind.LessThanSlashToken) {
-                // nextToken();
-                // let tagName = parseIdentifierName()
-                // const text = scanner.getTokenValue()
-                // console.log("🚀 --> file: --> currentToken PARSE LIST", currentToken, SyntaxKind[currentToken], text);
                 break;
             }
-            if (token == undefined) {
+            if (token === undefined) {
                 nextToken();
-                //   console.log("🚀 --> file: paOOOOOOOOOOOOOOOOsChildren --> token", nesss, SyntaxKind[nesss]);/
             }
 
             list.push(consumeNode(parseStatement()));
@@ -6136,14 +6077,11 @@ namespace Parser {
         const listPos = getNodePos();
         const saveParsingContext = parsingContext;
         parsingContext |= 1 << ParsingContext.JsxChildren;
-        // console.log("🚀 --> file: parser.ts:6117 --> VVVVVVVV", scanner.getTokenValue(), currentToken, SyntaxKind[currentToken]);
-
         currentToken = scanner.reScanCssStringToken();
         const valur = scanner.getTokenValue();
-        // console.log("🚀 --> file: parser.ts:6117 --> parseCSSStringChildren --> currentToken", valur, currentToken, SyntaxKind[currentToken]);
 
         list.push(factory.createJsxText(valur, true));
-        // currentToken = nextToken();
+
         parsingContext = saveParsingContext;
         return createNodeArray(list, listPos);
     }
@@ -6174,7 +6112,7 @@ namespace Parser {
         if (languageVariant !== ts.LanguageVariant.KJS) {
             return parseJsxStringChildren(openingTag);
         }
-        // console.log("🚀 --> file: languageVariant !== ts.LanguageVariant.KJS", getPrimaryTagNameIfCanBy(openingTag));
+
         if (openingTag.kind === SyntaxKind.JsxOpeningElement) {
             const tagName = getPrimaryTagNameIfCanBy(openingTag.tagName);
             if (tagName === "script") {
@@ -7351,7 +7289,7 @@ namespace Parser {
                 return parseDeclaration();
             case SyntaxKind.ExportKeyword:
                 if (isStartOfDeclaration()) {
-                    return parseExportKeywordDeclaration()
+                    return parseExportKeywordDeclaration();
                 }
                 break;
             case SyntaxKind.AsyncKeyword:
@@ -8536,7 +8474,6 @@ namespace Parser {
         return finishNode(factory.createNamespaceExport(parseIdentifierName()), pos);
     }
     function parseExportKeywordDeclaration() {
-        // const pos = getNodePos();
         const exportedDeclaration = parseDeclaration();
         if (languageVariant === LanguageVariant.KJS &&
             (ts.isVariableStatement(exportedDeclaration)
@@ -8547,19 +8484,13 @@ namespace Parser {
             if(ts.isVariableStatement(exportedDeclaration)){
                 for(const declaration of exportedDeclaration.declarationList.declarations){
                     kixExportedVariableStatements.push(declaration);
-                    
+
                 }
-            // kixExportedVariableStatements.push(exportedDeclaration.de);
-            }else{ 
+            }else{
             kixExportedVariableStatements.push(exportedDeclaration);
             }
-            // console.log("🚀 --> file: --> exportedDeclaration", exportedDeclaration.modifiers,SyntaxKind[93]);
-            // 
-            // const names = ts.filter(map(declart.declarationList.declarations, ts.getNameOfDeclaration), function isIdentifierAndNotUndefined(node: Node | undefined): node is Identifier {
-            //     return !!node && node.kind === SyntaxKind.Identifier;
-            // }); 
         }
-        return exportedDeclaration
+        return exportedDeclaration;
     }
     function parseExportDeclaration(pos: number, hasJSDoc: boolean, modifiers: NodeArray<ModifierLike> | undefined): ExportDeclaration {
         const savedAwaitContext = inAwaitContext();
@@ -8599,14 +8530,12 @@ namespace Parser {
         const savedAwaitContext = inAwaitContext();
         setAwaitContext(/*value*/ true);
         let isExportEquals: boolean | undefined;
-
         if (parseOptional(SyntaxKind.EqualsToken)) {
             isExportEquals = true;
         }
         else {
             parseExpected(SyntaxKind.DefaultKeyword);
         }
-
         const expression = parseAssignmentExpressionOrHigher(/*allowReturnTypeInArrowFunction*/ true);
         parseSemicolon();
         setAwaitContext(savedAwaitContext);
@@ -10501,7 +10430,7 @@ function extractPragmas(pragmas: PragmaPseudoMapEntry[], range: CommentRange, te
             return;
         }
         if (pragma.args) {
-            const argument: { [index: string]: string | { value: string, pos: number, end: number } } = {};
+            const argument: {[index: string]: string | {value: string, pos: number, end: number}} = {};
             for (const arg of pragma.args) {
                 const matcher = getNamedArgRegEx(arg.name);
                 const matchResult = matcher.exec(text);
@@ -10559,11 +10488,11 @@ function addPragmaForMatch(pragmas: PragmaPseudoMapEntry[], range: CommentRange,
     return;
 }
 
-function getNamedPragmaArguments(pragma: PragmaDefinition, text: string | undefined): { [index: string]: string } | "fail" {
+function getNamedPragmaArguments(pragma: PragmaDefinition, text: string | undefined): {[index: string]: string} | "fail" {
     if (!text) return {};
     if (!pragma.args) return {};
     const args = trimString(text).split(/\s+/);
-    const argMap: { [index: string]: string } = {};
+    const argMap: {[index: string]: string} = {};
     for (let i = 0; i < pragma.args.length; i++) {
         const argument = pragma.args[i];
         if (!args[i] && !argument.optional) {

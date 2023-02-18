@@ -2080,6 +2080,7 @@ declare namespace ts {
         readonly kind: SyntaxKind.SourceFile;
         readonly statements: NodeArray<Statement>;
         readonly endOfFileToken: Token<SyntaxKind.EndOfFileToken>;
+        kixExportedProps: Declaration[] | undefined;
         fileName: string;
         text: string;
         amdDependencies: readonly AmdDependency[];
@@ -2581,6 +2582,7 @@ declare namespace ts {
         Transient = 33554432,
         Assignment = 67108864,
         ModuleExports = 134217728,
+        KJSModule = 268435456,
         Enum = 384,
         Variable = 3,
         Value = 111551,

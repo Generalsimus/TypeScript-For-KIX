@@ -27,7 +27,6 @@ import {
     CaseClause,
     cast,
     CatchClause,
-    // ClassElement,
     ClassLikeDeclaration,
     ClassStaticBlockDeclaration,
     CompilerOptions,
@@ -579,39 +578,20 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
             delayedBindJSDocTypedefTag();
         }
 
-
         if (file.languageVariant === LanguageVariant.KJS) {
             const defaultSymbol = createSymbol(SymbolFlags.ExportSupportsDefaultModifier | SymbolFlags.KJSModule, "default" as __String);
-            // declareSymbol(defaultSymbol)
-            const propsKeyPropertyName = "_____$$$$$$$$$$$Props" as __String
-            // defaultSymbol.declarations =  [];
-            // createSymbolTable();
-            const propsSymbol = createSymbol(SymbolFlags.ClassMember  | SymbolFlags.KJSModule , propsKeyPropertyName)
-            // https://www.facebook.com/100085457903371/videos/521825519937445/
+
             defaultSymbol.members = createSymbolTable();
-            // propsSymbol.members = createSymbolTable();
-            propsSymbol.exports = createSymbolTable();
             for (const exportedPropNode of (file.kixExportedProps || [])) {
-                const declarationName = getDeclarationName(exportedPropNode)
+                const declarationName = getDeclarationName(exportedPropNode);
                 if(declarationName !== undefined){
-                    
-                    // console.log("🚀 --> file: binder.ts:597 --> bindSourceFile --> declarationName", declarationName,propsKeyPropertyName,declarationName===propsKeyPropertyName);
-                    // const methodSymbol = createSymbol(SymbolFlags.ClassMember , declarationName);
-                    // propsSymbol.declarations=[exportedPropNode];
-                    // propsSymbol.valueDeclaration = exportedPropNode
-                    // propsSymbol.members?.set(declarationName as __String, exportedPropNode.symbol)
-                    // propsSymbol.members?.set(declarationName as __String, methodSymbol)
-                    defaultSymbol.members?.set(declarationName as __String, exportedPropNode.symbol)
+
+                   defaultSymbol.members?.set(declarationName as __String, exportedPropNode.symbol);
                 }
-                // console.log("🚀 --> file: binder.ts:589 --> bindSourceFile --> exportedPropNode", getDeclarationName(exportedPropNode));
-                // getDeclarationName()
-                // file.symbol.exports?.set("default" as __String, defaultSymbol)
-                // addDeclarationToSymbol(defaultSymbol, exportedPropNode, SymbolFlags.Value | SymbolFlags.Variable)
             }
-            // defaultSymbol.members?.set(propsKeyPropertyName, propsSymbol)
-            // addDeclarationToSymbol()
-            file.symbol.exports?.set("default" as __String, defaultSymbol)
-            console.log({ defaultSymbol,propsSymbol })
+
+            file.symbol.exports?.set("default" as __String, defaultSymbol);
+            // console.log({ defaultSymbol,propsSymbol })
         }
 
 
@@ -663,7 +643,6 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
 
         if (symbolFlags & (SymbolFlags.Class | SymbolFlags.Enum | SymbolFlags.Module | SymbolFlags.Variable) && !symbol.exports) {
             symbol.exports = createSymbolTable();
-            // console.log("🚀 --> file: binder.ts:628 --> addDeclarationToSymbol --> symbol.exports",  {ss:{exports:symbol.exports,node} });
         }
 
         if (symbolFlags & (SymbolFlags.Class | SymbolFlags.Interface | SymbolFlags.TypeLiteral | SymbolFlags.ObjectLiteral) && !symbol.members) {
@@ -3028,7 +3007,6 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
     function bindSourceFileIfExternalModule() {
         setExportContextFlag(file);
         if (isExternalModule(file)) {
-            // || (file as SourceFile).languageVariant === LanguageVariant.KJS
             bindSourceFileAsExternalModule();
         }
         else if (isJsonSourceFile(file)) {
@@ -3064,9 +3042,6 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
                 setValueDeclaration(symbol, node);
             }
         }
-        // if(file.languageVariant === LanguageVariant.KJS){
-        //     console.log({...node,parent:undefined},SyntaxKind[274])
-        // }
     }
 
     function bindNamespaceExportDeclaration(node: NamespaceExportDeclaration) {
@@ -3084,7 +3059,6 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
             file.symbol.globalExports = file.symbol.globalExports || createSymbolTable();
             declareSymbol(file.symbol.globalExports, file.symbol, node, SymbolFlags.Alias, SymbolFlags.AliasExcludes);
         }
-
     }
 
     function bindExportDeclaration(node: ExportDeclaration) {
@@ -3327,7 +3301,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
 
     function bindSpecialPropertyAssignment(node: BindablePropertyAssignmentExpression) {
         // Class declarations in Typescript do not allow property declarations
-        const parentSymbol = lookupSymbolForPropertyAccess(node.left.expression, container) || lookupSymbolForPropertyAccess(node.left.expression, blockScopeContainer);
+        const parentSymbol = lookupSymbolForPropertyAccess(node.left.expression, container) || lookupSymbolForPropertyAccess(node.left.expression, blockScopeContainer) ;
         if (!isInJSFile(node) && !isFunctionSymbol(parentSymbol)) {
             return;
         }

@@ -8255,7 +8255,6 @@ export function getLanguageVariant(scriptKind: ScriptKind) {
         default:
             return LanguageVariant.Standard;
     }
-//  return scriptKind === ScriptKind.TSX || scriptKind === ScriptKind.JSX || scriptKind === ScriptKind.JS || scriptKind === ScriptKind.JSON ? LanguageVariant.JSX : LanguageVariant.Standard;
 }
 
 /**

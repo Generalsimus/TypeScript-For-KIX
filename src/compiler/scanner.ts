@@ -72,7 +72,6 @@ export interface Scanner {
     reScanJsxAttributeValue(): SyntaxKind;
     reScanJsxToken(allowMultilineJsxText?: boolean): JsxTokenSyntaxKind;
     reScanCssStringToken(allowMultilineJsxText?: boolean): KtsCssTagTokenSyntaxKind;
-    // reScanKsxToken(allowMultilineJsxText?: boolean): JsxTokenSyntaxKind;
     reScanScriptTagToken(): JsxScriptTokenSyntaxKind | undefined;
     reScanLessThanToken(): SyntaxKind;
     reScanHashToken(): SyntaxKind;
@@ -2306,11 +2305,10 @@ export function createScanner(languageVersion: ScriptTarget,
         pos = tokenPos = startPos;
         while (pos < end) {
             const char = text.charCodeAt(pos);
-            // console.log("🚀 --> file: scanner.ts:2306 --> reScanScriptTagToken --> char",CharacterCodes[char],CharacterCodes[text.charCodeAt(pos + 1)] );
+
 
             if (char === CharacterCodes.lessThan) {
                 if (text.charCodeAt(pos + 1) === CharacterCodes.slash) {
-                    // console.log("🚀 --> file: scanner.ts:2311 --> reScanScriptTagToken --> tagName", tagName);
                     pos += 2;
                     return SyntaxKind.LessThanSlashToken;
                 }
@@ -2390,7 +2388,7 @@ export function createScanner(languageVersion: ScriptTarget,
                 if (quote === char) {
                     quote = undefined;
                 }
- else if (quote === undefined) {
+                else if (quote === undefined) {
                     quote = char;
                 }
             }
@@ -2398,9 +2396,6 @@ export function createScanner(languageVersion: ScriptTarget,
         }
 
         tokenValue = text.substring(startPos, pos);
-        // console.log("🚀 --> file: scanner.ts:2388 --> reScanCssStringToken --> tokenValue", {tokenValue});
-        // console.log("🚀 --> file: scanner.ts:2367 --> reScanCssStringToken --> char === undefined && char === CharacterCodes.lessThan", text.substring(startPos, pos), char === undefined, char === CharacterCodes.lessThan);
-
         return SyntaxKind.EndOfFileToken;
     }
 

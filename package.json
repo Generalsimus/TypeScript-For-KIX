@@ -88,7 +88,7 @@
     "scripts": {
         "test": "hereby runtests-parallel --light=false",
         "test:eslint-rules": "hereby run-eslint-rules-tests",
-        "build": "npm run build:compiler && npm run build:tests && hereby lkg && hereby local && hereby lib",
+        "build": "npm run build:compiler && npm run build:tests",
         "build:compiler": "hereby local",
         "build:tests": "hereby tests",
         "build:tests:notypecheck": "hereby tests --no-typecheck",
@@ -96,8 +96,7 @@
         "clean": "hereby clean",
         "gulp": "hereby",
         "lint": "hereby lint",
-        "setup-hooks": "node scripts/link-hooks.mjs",
-        "dev":"hereby watch-local"
+        "setup-hooks": "node scripts/link-hooks.mjs"
     },
     "browser": {
         "fs": false,

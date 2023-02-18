@@ -2034,10 +2034,7 @@ function tryFile(fileName: string, onlyRecordFailures: boolean, state: ModuleRes
 
     const ext = tryGetExtensionFromPath(fileName) ?? "";
     const fileNameNoExtension = ext ? removeExtension(fileName, ext) : fileName;
-    const res = forEach(state.compilerOptions.moduleSuffixes, suffix => tryFileLookup(fileNameNoExtension + suffix + ext, onlyRecordFailures, state))
-    // console.log("🚀 --> file: moduleNameResolver.ts:2006 --> tryFile --> res", {fileName,res});
-    
-    return res
+    return forEach(state.compilerOptions.moduleSuffixes, suffix => tryFileLookup(fileNameNoExtension + suffix + ext, onlyRecordFailures, state));
 }
 
 function tryFileLookup(fileName: string, onlyRecordFailures: boolean, state: ModuleResolutionState): string | undefined {
@@ -3043,8 +3040,6 @@ export function classicNameResolver(moduleName: string, containingFile: string, 
     const resolved =
     tryResolve(Extensions.TypeScript | Extensions.Declaration) ||
     tryResolve(Extensions.JavaScript | (compilerOptions.resolveJsonModule ? Extensions.Json : 0));
-    // tryResolve(Extensions.Kix);
-
     // No originalPath because classic resolution doesn't resolve realPath
     return createResolvedModuleWithFailedLookupLocationsHandlingSymlink(
         moduleName,
