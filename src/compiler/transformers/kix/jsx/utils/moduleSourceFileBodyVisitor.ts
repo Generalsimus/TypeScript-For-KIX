@@ -1,7 +1,7 @@
-import { CustomContextType } from "../..";
 import { factory } from "../../../../factory/nodeFactory";
 import { SourceFile, Visitor } from "../../../../types";
 import { visitEachChild } from "../../../../visitorPublic";
+import { CustomContextType } from "../..";
 import { createObject } from "../../factoryCode/createObject";
 import { variableStatement } from "../../factoryCode/variableStatement";
 import { createBlockVisitor } from "./createBlockVisitor";
@@ -9,7 +9,7 @@ import { createBlockVisitor } from "./createBlockVisitor";
 const moduleBodyNodesVisitor = createBlockVisitor(<N extends SourceFile>(sourceFileNode: N, visitor: Visitor, context: CustomContextType) => {
 
     return visitEachChild(sourceFileNode, visitor, context);
-}, true);
+}, /* isGlobalBlock */ true);
 
 export const moduleSourceFileBodyVisitor = (
     sourceFileNode: SourceFile,
@@ -25,14 +25,9 @@ export const moduleSourceFileBodyVisitor = (
             [variableState.globalScopeIdentifiers, createObject([])]
         ]);
 
-        return  factory.updateSourceFile(
+        return factory.updateSourceFile(
             sourceFileNode,
             [
-                factory.createExportAssignment(
-                    undefined,
-                    undefined,
-                    factory.createNumericLiteral("5")
-                  ),
                 declarationNode,
                 ...visitedStatements.statements
             ],

@@ -13,7 +13,7 @@ export interface IdentifiersStateType {
     declaredFlag: NodeFlags | undefined,
     substituteCallback: (indexIdToUniqueString: string, declarationIdentifier: Identifier) => void,
 }
-export type declaredBlockIdentifiersType = Map<string, IdentifiersStateType>;
+export type DeclaredBlockIdentifiersType = Map<string, IdentifiersStateType>;
 export interface CustomContextType extends TransformationContext {
     getJSXPropRegistrationIdentifier?: () => Identifier
     /* JSX ში მოთავხებული .? უსაფრთხოებისთვის როდესაც ხდება რეგისტრაცია და ასევესაჭიროა მისი გაშვებაც ნიმუში: ssss?.() */
@@ -27,8 +27,12 @@ export interface CustomContextType extends TransformationContext {
 
     addDeclaredIdentifierState: (identifierName: string, identifierState?: IdentifiersStateType) => void
     addIdentifiersChannelCallback: (identifierName: string, addCallback: (identifierState: IdentifiersStateType) => void) => void
-}
 
+    languageVariant: LanguageVariant
+}
+// export interface CustomContextTypeExperimental extends CustomContextType {
+
+// }
 
 const getNodeVisitor = getVisitor(jsxTransformers) as TransformerFactory<SourceFile>;
 

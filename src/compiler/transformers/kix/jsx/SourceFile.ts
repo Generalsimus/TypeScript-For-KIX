@@ -1,6 +1,7 @@
-import { CustomContextType } from "..";
-import { Node, SourceFile, Visitor } from "../../../types";
+import { LanguageVariant, Node, SourceFile, Visitor } from "../../../types";
 import { visitEachChild } from "../../../visitorPublic";
+import { CustomContextType } from "..";
+import { createKJSDefaultExportClassForSourceFile } from "./FactoryCreate/createKJSDefaultExportClassForSourceFile";
 import { moduleSourceFileBodyVisitor } from "./utils/moduleSourceFileBodyVisitor";
 
 export const VisitSourceFile = (node: SourceFile, visitor: Visitor, context: CustomContextType) => {
@@ -9,6 +10,11 @@ export const VisitSourceFile = (node: SourceFile, visitor: Visitor, context: Cus
 
     context.addDeclaredIdentifierState = () => { };
     context.addIdentifiersChannelCallback = () => { };
+    context.languageVariant = node.languageVariant;
+
+    if (node.languageVariant === LanguageVariant.KJS) {
+        node = createKJSDefaultExportClassForSourceFile(node);
+    }
 
     node = moduleSourceFileBodyVisitor(node, visitor, context);
     if (substituteNodesList.size) {

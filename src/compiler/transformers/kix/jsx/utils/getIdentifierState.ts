@@ -1,5 +1,5 @@
-import { CustomContextType, declaredBlockIdentifiersType, IdentifiersStateType } from "../..";
 import { NodeFlags } from "../../../../types";
+import { CustomContextType, DeclaredBlockIdentifiersType, IdentifiersStateType } from "../..";
 import { getIndexId } from "./getIndexId";
 import { NumberToUniqueString } from "./numberToUniqueString";
 
@@ -46,7 +46,7 @@ const createIdentifiersMap = (context: CustomContextType) => {
 
             declaredBlockIdentifiers.set(identifierName, newIdentifierState);
         }
- else if (identifierState) {
+        else if (identifierState) {
             const currentIdentifierState = declaredBlockIdentifiers.get(identifierName)!;
 
             currentIdentifierState.substituteCallback = identifierState.substituteCallback;
@@ -57,7 +57,7 @@ const createIdentifiersMap = (context: CustomContextType) => {
 };
 
 
-type LocalIdentifiersChannelCallbackType = (declaredBlockIdentifiers: declaredBlockIdentifiersType, isGlobalBlock: boolean) => void;
+type LocalIdentifiersChannelCallbackType = (declaredBlockIdentifiers: DeclaredBlockIdentifiersType, isGlobalBlock: boolean) => void;
 
 export const creteManageIdentifierState = <R extends any>(context: CustomContextType, isGlobalBlock: boolean, visitor: () => R): R => {
     const { declaredBlockIdentifiers, addDeclaredIdentifierState } = createIdentifiersMap(context);
@@ -71,18 +71,18 @@ export const creteManageIdentifierState = <R extends any>(context: CustomContext
         addCallback: (identifierState: IdentifiersStateType) => void
     ) => {
 
-        const newIdentifiersChannelCallback = (declaredBlockIdentifiers: declaredBlockIdentifiersType, isGlobalBlock: boolean) => {
+        const newIdentifiersChannelCallback = (declaredBlockIdentifiers: DeclaredBlockIdentifiersType, isGlobalBlock: boolean) => {
             const identifierState = declaredBlockIdentifiers.get(identifierName);
             if (identifierState) {
                 if (identifierState.declaredFlag === NodeFlags.None && !isGlobalBlock) {
                     addIdentifiersChannelCallbackParentCache(identifierName, addCallback);
                     addDeclaredIdentifierParentCache(identifierName, identifierState);
                 }
- else {
+                else {
                     addCallback(identifierState);
                 }
             }
- else {
+            else {
                 addIdentifiersChannelCallbackParentCache(identifierName, addCallback);
             }
         };
@@ -90,7 +90,7 @@ export const creteManageIdentifierState = <R extends any>(context: CustomContext
 
 
         const localIdentifiersChannelCallbackCache = localIdentifiersChannelCallback;
-        localIdentifiersChannelCallback = (declaredBlockIdentifiers: declaredBlockIdentifiersType, isGlobalBlock: boolean) => {
+        localIdentifiersChannelCallback = (declaredBlockIdentifiers: DeclaredBlockIdentifiersType, isGlobalBlock: boolean) => {
             localIdentifiersChannelCallbackCache(declaredBlockIdentifiers, isGlobalBlock);
             newIdentifiersChannelCallback(declaredBlockIdentifiers, isGlobalBlock);
         };

@@ -5,7 +5,7 @@ import { createGlobalBlockNodesVisitor } from "./utils/createGlobalBlockNodesVis
 
 
 export const VisitFunctionExpression = createGlobalBlockNodesVisitor(
-    (visitedNode:  FunctionExpression, declarationNode, context) => {
+    (visitedNode: FunctionExpression, declarationNode, context) => {
         return context.factory.updateFunctionExpression(
             visitedNode,
              getModifiers(visitedNode),

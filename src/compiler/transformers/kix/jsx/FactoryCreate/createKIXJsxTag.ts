@@ -1,47 +1,35 @@
-import { CustomContextType } from "..";
-import { createObject, createObjectArgsType } from "../factoryCode/createObject";
-import { stringLiteral } from "../factoryCode/stringLiteral";
-import { createJsxChildrenNode } from "./utils/createJsxChildrenNode";
-import { forEachJsxAttributes } from "./utils/forEachJsxAttributes";
-import { useJsxPropRegistration } from "./utils/useJsxPropRegistration";
-import { createJSXComponent } from "./utils/createJSXComponent";
-import { arrowFunction } from "../factoryCode/arrowFunction";
-import { JsxAttributes, JsxChild, JsxTagNameExpression, NodeArray, SyntaxKind, Visitor } from "../../../types";
-import { idText } from "../../../utilitiesPublic";
-import { isIdentifier, isJsxText, isStringLiteral } from "../../../factory/nodeTests";
+import { isJsxText, isStringLiteral } from "../../../../factory/nodeTests";
+import { JsxAttributes, JsxChild, JsxTagNameExpression, NodeArray, Visitor } from "../../../../types";
+import { idText } from "../../../../utilitiesPublic";
+import { CustomContextType } from "../..";
+import { arrowFunction } from "../../factoryCode/arrowFunction";
+import { createObject, createObjectArgsType } from "../../factoryCode/createObject";
+import { stringLiteral } from "../../factoryCode/stringLiteral";
+import { createJsxChildrenNode } from "../utils/createJsxChildrenNode";
+import { createJSXComponent } from "../utils/createJSXComponent";
+import { forEachJsxAttributes } from "../utils/forEachJsxAttributes";
+import { useJsxPropRegistration } from "../utils/useJsxPropRegistration";
 
-const getTagNameString = (tagName: JsxTagNameExpression, _?: string) => {
-    if (isIdentifier(tagName)) {
-        const tagNameString = idText(tagName);
-        if (/^([a-z]|\d+|\-|\:)*$/.test(tagNameString)) {
-            return tagNameString;
-        }
-    }
-    else if (tagName.kind === SyntaxKind.ThisKeyword) {
-        return "this";
-    }
-};
-export const VisitJsxToObject = (
-    visitor: Visitor,
+export const createKIXJsxTag = (
+     visitor: Visitor,
     context: CustomContextType,
     tagName: JsxTagNameExpression,
     attributes: JsxAttributes,
-    children: NodeArray<JsxChild>
-) => {
+    children: NodeArray<JsxChild>,
+    tagNameToString?: string)=>{
     const childrenNode = createJsxChildrenNode(
         visitor,
         context,
         children
     );
-    // Identifier | ThisExpression | JsxTagNamePropertyAccess;
-    const tagNameToString = getTagNameString(tagName);
+
 
 
     if (tagNameToString) {
         const objectNodeProperties: createObjectArgsType = [
             [
                 tagNameToString,
-                childrenNode || context.factory.createArrayLiteralExpression([], false)
+                childrenNode || context.factory.createArrayLiteralExpression([], /* multiLine */ false)
             ]
         ];
 
@@ -144,7 +132,6 @@ export const VisitJsxToObject = (
         children
     );
 };
-
 
 
 /*

@@ -1,8 +1,8 @@
-import { CustomContextType } from "..";
 import { isIdentifier } from "../../../factory/nodeTests";
 import { PostfixUnaryExpression, SyntaxKind, Visitor } from "../../../types";
 import { idText } from "../../../utilitiesPublic";
 import { visitEachChild } from "../../../visitorPublic";
+import { CustomContextType } from "..";
 import { nodeToken } from "../factoryCode/nodeToken";
 import { propertyAccessExpression } from "../factoryCode/propertyAccessExpression";
 

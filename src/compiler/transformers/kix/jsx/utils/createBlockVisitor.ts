@@ -1,5 +1,5 @@
-import { CustomContextType } from "../..";
 import { NodeFlags, Visitor } from "../../../../types";
+import { CustomContextType } from "../..";
 import { creteManageIdentifierState } from "./getIdentifierState";
 
 export interface VariableStateType {
@@ -9,17 +9,17 @@ export interface VariableStateType {
 }
 
 export const createBlockVisitor = <N extends any, R extends any>(
-    nodeVisitor: (node: N, visitor:  Visitor, context: CustomContextType) => R,
+    nodeVisitor: (node: N, visitor: Visitor, context: CustomContextType) => R,
     isGlobalBlock: boolean
 ) => {
-    return (node: N, visitor:  Visitor, context: CustomContextType): [R, VariableStateType] => {
+    return (node: N, visitor: Visitor, context: CustomContextType): [R, VariableStateType] => {
 
         const getVariableUniqueIdentifierCache = context.getVariableUniqueIdentifier;
         const variableState: VariableStateType = {
             blockScopeIdentifiers: undefined,
             globalScopeIdentifiers: undefined,
         };
-        context.getVariableUniqueIdentifier = (flag:  NodeFlags) => {
+        context.getVariableUniqueIdentifier = (flag: NodeFlags) => {
 
             if (isGlobalBlock) {
 

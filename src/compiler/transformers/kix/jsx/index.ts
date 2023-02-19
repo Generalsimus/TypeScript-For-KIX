@@ -1,28 +1,28 @@
+import { JsxElement, JsxFragment, JsxSelfClosingElement, SyntaxKind, Visitor } from "../../../types";
 import { CustomContextType } from "..";
 import { VisitArrowFunction } from "./ArrowFunction";
 import { VisitBinaryExpression } from "./BinaryExpression";
+import { VisitCallExpression } from "./CallExpression";
+import { VisitClassStaticBlockDeclaration } from "./ClassStaticBlockDeclaration";
+import { VisitDoStatement } from "./DoStatement";
+import { VisitForInStatement } from "./ForInStatement";
+import { VisitForOfStatement } from "./ForOfStatement";
+import { VisitForStatement } from "./ForStatement";
 import { VisitFunctionDeclaration } from "./FunctionDeclaration";
 import { VisitFunctionExpression } from "./FunctionExpression";
 import { VisitIdentifier } from "./Identifier";
-import { VisitJsxToObject } from "./jsxToObject";
-import { VisitCallExpression } from "./CallExpression";
-import { createJsxChildrenNode } from "./utils/createJsxChildrenNode";
-import { VisitPropertyAccessExpressionOrElementAccessExpression } from "./utils/PropertyAccessExpressionOrElementAccessExpression";
-import { VisitVariableStatement } from "./VariableStatement";
 import { VisitIfStatement } from "./IfStatement";
-import { VisitSwitchStatement } from "./SwitchStatement";
-import { VisitForStatement } from "./ForStatement";
-import { VisitForInStatement } from "./ForInStatement";
-import { VisitForOfStatement } from "./ForOfStatement";
 import { VisitMethodDeclaration } from "./MethodDeclaration";
-import { VisitClassStaticBlockDeclaration } from "./ClassStaticBlockDeclaration";
-import { VisitTryStatement } from "./TryStatement";
-import { VisitWhileStatement } from "./WhileStatement";
 import { VisitPostfixUnaryExpression } from "./PostfixUnaryExpression";
 import { VisitPrefixUnaryExpression } from "./PrefixUnaryExpression";
 import { VisitSourceFile } from "./SourceFile";
-import { VisitDoStatement } from "./DoStatement";
-import { JsxElement, JsxFragment, JsxSelfClosingElement, SyntaxKind, Visitor } from "../../../types";
+import { VisitSwitchStatement } from "./SwitchStatement";
+import { VisitTryStatement } from "./TryStatement";
+import { createJsxChildrenNode } from "./utils/createJsxChildrenNode";
+import { VisitJsxToObject } from "./utils/jsxToObject";
+import { VisitPropertyAccessExpressionOrElementAccessExpression } from "./utils/PropertyAccessExpressionOrElementAccessExpression";
+import { VisitVariableStatement } from "./VariableStatement";
+import { VisitWhileStatement } from "./WhileStatement";
 
 
 export const jsxTransformers = {
@@ -48,7 +48,7 @@ export const jsxTransformers = {
             context,
             node.children
         );
-        return childrenNode || context.factory.createArrayLiteralExpression([], false);
+        return childrenNode || context.factory.createArrayLiteralExpression([], /*multiLine*/ false);
     },
     [SyntaxKind.ArrowFunction]: VisitArrowFunction,
     [SyntaxKind.FunctionExpression]: VisitFunctionExpression,

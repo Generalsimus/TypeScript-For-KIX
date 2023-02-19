@@ -1,10 +1,10 @@
-import { CustomContextType } from "..";
+import { isIdentifier } from "../../../factory/nodeTests";
 import { BinaryExpression, SyntaxKind, Visitor } from "../../../types";
+import { idText } from "../../../utilitiesPublic";
 import { visitEachChild } from "../../../visitorPublic";
+import { CustomContextType } from "..";
 import { nodeToken } from "../factoryCode/nodeToken";
 import { propertyAccessExpression } from "../factoryCode/propertyAccessExpression";
-import { isIdentifier } from "../../../factory/nodeTests";
-import { idText } from "../../../utilitiesPublic";
 
 
 
@@ -36,14 +36,6 @@ export const VisitBinaryExpression = (node: BinaryExpression, visitor: Visitor, 
             // console.log("🚀 --> file: BinaryExpression.ts --> line 33 --> context.addIdentifiersChannelCallback --> identifierName", identifierName);
 
             identifierState.isChanged = true;
-            // const { substituteCallback } = identifierState
-            // visitedNode = context.factory.updateBinaryExpression(
-            //     visitedNode,
-            //     visitedNode.left,
-            //     visitedNode.operatorToken,
-            //     context.factory.createParenthesizedExpression(visitedNode.right),
-            // )
-
             identifierState.substituteCallback = (indexIdToUniqueString, declarationIdentifier) => {
 
 
@@ -68,7 +60,7 @@ export const VisitBinaryExpression = (node: BinaryExpression, visitor: Visitor, 
                         ]
                     );
                 });
-                // substituteCallback(indexIdToUniqueString, declarationIdentifier);
+
             };
 
         });
