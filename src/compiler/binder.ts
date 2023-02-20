@@ -572,26 +572,33 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
         if (!file.locals) {
             tracing?.push(tracing.Phase.Bind, "bindSourceFile", { path: file.path }, /*separateBeginAndEnd*/ true);
             bind(file);
+            if (file.languageVariant === LanguageVariant.KJS) {
+                console.log("🚀 --> file: binder.ts:589 --> bindSourceFile --> file.symbol",file.symbol.exports);
+                const defaultSymbol = createSymbol(SymbolFlags.ExportSupportsDefaultModifier | SymbolFlags.KJSModule, "default" as __String);
+                // console.log("🚀 --> file: binder.ts:583 --> bindSourceFile --> defaultSymbol", defaultSymbol);
+
+                defaultSymbol.members = createSymbolTable();
+                for (const exportedPropNode of (file.kixExportedProps || [])) {
+                    const declarationName = getDeclarationName(exportedPropNode);
+                    if (declarationName !== undefined) {
+
+                        defaultSymbol.members?.set(declarationName as __String, exportedPropNode.symbol);
+                    }
+                }
+
+                file.symbol.exports?.set("default" as __String, defaultSymbol);
+                // console.log("🚀 --> file: binder.ts:591 --> bindSourceFile --> file", file);
+
+            }
+            // console.log({ filename:file.fileName, file:"file",len:(file.kixExportedProps || []).length });
+            if(file.fileName.endsWith("impoooo.tsx")){
+
+                // console.log("🚀 --> file: binder.ts:591 --> bindSourceFile --> file", file.resolvedModules);
+            }
             tracing?.pop();
             file.symbolCount = symbolCount;
             file.classifiableNames = classifiableNames;
             delayedBindJSDocTypedefTag();
-        }
-
-        if (file.languageVariant === LanguageVariant.KJS) {
-            const defaultSymbol = createSymbol(SymbolFlags.ExportSupportsDefaultModifier | SymbolFlags.KJSModule, "default" as __String);
-
-            defaultSymbol.members = createSymbolTable();
-            for (const exportedPropNode of (file.kixExportedProps || [])) {
-                const declarationName = getDeclarationName(exportedPropNode);
-                if(declarationName !== undefined){
-
-                   defaultSymbol.members?.set(declarationName as __String, exportedPropNode.symbol);
-                }
-            }
-
-            file.symbol.exports?.set("default" as __String, defaultSymbol);
-            // console.log({ defaultSymbol,propsSymbol })
         }
 
 
@@ -3301,7 +3308,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
 
     function bindSpecialPropertyAssignment(node: BindablePropertyAssignmentExpression) {
         // Class declarations in Typescript do not allow property declarations
-        const parentSymbol = lookupSymbolForPropertyAccess(node.left.expression, container) || lookupSymbolForPropertyAccess(node.left.expression, blockScopeContainer) ;
+        const parentSymbol = lookupSymbolForPropertyAccess(node.left.expression, container) || lookupSymbolForPropertyAccess(node.left.expression, blockScopeContainer);
         if (!isInJSFile(node) && !isFunctionSymbol(parentSymbol)) {
             return;
         }

@@ -1,6 +1,6 @@
-import { CustomContextType } from "..";
 import { isBlock } from "../../../factory/nodeTests";
 import { Expression, IfStatement, Node, Statement, Visitor } from "../../../types";
+import { CustomContextType } from "..";
 import { createObject } from "../factoryCode/createObject";
 import { variableStatement } from "../factoryCode/variableStatement";
 import { createBlockVisitor, VariableStateType } from "./utils/createBlockVisitor";
@@ -8,7 +8,7 @@ import { createBlockVisitor, VariableStateType } from "./utils/createBlockVisito
 const visitIfStatementBlockNode = createBlockVisitor(<N extends Node>(node: N, visitor: Visitor, _: CustomContextType) => {
 
     return visitor(node);
-}, false);
+}, /* isGlobalBlock */ false);
 
 
 export const VisitIfStatement = (node: IfStatement, visitor: Visitor, context: CustomContextType,) => {
@@ -44,6 +44,6 @@ const statementToBlock = (visitedNode: Statement, variableState: VariableStateTy
         return context.factory.createBlock([
             declarationNode,
             visitedNode
-        ], true);
+        ], /* multiline */ true);
     }
 };

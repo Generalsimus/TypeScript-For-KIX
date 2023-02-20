@@ -2753,7 +2753,7 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
 
             Debug.assert(!!sourceFile.bindDiagnostics);
 
-            const isJs = sourceFile.scriptKind === ScriptKind.JS || sourceFile.scriptKind === ScriptKind.JSX;
+            const isJs = sourceFile.scriptKind === ScriptKind.JS || sourceFile.scriptKind === ScriptKind.JSX || sourceFile.scriptKind === ScriptKind.KJS;
             const isCheckJs = isJs && isCheckJsEnabledForFile(sourceFile, options);
             const isPlainJs = isPlainJsFile(sourceFile, options.checkJs);
             const isTsNoCheck = !!sourceFile.checkJsDirective && sourceFile.checkJsDirective.enabled === false;

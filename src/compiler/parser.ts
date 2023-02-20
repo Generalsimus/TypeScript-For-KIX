@@ -395,7 +395,7 @@ const enum SignatureFlags {
     None = 0,
     Yield = 1 << 0,
     Await = 1 << 1,
-    Type  = 1 << 2,
+    Type = 1 << 2,
     IgnoreMissingOpenBrace = 1 << 4,
     JSDoc = 1 << 5,
 }
@@ -1739,6 +1739,7 @@ namespace Parser {
         const endOfFileToken = addJSDocComment(parseTokenNode<EndOfFileToken>());
 
         const sourceFile = createSourceFile(fileName, languageVersion, scriptKind, isDeclarationFile, statements, endOfFileToken, sourceFlags, setExternalModuleIndicator);
+        // console.log("🚀 --> file: parser.ts:1742 --> parseSourceFileWorker --> fileName", fileName);
 
         // A member of ReadonlyArray<T> isn't assignable to a member of T[] (and prevents a direct cast) - but this is where we set up those members so they can be readonly in the future
         processCommentPragmas(sourceFile as {} as PragmaContext, sourceText);
@@ -2983,9 +2984,9 @@ namespace Parser {
 
         return false;
     }
-    function parseJsxOpeningOrSelfClosingElementOrOpeningFragmentForStatement(): NodeArray<Statement> {
+    function parseJsxOpeningOrSelfClosingElementOrOpeningFragmentForStatement() {
         const list: JsxChild[] = [];
-        const listPos = getNodePos();
+        const pos = getNodePos();
         const saveParsingContext = parsingContext;
         parsingContext |= 1 << ParsingContext.JsxChildren;
         const openingTag = factory.createJsxOpeningFragment();
@@ -3000,18 +3001,25 @@ namespace Parser {
         }
 
         parsingContext = saveParsingContext;
-        return createNodeArray([
-            factory.createExpressionStatement(factory.createJsxFragment(
-                openingTag,
-                list,
-                factory.createJsxJsxClosingFragment()
-            ))
+        return finishNode(factory.createExpressionStatement(factory.createJsxFragment(
+            openingTag,
+            list,
+            factory.createJsxJsxClosingFragment()
+        )), pos);
+        // return createNodeArray([
+        // factory.createExpressionStatement(factory.createJsxFragment(
+        //     openingTag,
+        //     list,
+        //     factory.createJsxJsxClosingFragment()
+        // ))
 
-        ], listPos);
+        // ], listPos);
     }
 
     function ParseMainStatements() {
-        return languageVariant === LanguageVariant.KJS ? parseJsxOpeningOrSelfClosingElementOrOpeningFragmentForStatement() : parseList(
+        return languageVariant === LanguageVariant.KJS ? createNodeArray([
+            parseJsxOpeningOrSelfClosingElementOrOpeningFragmentForStatement()
+        ], getNodePos()) : parseList(
             ParsingContext.SourceElements,
             parseStatement
         );
@@ -8481,13 +8489,14 @@ namespace Parser {
                 || ts.isFunctionDeclaration(exportedDeclaration)
             )
         ) {
-            if(ts.isVariableStatement(exportedDeclaration)){
-                for(const declaration of exportedDeclaration.declarationList.declarations){
+            if (ts.isVariableStatement(exportedDeclaration)) {
+                for (const declaration of exportedDeclaration.declarationList.declarations) {
                     kixExportedVariableStatements.push(declaration);
-
+// console.log("dec;,",getDeclarationFromName)
                 }
-            }else{
-            kixExportedVariableStatements.push(exportedDeclaration);
+            }
+               else {
+                kixExportedVariableStatements.push(exportedDeclaration);
             }
         }
         return exportedDeclaration;
@@ -10430,7 +10439,7 @@ function extractPragmas(pragmas: PragmaPseudoMapEntry[], range: CommentRange, te
             return;
         }
         if (pragma.args) {
-            const argument: {[index: string]: string | {value: string, pos: number, end: number}} = {};
+            const argument: { [index: string]: string | { value: string, pos: number, end: number } } = {};
             for (const arg of pragma.args) {
                 const matcher = getNamedArgRegEx(arg.name);
                 const matchResult = matcher.exec(text);
@@ -10488,11 +10497,11 @@ function addPragmaForMatch(pragmas: PragmaPseudoMapEntry[], range: CommentRange,
     return;
 }
 
-function getNamedPragmaArguments(pragma: PragmaDefinition, text: string | undefined): {[index: string]: string} | "fail" {
+function getNamedPragmaArguments(pragma: PragmaDefinition, text: string | undefined): { [index: string]: string } | "fail" {
     if (!text) return {};
     if (!pragma.args) return {};
     const args = trimString(text).split(/\s+/);
-    const argMap: {[index: string]: string} = {};
+    const argMap: { [index: string]: string } = {};
     for (let i = 0; i < pragma.args.length; i++) {
         const argument = pragma.args[i];
         if (!args[i] && !argument.optional) {

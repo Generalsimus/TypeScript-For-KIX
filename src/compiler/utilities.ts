@@ -873,7 +873,7 @@ export function getSourceFileOfModule(module: Symbol) {
 
 /** @internal */
 export function isPlainJsFile(file: SourceFile | undefined, checkJs: boolean | undefined): boolean {
-    return !!file && (file.scriptKind === ScriptKind.JS || file.scriptKind === ScriptKind.JSX) && !file.checkJsDirective && checkJs === undefined;
+    return !!file && (file.scriptKind === ScriptKind.JS || file.scriptKind === ScriptKind.JSX || file.scriptKind === ScriptKind.KJS) && !file.checkJsDirective && checkJs === undefined;
 }
 
 /** @internal */
@@ -9122,7 +9122,7 @@ export function getSupportedExtensionsWithJsonIfResolveJsonModule(options: Compi
 }
 
 function isJSLike(scriptKind: ScriptKind | undefined): boolean {
-    return scriptKind === ScriptKind.JS || scriptKind === ScriptKind.JSX;
+    return scriptKind === ScriptKind.JS || scriptKind === ScriptKind.JSX || scriptKind === ScriptKind.KJS;
 }
 
 /** @internal */

@@ -1,14 +1,14 @@
-import { isJsxText, isStringLiteral } from "../../../../factory/nodeTests";
-import { JsxAttributes, JsxChild, JsxTagNameExpression, NodeArray, Visitor } from "../../../../types";
-import { idText } from "../../../../utilitiesPublic";
-import { CustomContextType } from "../..";
-import { arrowFunction } from "../../factoryCode/arrowFunction";
-import { createObject, createObjectArgsType } from "../../factoryCode/createObject";
-import { stringLiteral } from "../../factoryCode/stringLiteral";
-import { createJsxChildrenNode } from "../utils/createJsxChildrenNode";
-import { createJSXComponent } from "../utils/createJSXComponent";
-import { forEachJsxAttributes } from "../utils/forEachJsxAttributes";
-import { useJsxPropRegistration } from "../utils/useJsxPropRegistration";
+import { isJsxText, isStringLiteral } from "../../../../../factory/nodeTests";
+import { JsxAttributes, JsxChild, JsxTagNameExpression, NodeArray, Visitor } from "../../../../../types";
+import { idText } from "../../../../../utilitiesPublic";
+import { CustomContextType } from "../../..";
+import { arrowFunction } from "../../../factoryCode/arrowFunction";
+import { createObject, createObjectArgsType } from "../../../factoryCode/createObject";
+import { stringLiteral } from "../../../factoryCode/stringLiteral";
+import { createJsxChildrenNode } from "../createJsxChildrenNode";
+import { createJSXComponent } from "../createJSXComponent";
+import { forEachJsxAttributes } from "../forEachJsxAttributes";
+import { useJsxPropRegistration } from "../useJsxPropRegistration";
 
 export const createKIXJsxTag = (
      visitor: Visitor,

@@ -20,7 +20,10 @@ export const createBlockVisitor = <N extends any, R extends any>(
             globalScopeIdentifiers: undefined,
         };
         context.getVariableUniqueIdentifier = (flag: NodeFlags) => {
+            // ThisExpression
+            // if(){
 
+            // }
             if (isGlobalBlock) {
 
                 return variableState.globalScopeIdentifiers ||= context.factory.createUniqueName("_");

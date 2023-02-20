@@ -1,6 +1,6 @@
-import { CustomContextType } from "..";
 import { isBlock, isVariableDeclarationList } from "../../../factory/nodeTests";
 import { ForStatement, NodeFlags, SyntaxKind, VariableDeclarationList, Visitor } from "../../../types";
+import { CustomContextType } from "..";
 import { createObject } from "../factoryCode/createObject";
 import { nodeToken } from "../factoryCode/nodeToken";
 import { variableStatement } from "../factoryCode/variableStatement";
@@ -28,7 +28,7 @@ const ForStatementBlockVisitor = createBlockVisitor(<N extends InitializerArgTyp
 
     return statement;
 
-}, false);
+}, /* isGlobalBlock */ false);
 
 const ForStatementVisitor = createBlockVisitor((
     node: ForStatement,
@@ -62,7 +62,7 @@ const ForStatementVisitor = createBlockVisitor((
         incrementor,
         statement
     };
-}, false);
+}, /* isGlobalBlock */ false);
 
 export const VisitForStatement = (node: ForStatement, visitor: Visitor, context: CustomContextType) => {
     let [{
@@ -72,12 +72,12 @@ export const VisitForStatement = (node: ForStatement, visitor: Visitor, context:
         statement
     }, variableState] = ForStatementVisitor(node, visitor, context);
 
-    if (initializer && isVariableDeclarationList(initializer) && initializer.flags === NodeFlags.Let) {
+    if (initializer && isVariableDeclarationList(initializer) && (initializer.flags & NodeFlags.Let)) {
         const letInitializerUpdated = updateLetInitializerAndConditionForBlock(initializer, condition, variableState, context);
         initializer = letInitializerUpdated.initializer;
         condition = letInitializerUpdated.condition;
     }
- else {
+    else {
         statement = updateStatementNode(statement, variableState, context);
     }
     return context.factory.updateForStatement(
@@ -122,7 +122,7 @@ const updateLetInitializerAndConditionForBlock = (
     if (condition) {
         condition = nodeToken([stateObjectNode, condition], SyntaxKind.CommaToken);
     }
- else {
+    else {
         condition = stateObjectNode;
     }
 

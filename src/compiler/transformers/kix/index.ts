@@ -1,4 +1,5 @@
-import { Bundle, Identifier, LanguageVariant, Node, NodeFlags, SourceFile, TransformationContext, TransformerFactory, Visitor } from "../../types";
+// import { factory } from "../../factory/nodeFactory";
+import { Bundle, Identifier, LanguageVariant, Node, NodeArray, NodeFlags, SourceFile, ThisExpression, TransformationContext, TransformerFactory, Visitor } from "../../types";
 import { chainBundle } from "../utilities";
 import { jsxTransformers } from "./jsx";
 import { getVisitor } from "./utils/getVisitor";
@@ -8,10 +9,12 @@ import { getVisitor } from "./utils/getVisitor";
 
 export type VisitEachType = <N extends Node>(node: N, nodeVisitor: Visitor, context: CustomContextType) => N;
 export interface IdentifiersStateType {
-    isJsx: boolean,
+    isDynamicJsx: boolean,
     isChanged: boolean,
     declaredFlag: NodeFlags | undefined,
-    substituteCallback: (indexIdToUniqueString: string, declarationIdentifier: Identifier) => void,
+    defaultPropertyName: string | undefined,
+    defaultDeclareNameNode: ThisExpression | Identifier | undefined,
+    substituteCallback: (indexIdToUniqueString: string, declarationIdentifier: ThisExpression | Identifier) => void,
 }
 export type DeclaredBlockIdentifiersType = Map<string, IdentifiersStateType>;
 export interface CustomContextType extends TransformationContext {
@@ -21,6 +24,7 @@ export interface CustomContextType extends TransformationContext {
 
 
     getVariableUniqueIdentifier: (flag: NodeFlags) => Identifier
+    // | ThisExpression
     substituteNodesList: Map<Node, (node: Node, substituteVisitor: Visitor, context: Visitor) => Node | Node[]>
 
 
@@ -30,9 +34,11 @@ export interface CustomContextType extends TransformationContext {
 
     languageVariant: LanguageVariant
 }
-// export interface CustomContextTypeExperimental extends CustomContextType {
-
-// }
+export interface CustomContextTypeExperimental extends CustomContextType {
+    substituteChannelCallback: () => void
+    addSubstituteCallBack: <N extends (Node | Node[] | NodeArray<Node>) >(node: N, callback: (node: N) => N | undefined) => void
+    languageVariant: LanguageVariant
+}
 
 const getNodeVisitor = getVisitor(jsxTransformers) as TransformerFactory<SourceFile>;
 
@@ -44,8 +50,8 @@ export function transformKix(context: TransformationContext): (x: SourceFile | B
     const visitor = getNodeVisitor(context);
 
     return chainBundle(context, (sourceFile: SourceFile) => {
-       const languageVariant = sourceFile?.languageVariant;
-    //    console.log("🚀 --> file: index.ts:43 --> returnchainBundle --> sourceFile", sourceFile.fileName, LanguageVariant[languageVariant] );
+        const languageVariant = sourceFile?.languageVariant;
+        //    console.log("🚀 --> file: index.ts:43 --> returnchainBundle --> sourceFile", sourceFile.fileName, LanguageVariant[languageVariant] );
 
         if (languageVariant === LanguageVariant.JSX || languageVariant === LanguageVariant.KJS) {
 

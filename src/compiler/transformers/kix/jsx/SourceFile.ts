@@ -1,7 +1,7 @@
 import { LanguageVariant, Node, SourceFile, Visitor } from "../../../types";
 import { visitEachChild } from "../../../visitorPublic";
 import { CustomContextType } from "..";
-import { createKJSDefaultExportClassForSourceFile } from "./FactoryCreate/createKJSDefaultExportClassForSourceFile";
+import { createKJSDefaultExportClassForSourceFile } from "./factoryTransforms/createKJSDefaultExportClassForSourceFile";
 import { moduleSourceFileBodyVisitor } from "./utils/moduleSourceFileBodyVisitor";
 
 export const VisitSourceFile = (node: SourceFile, visitor: Visitor, context: CustomContextType) => {

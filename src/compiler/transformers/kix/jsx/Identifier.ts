@@ -14,7 +14,7 @@ export const VisitIdentifier = (node: Identifier, _: Visitor , context: CustomCo
     const identifierName = idText(node);
 
     context.addIdentifiersChannelCallback(identifierName, (identifierState) => {
-      identifierState.isJsx = true;
+      identifierState.isDynamicJsx = true;
       // const { substituteCallback } = identifierState
       identifierState.substituteCallback = (indexIdToUniqueString, declarationIdentifier) => {
 

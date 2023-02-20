@@ -50,6 +50,7 @@ export const jsxTransformers = {
         );
         return childrenNode || context.factory.createArrayLiteralExpression([], /*multiLine*/ false);
     },
+    ///////////////////////////////////////////////////////////////
     [SyntaxKind.ArrowFunction]: VisitArrowFunction,
     [SyntaxKind.FunctionExpression]: VisitFunctionExpression,
     [SyntaxKind.FunctionDeclaration]: VisitFunctionDeclaration,

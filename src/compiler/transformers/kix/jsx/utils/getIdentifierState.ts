@@ -17,9 +17,11 @@ const createIdentifiersMap = (context: CustomContextType) => {
             const { getVariableUniqueIdentifier } = context;
             const indexId = getIndexId();
             const newIdentifierState = {
-                isJsx: false,
+                isDynamicJsx: false,
                 isChanged: false,
                 declaredFlag: undefined,
+                defaultDeclareNameNode: undefined,
+                defaultPropertyName: undefined,
                 get substituteCallback() {
                     return substituteCallback;
                 },
@@ -30,9 +32,9 @@ const createIdentifiersMap = (context: CustomContextType) => {
                         newValue(indexIdToUniqueString, declarationIdentifier);
                         substituteCallbackCache(indexIdToUniqueString, declarationIdentifier);
                     };
-                    if (this.isJsx && this.isChanged && this.declaredFlag !== undefined) {
+                    if (this.isDynamicJsx && this.isChanged && this.declaredFlag !== undefined) {
                         if (this.declaredFlag !== NodeFlags.Const) {
-                            substituteCallback(NumberToUniqueString(indexId), getVariableUniqueIdentifier(this.declaredFlag));
+                            substituteCallback(this.defaultPropertyName || NumberToUniqueString(indexId), this.defaultDeclareNameNode || getVariableUniqueIdentifier(this.declaredFlag));
                         }
                         substituteCallback = () => { };
                     }

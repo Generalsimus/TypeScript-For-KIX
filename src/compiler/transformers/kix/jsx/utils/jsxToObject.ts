@@ -4,7 +4,8 @@ import { JsxAttributes, JsxChild, JsxTagNameExpression, LanguageVariant, NodeArr
 import { isFunctionExpressionOrArrowFunction } from "../../../../utilities";
 import { idText } from "../../../../utilitiesPublic";
 import { CustomContextType } from "../..";
-import { createKIXJsxTag } from "../FactoryCreate/createKixJsxTag";
+import { createKIXJsxTag } from "./factoryTransforms/createKIXJsxTag";
+// import { createKIXJsxTag } from "./factoryCreate/createKixJsxTag";
 
 const getTagNameString = (tagName: JsxTagNameExpression, _?: string) => {
     if (isIdentifier(tagName)) {
@@ -30,7 +31,7 @@ export const VisitJsxToObject = (
             if (isJsxExpression(childNode) && childNode.expression && (isFunctionExpressionOrArrowFunction(childNode.expression) || isFunctionDeclaration(childNode.expression))) {
 
                 return factory.createCallExpression(
-                    factory.createParenthesizedExpression(childNode.expression),
+                    factory.createParenthesizedExpression(visitor(childNode.expression) as any),
                     [],
                     []
                 );

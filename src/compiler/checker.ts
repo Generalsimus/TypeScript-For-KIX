@@ -29381,7 +29381,10 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
             return getIntersectionType(results); // Same result for both union and intersection signatures
         }
         const instanceType = getReturnTypeOfSignature(sig);
+        // console.log("🚀 --> file: checker.ts:29385 --> getJsxPropsTypeForSignatureFromMember --> instanceType", instanceType);
         if(instanceType.symbol && (instanceType.symbol.flags & SymbolFlags.KJSModule)){
+            debugger;
+        // throw Error("SSSS");
             return instanceType;
         }
         return isTypeAny(instanceType) ? instanceType : getTypeOfPropertyOfType(instanceType, forcedLookupLocation);
@@ -29426,6 +29429,7 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
     }
 
     function getJsxPropsTypeFromClassType(sig: Signature, context: JsxOpeningLikeElement) {
+        console.log("🚀 --> file: checker.ts:29432 --> getJsxPropsTypeFromClassType --> sig:", "sig");
         const ns = getJsxNamespaceAt(context);
         const forcedLookupLocation = getJsxElementPropertiesName(ns);
         let attributesType = forcedLookupLocation === undefined
@@ -31299,7 +31303,7 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
     function isUncheckedJSSuggestion(node: Node | undefined, suggestion: Symbol | undefined, excludeClasses: boolean): boolean {
         const file = getSourceFileOfNode(node);
         if (file) {
-            if (compilerOptions.checkJs === undefined && file.checkJsDirective === undefined && (file.scriptKind === ScriptKind.JS || file.scriptKind === ScriptKind.JSX)) {
+            if (compilerOptions.checkJs === undefined && file.checkJsDirective === undefined && (file.scriptKind === ScriptKind.JS || file.scriptKind === ScriptKind.JSX || file.scriptKind === ScriptKind.KJS)) {
                 const declarationFile = forEach(suggestion?.declarations, getSourceFileOfNode);
                 return !(file !== declarationFile && !!declarationFile && isGlobalSourceFile(declarationFile))
                     && !(excludeClasses && suggestion && suggestion.flags & SymbolFlags.Class)
@@ -33731,6 +33735,7 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
     }
 
     function resolveJsxOpeningLikeElement(node: JsxOpeningLikeElement, candidatesOutArray: Signature[] | undefined, checkMode: CheckMode): Signature {
+        // console.log("🚀 --> file: checker.ts:33736 --> resolveJsxOpeningLikeElement --> node:",  (node.tagName));
         if (isJsxIntrinsicIdentifier(node.tagName)) {
             const result = getIntrinsicAttributesTypeFromJsxOpeningLikeElement(node);
             const fakeSignature = createSignatureForJSXIntrinsic(node, result);
@@ -33743,6 +33748,7 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
         }
         const exprTypes = checkExpression(node.tagName);
         const apparentType = getApparentType(exprTypes);
+        console.log("🚀 --> file: checker.ts:33748 --> resolveJsxOpeningLikeElement --> apparentType:", isErrorType(apparentType));
         if (isErrorType(apparentType)) {
             return resolveErrorCall(node);
         }
@@ -33799,12 +33805,18 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
      */
     function getResolvedSignature(node: CallLikeExpression, candidatesOutArray?: Signature[] | undefined, checkMode?: CheckMode): Signature {
         const links = getNodeLinks(node);
+        // debugger;
+        // console.log("🚀 --> file: checker.ts:33806 --> getResolvedSignature --> node:",{qqqq: {node}});
         // If getResolvedSignature has already been called, we will have cached the resolvedSignature.
         // However, it is possible that either candidatesOutArray was not passed in the first time,
         // or that a different candidatesOutArray was passed in. Therefore, we need to redo the work
         // to correctly fill the candidatesOutArray.
+        // throw Error("")
         const cached = links.resolvedSignature;
+        // console.log("🚀 --> :", !!(cached && cached !== resolvingSignature && !candidatesOutArray));
+          
         if (cached && cached !== resolvingSignature && !candidatesOutArray) {
+             // console.log({ww:{cached}})
             return cached;
         }
         links.resolvedSignature = resolvingSignature;
@@ -33817,6 +33829,7 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
             // types from the control flow analysis.
             links.resolvedSignature = flowLoopStart === flowLoopCount ? result : cached;
         }
+        // console.log({aa:{result}})
         return result;
     }
 
@@ -44598,6 +44611,7 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
 
     function checkDeferredNodes(context: SourceFile) {
         const links = getNodeLinks(context);
+        // console.log("🚀 --> file: checker.ts:44614 --> checkDeferredNodes --> links:", !(links.deferredNodes));
         if (links.deferredNodes) {
             links.deferredNodes.forEach(checkDeferredNode);
         }
