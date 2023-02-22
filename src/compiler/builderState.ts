@@ -389,11 +389,14 @@ export namespace BuilderState {
             return emptyArray;
         }
 
+        // console.log(sourceFile.fileName,!updateShapeSignature(state, programOfThisState, sourceFile, cancellationToken, host));
         if (!updateShapeSignature(state, programOfThisState, sourceFile, cancellationToken, host)) {
             return [sourceFile];
         }
+        
 
-        return (state.referencedMap ? getFilesAffectedByUpdatedShapeWhenModuleEmit : getFilesAffectedByUpdatedShapeWhenNonModuleEmit)(state, programOfThisState, sourceFile, cancellationToken, host);
+        return   (state.referencedMap ? getFilesAffectedByUpdatedShapeWhenModuleEmit : getFilesAffectedByUpdatedShapeWhenNonModuleEmit)(state, programOfThisState, sourceFile, cancellationToken, host);
+   
     }
 
     export function updateSignatureOfFile(state: BuilderState, signature: string | undefined, path: Path) {
@@ -411,6 +414,7 @@ export namespace BuilderState {
         programOfThisState.emit(
             sourceFile,
             (fileName, text, _writeByteOrderMark, _onError, sourceFiles, data) => {
+                console.log("🚀 --> file: builderState.ts:417 --> text:", {sourceFile,text});
                 Debug.assert(isDeclarationFileName(fileName), `File extension for signature expected to be dts: Got:: ${fileName}`);
                 onNewSignature(computeSignatureWithDiagnostics(
                     programOfThisState,
@@ -452,6 +456,10 @@ export namespace BuilderState {
                 }
             });
         }
+        
+    //     if (!sourceFile.fileName.includes("node_modules") && !sourceFile.fileName.includes("/built/local/")) {
+    //     console.log({latestSignature, prevSignature,filename:sourceFile.fileName}, latestSignature !== prevSignature)
+    // }
         // Default is to use file version as signature
         if (latestSignature === undefined) {
             latestSignature = sourceFile.version;
@@ -470,6 +478,10 @@ export namespace BuilderState {
         (state.oldSignatures ||= new Map()).set(sourceFile.resolvedPath, prevSignature || false);
         (state.hasCalledUpdateShapeSignature ||= new Set()).add(sourceFile.resolvedPath);
         info.signature = latestSignature;
+        // if (!sourceFile.fileName.includes("node_modules") && !sourceFile.fileName.includes("/built/local/")) {
+        //     debugger;
+        //   }
+        //   return true
         return latestSignature !== prevSignature;
     }
 

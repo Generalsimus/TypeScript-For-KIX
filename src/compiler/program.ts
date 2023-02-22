@@ -3099,7 +3099,6 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
         cache: DiagnosticCache<U>,
         getDiagnostics: (sourceFile: T, cancellationToken: CancellationToken | undefined) => readonly U[],
     ): readonly U[] {
-
         const cachedResult = sourceFile
             ? cache.perFile?.get(sourceFile.path)
             : cache.allDiagnostics;

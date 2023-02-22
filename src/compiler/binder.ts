@@ -573,8 +573,9 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
             tracing?.push(tracing.Phase.Bind, "bindSourceFile", { path: file.path }, /*separateBeginAndEnd*/ true);
             bind(file);
             if (file.languageVariant === LanguageVariant.KJS) {
-                console.log("🚀 --> file: binder.ts:589 --> bindSourceFile --> file.symbol",file.symbol.exports);
+                // console.log("🚀 --> file: binder.ts:589 --> bindSourceFile --> file.symbol", file.symbol.exports);
                 const defaultSymbol = createSymbol(SymbolFlags.ExportSupportsDefaultModifier | SymbolFlags.KJSModule, "default" as __String);
+                defaultSymbol.parent = file.symbol;
                 // console.log("🚀 --> file: binder.ts:583 --> bindSourceFile --> defaultSymbol", defaultSymbol);
 
                 defaultSymbol.members = createSymbolTable();
@@ -588,12 +589,13 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
 
                 file.symbol.exports?.set("default" as __String, defaultSymbol);
                 // console.log("🚀 --> file: binder.ts:591 --> bindSourceFile --> file", file);
-
+               
+                // setParent
             }
             // console.log({ filename:file.fileName, file:"file",len:(file.kixExportedProps || []).length });
-            if(file.fileName.endsWith("impoooo.tsx")){
+            if (file.fileName.endsWith("impoooo.tsx") || file.fileName.endsWith("tesssssssss.kts")) {
 
-                // console.log("🚀 --> file: binder.ts:591 --> bindSourceFile --> file", file.resolvedModules);
+                // console.log("🚀 --> file: binder.ts:591 --> bindSourceFile --> file",  file.symbol.exports );
             }
             tracing?.pop();
             file.symbolCount = symbolCount;

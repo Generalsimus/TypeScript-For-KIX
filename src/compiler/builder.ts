@@ -536,12 +536,16 @@ function getNextAffectedFile(
 ): SourceFile | Program | undefined {
     while (true) {
         const { affectedFiles } = state;
+        
         if (affectedFiles) {
             const seenAffectedFiles = state.seenAffectedFiles!;
+            // console.log("!!!!!!",{seenAffectedFiles: state.seenAffectedFiles,aa:affectedFiles?.map((el:any)=>(el.fileName))}).
             let affectedFilesIndex = state.affectedFilesIndex!; // TODO: GH#18217
+        
             while (affectedFilesIndex < affectedFiles.length) {
                 const affectedFile = affectedFiles[affectedFilesIndex];
                 if (!seenAffectedFiles.has(affectedFile.resolvedPath)) {
+                    // console.log("🚀 --> file: builder.ts:544 --> affectedFile.resolvedPat:",affectedFile.fileName);
                     // Set the next affected file as seen and remove the cached semantic diagnostics
                     state.affectedFilesIndex = affectedFilesIndex;
                     addToAffectedFilesPendingEmit(state, affectedFile.resolvedPath, getBuilderFileEmit(state.compilerOptions));
@@ -551,6 +555,7 @@ function getNextAffectedFile(
                         cancellationToken,
                         host
                     );
+                   
                     return affectedFile;
                 }
                 affectedFilesIndex++;
@@ -582,6 +587,7 @@ function getNextAffectedFile(
         }
 
         // Get next batch of affected files
+        // console.log({seenAffectedqqqqq:state.affectedFiles?.map(el=>el.fileName)})
         state.affectedFiles = BuilderState.getFilesAffectedByWithOldState(
             state,
             program,
@@ -589,6 +595,7 @@ function getNextAffectedFile(
             cancellationToken,
             host,
         );
+        // console.log({seenAffectewwwww:state.affectedFiles?.map(el=>el.fileName)})
         state.currentChangedFilePath = nextKey.value;
         state.affectedFilesIndex = 0;
         if (!state.seenAffectedFiles) state.seenAffectedFiles = new Set();
@@ -647,6 +654,7 @@ function handleDtsMayChangeOfAffectedFile(
     cancellationToken: CancellationToken | undefined,
     host: BuilderProgramHost,
 ) {
+    // console.log(affectedFile.resolvedPath),
     removeSemanticDiagnosticsOf(state, affectedFile.resolvedPath);
 
     // If affected files is everything except default library, then nothing more to do
@@ -857,6 +865,7 @@ function getSemanticDiagnosticsOfFile(state: BuilderProgramState, sourceFile: So
  */
 function getBinderAndCheckerDiagnosticsOfFile(state: BuilderProgramState, sourceFile: SourceFile, cancellationToken?: CancellationToken): readonly Diagnostic[] {
     const path = sourceFile.resolvedPath;
+    
     if (state.semanticDiagnosticsPerFile) {
         const cachedDiagnostics = state.semanticDiagnosticsPerFile.get(path);
         // Report the bind and check diagnostics from the cache if we already have those diagnostics present
@@ -868,6 +877,7 @@ function getBinderAndCheckerDiagnosticsOfFile(state: BuilderProgramState, source
     // Diagnostics werent cached, get them from program, and cache the result
     const diagnostics = Debug.checkDefined(state.program).getBindAndCheckDiagnostics(sourceFile, cancellationToken);
     if (state.semanticDiagnosticsPerFile) {
+        // console.log(sourceFile.path, diagnostics.length);
         state.semanticDiagnosticsPerFile.set(path, diagnostics);
     }
     return filterSemanticDiagnostics(diagnostics, state.compilerOptions);
@@ -1296,13 +1306,16 @@ export function computeSignatureWithDiagnostics(
     host: HostForComputeHash,
     data: WriteFileCallbackData | undefined
 ) {
+  
     text = getTextHandlingSourceMapForSignature(text, data);
+   
     let sourceFileDirectory: string | undefined;
     if (data?.diagnostics?.length) {
         text += data.diagnostics.map(diagnostic =>
             `${locationInfo(diagnostic)}${DiagnosticCategory[diagnostic.category]}${diagnostic.code}: ${flattenDiagnosticMessageText(diagnostic.messageText)}`
         ).join("\n");
-    }
+    } 
+    
     return (host.createHash ?? generateDjb2Hash)(text);
 
     function flattenDiagnosticMessageText(diagnostic: string | DiagnosticMessageChain | undefined): string {
@@ -1325,6 +1338,7 @@ export function computeSignatureWithDiagnostics(
         ))}(${diagnostic.start},${diagnostic.length})`;
     }
 }
+    // console.log("🚀 --> file: builder.ts:1338 --> text:", text);
 
 /** @internal */
 export function computeSignature(text: string, host: HostForComputeHash, data?: WriteFileCallbackData) {
@@ -1479,7 +1493,8 @@ export function createBuilderProgram(kind: BuilderProgramKind, { newProgram, hos
                                 text,
                                 host,
                                 data,
-                            );
+                            ); 
+                            // console.log("🚀 --> file: builder.ts:1493 --> return --> signature:", signature);
                             // With d.ts diagnostics they are also part of the signature so emitSignature will be different from it since its just hash of d.ts
                             if (!data?.diagnostics?.length) emitSignature = signature;
                             if (signature !== file.version) { // Update it
@@ -1605,13 +1620,16 @@ export function createBuilderProgram(kind: BuilderProgramKind, { newProgram, hos
      * If provided ignoreSourceFile would be called before getting the diagnostics and would ignore the sourceFile if the returned value was true
      */
     function getSemanticDiagnosticsOfNextAffectedFile(cancellationToken?: CancellationToken, ignoreSourceFile?: (sourceFile: SourceFile) => boolean): AffectedFileResult<readonly Diagnostic[]> {
+        
         while (true) {
+           
             const affected = getNextAffectedFile(state, cancellationToken, host);
             let result;
             if (!affected) return undefined; // Done
             else if (affected !== state.program) {
                 // Get diagnostics for the affected file if its not ignored
                 const affectedSourceFile = affected as SourceFile;
+                // console.log("🚀 --> file: builder.ts:1619 --> getSemanticDiagnosticsOfNextAffectedFile --> affectedSourceFile:", affectedSourceFile.path);
                 if (!ignoreSourceFile || !ignoreSourceFile(affectedSourceFile)) {
                     result = getSemanticDiagnosticsOfFile(state, affectedSourceFile, cancellationToken);
                 }

@@ -1319,7 +1319,7 @@ export function createSourceFile(fileName: string, sourceText: string, languageV
     tracing?.push(tracing.Phase.Parse, "createSourceFile", { path: fileName }, /*separateBeginAndEnd*/ true);
     performance.mark("beforeParse");
     let result: SourceFile;
-
+    // console.log("🚀 --> file: parser.ts:9665 --> updateSourceFile --> sourceFile:", fileName);
     perfLogger.logStartParseSourceFile(fileName);
     const {
         languageVersion,
@@ -1341,6 +1341,14 @@ export function createSourceFile(fileName: string, sourceText: string, languageV
     performance.mark("afterParse");
     performance.measure("Parse", "beforeParse", "afterParse");
     tracing?.pop();
+    console.log("🚀 --> file: </Node>parser.ts:1347 --> createSourceFile --> result.version:", result.fileName);
+    // if (!result.fileName.includes("node_modules") && !result.fileName.includes("/built/local/")) {
+    //     debugger;
+    //   }
+    //   if(result.languageVariant === LanguageVariant.KJS){
+        
+    //     // console.log("🚀 --> file: parser.ts:1351 --> createSourceFile --> sourceText:", {sourceText});
+    //   }
     return result;
 }
 
@@ -1755,6 +1763,7 @@ namespace Parser {
         }
         if (languageVariant === LanguageVariant.KJS) {
             const kixExportedProps: (VariableDeclaration | ClassDeclaration | FunctionDeclaration)[] = (sourceFile.kixExportedProps = []);
+            
             for (const kixExportedDeclaration of kixExportedVariableStatements) {
                 kixExportedProps.push(kixExportedDeclaration);
             }
@@ -1763,7 +1772,7 @@ namespace Parser {
         if (setParentNodes) {
             fixupParentReferences(sourceFile);
         }
-
+        // console.log("🚀 --> file: parser.ts:1766 --> parseSourceFileWorker --> kixExportedProps:", sourceFile.kixExportedProps?.length,kixExportedVariableStatements.length);
         return sourceFile;
 
         function reportPragmaDiagnostic(pos: number, end: number, diagnostic: DiagnosticMessage) {
@@ -8491,11 +8500,13 @@ namespace Parser {
         ) {
             if (ts.isVariableStatement(exportedDeclaration)) {
                 for (const declaration of exportedDeclaration.declarationList.declarations) {
-                    kixExportedVariableStatements.push(declaration);
+                    kixExportedVariableStatements.splice(0,0,declaration)
+                    // kixExportedVariableStatements.push(declaration);
 // console.log("dec;,",getDeclarationFromName)
                 }
             }
                else {
+                // kixExportedVariableStatements.splice(0,0,exportedDeclaration)
                 kixExportedVariableStatements.push(exportedDeclaration);
             }
         }
@@ -9662,6 +9673,7 @@ namespace Parser {
 
 namespace IncrementalParser {
     export function updateSourceFile(sourceFile: SourceFile, newText: string, textChangeRange: TextChangeRange, aggressiveChecks: boolean): SourceFile {
+       
         aggressiveChecks = aggressiveChecks || Debug.shouldAssert(AssertionLevel.Aggressive);
 
         checkChangeRange(sourceFile, newText, textChangeRange, aggressiveChecks);
