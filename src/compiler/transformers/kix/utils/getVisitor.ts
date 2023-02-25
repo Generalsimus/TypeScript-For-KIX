@@ -1,6 +1,6 @@
-import { CustomContextType } from "..";
 import { Node, VisitResult } from "../../../types";
 import { visitEachChild } from "../../../visitorPublic";
+import { CustomContextType } from "..";
 import { declarationTransformers } from "../declarations";
 import { jsxTransformers } from "../jsx";
 

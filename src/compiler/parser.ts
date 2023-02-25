@@ -1341,7 +1341,7 @@ export function createSourceFile(fileName: string, sourceText: string, languageV
     performance.mark("afterParse");
     performance.measure("Parse", "beforeParse", "afterParse");
     tracing?.pop();
-    console.log("🚀 --> file: </Node>parser.ts:1347 --> createSourceFile --> result.version:", result.fileName);
+    // console.log("🚀 --> file: </Node>parser.ts:1347 --> createSourceFile --> result.version:", result.fileName);
     // if (!result.fileName.includes("node_modules") && !result.fileName.includes("/built/local/")) {
     //     debugger;
     //   }
@@ -1763,7 +1763,7 @@ namespace Parser {
         }
         if (languageVariant === LanguageVariant.KJS) {
             const kixExportedProps: (VariableDeclaration | ClassDeclaration | FunctionDeclaration)[] = (sourceFile.kixExportedProps = []);
-            
+
             for (const kixExportedDeclaration of kixExportedVariableStatements) {
                 kixExportedProps.push(kixExportedDeclaration);
             }

@@ -589,7 +589,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
 
                 file.symbol.exports?.set("default" as __String, defaultSymbol);
                 // console.log("🚀 --> file: binder.ts:591 --> bindSourceFile --> file", file);
-               
+
                 // setParent
             }
             // console.log({ filename:file.fileName, file:"file",len:(file.kixExportedProps || []).length });

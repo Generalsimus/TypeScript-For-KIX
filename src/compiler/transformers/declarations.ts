@@ -542,7 +542,7 @@ export function transformDeclarations(context: TransformationContext) {
             refs.forEach(referenceVisitor);
             return bundle;
         }
-
+        console.log("🚀 --> file: declarations.ts:580 --> transformRoot --> node:", node.fileName);
         // Single source file
         needsDeclare = true;
         needsScopeFixMarker = false;
@@ -577,6 +577,7 @@ export function transformDeclarations(context: TransformationContext) {
             }
         }
         const updated = factory.updateSourceFile(node, combinedStatements, /*isDeclarationFile*/ true, references, getFileReferencesForUsedTypeReferences(), node.hasNoDefaultLib, getLibReferences());
+       
         updated.exportedModulesFromDeclarationEmit = exportedModulesFromDeclarationEmit;
         return updated;
 

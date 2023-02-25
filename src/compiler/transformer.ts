@@ -195,9 +195,10 @@ function getDeclarationTransformers(customTransformers?: CustomTransformers) {
     const transformers: TransformerFactory<SourceFile | Bundle>[] = [];
 
 
-        transformers.push(transformKixDeclaration);
+    transformers.push(transformDeclarations);
 
-        transformers.push(transformDeclarations);
+    transformers.push(transformKixDeclaration);
+
 
 
     addRange(transformers, customTransformers && map(customTransformers.afterDeclarations, wrapDeclarationTransformerFactory));

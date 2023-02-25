@@ -414,7 +414,7 @@ export namespace BuilderState {
         programOfThisState.emit(
             sourceFile,
             (fileName, text, _writeByteOrderMark, _onError, sourceFiles, data) => {
-                console.log("🚀 --> file: builderState.ts:417 --> text:", {sourceFile,text});
+                // console.log("🚀 --> file: builderState.ts:417 --> text:", {sourceFile,text});
                 Debug.assert(isDeclarationFileName(fileName), `File extension for signature expected to be dts: Got:: ${fileName}`);
                 onNewSignature(computeSignatureWithDiagnostics(
                     programOfThisState,

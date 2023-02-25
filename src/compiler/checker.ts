@@ -29385,7 +29385,7 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
         if(instanceType.symbol && (instanceType.symbol.flags & SymbolFlags.KJSModule)){
             // debugger;
         // throw Error("SSSS");
-        console.log("🚀 --> file: checker.ts:29390 --> getJsxPropsTypeForSignatureFromMember --> SSSS:", "SSSS");
+        // console.log("🚀 --> file: checker.ts:29390 --> getJsxPropsTypeForSignatureFromMember --> SSSS:", "SSSS");
             return instanceType;
         }
         return isTypeAny(instanceType) ? instanceType : getTypeOfPropertyOfType(instanceType, forcedLookupLocation);

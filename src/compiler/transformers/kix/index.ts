@@ -1,12 +1,8 @@
-// import { factory } from "../../factory/nodeFactory";
-import { getTypeNode } from "../../factory/emitNode";
-import { factory } from "../../factory/nodeFactory";
-import { SyntaxKind } from "../../types";
-import { Bundle, Identifier, LanguageVariant, Node, NodeArray, NodeFlags, SourceFile, ThisExpression, TransformationContext, TransformerFactory, Visitor } from "../../types";
+import { Bundle, Identifier, LanguageVariant, Node, NodeFlags, SourceFile, ThisExpression, TransformationContext, TransformerFactory, Visitor } from "../../types";
 import { chainBundle } from "../utilities";
+import { declarationTransformers } from "./declarations";
 import { jsxTransformers } from "./jsx";
 import { getVisitor } from "./utils/getVisitor";
-// import { chainBundle } from "./utilities";
 
 
 
@@ -37,11 +33,6 @@ export interface CustomContextType extends TransformationContext {
 
     languageVariant: LanguageVariant
 }
-// export interface CustomContextTypeExperimental extends CustomContextType {
-//     substituteChannelCallback: () => void
-//     addSubstituteCallBack: <N extends (Node | Node[] | NodeArray<Node>) >(node: N, callback: (node: N) => N | undefined) => void
-//     languageVariant: LanguageVariant
-// }
 
 const getNodeVisitor = getVisitor(jsxTransformers) as TransformerFactory<SourceFile>;
 
@@ -51,7 +42,6 @@ export function transformKix(context: TransformationContext): (x: SourceFile | B
 
     return chainBundle(context, (sourceFile: SourceFile) => {
         const languageVariant = sourceFile?.languageVariant;
-        //    console.log("🚀 --> file: index.ts:43 --> returnchainBundle --> sourceFile", sourceFile.fileName, LanguageVariant[languageVariant] );
 
         if (languageVariant === LanguageVariant.JSX || languageVariant === LanguageVariant.KJS) {
 
@@ -60,33 +50,20 @@ export function transformKix(context: TransformationContext): (x: SourceFile | B
         return sourceFile;
     });
 }
-const getDeclarationNodeVisitor = getVisitor({
-    [SyntaxKind.SourceFile]: (node: SourceFile, visitor: Visitor, context: CustomContextType) => {
-        console.log("🚀 --> file: index.ts:66 --> node:", node);
-        // getTypeNode
-        // if(node.l\)
-        for (const declarationNode of (node.kixExportedProps || [])) {
-            // console.log("🚀 --> file: index.ts:68 --> declarationNode:", getTypeNode(declarationNode));
-            
-        }
-        // factory.updateSourceFile(
-        //     node,
-        //     []
-        // );
-        return node;
-    }
-}) as TransformerFactory<SourceFile>;
 
 
+export interface DeclarationCustomContextType extends TransformationContext {
+    isScriptTagInsideContent: boolean,
+    // scriptTagContentNodes: Statement[]
+}
+const getDeclarationNodeVisitor = getVisitor(declarationTransformers) as TransformerFactory<SourceFile>;
 export function transformKixDeclaration(context: TransformationContext): (x: SourceFile | Bundle) => SourceFile | Bundle {
     const visitor = getDeclarationNodeVisitor(context);
 
     return chainBundle(context, (sourceFile: SourceFile) => {
         const languageVariant = sourceFile?.languageVariant;
-        //    console.log("🚀 --> file: index.ts:43 --> returnchainBundle --> sourceFile", sourceFile.fileName, LanguageVariant[languageVariant] );
 
         if (languageVariant === LanguageVariant.KJS) {
-
             return visitor(sourceFile);
         }
         return sourceFile;

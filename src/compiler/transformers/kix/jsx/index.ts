@@ -64,7 +64,7 @@ export const jsxTransformers = {
     [SyntaxKind.ForStatement]: VisitForStatement,
     [SyntaxKind.ForInStatement]: VisitForInStatement,
     [SyntaxKind.ForOfStatement]: VisitForOfStatement,
-
+    // [SyntaxKind.Constructor]: // TODO: ბლოკ ვისიტორში გაკლია კლასის კონსტრუქტორი
 
 
     //////////////////////////////////

@@ -1,6 +1,6 @@
-import { parameterDeclaration } from "./parameterDeclaration";
 import { factory } from "../../../factory/nodeFactory";
 import { BindingName, Expression, Statement, SyntaxKind } from "../../../types";
+import { parameterDeclaration } from "./parameterDeclaration";
 
 
 
