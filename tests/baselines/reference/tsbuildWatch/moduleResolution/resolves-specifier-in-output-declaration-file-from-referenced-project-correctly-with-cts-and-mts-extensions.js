@@ -52,7 +52,7 @@ Output::
 Found 'package.json' at '/user/username/projects/myproject/packages/pkg2/package.json'.
 ======== Resolving module './const.cjs' from '/user/username/projects/myproject/packages/pkg2/index.ts'. ========
 Module resolution kind is not specified, using 'Node16'.
-Resolving in ESM mode with conditions 'node', 'import', 'types'.
+Resolving in ESM mode with conditions 'import', 'types', 'node'.
 Loading module as file / folder, candidate module location '/user/username/projects/myproject/packages/pkg2/const.cjs', target file types: TypeScript, JavaScript, Declaration.
 File name '/user/username/projects/myproject/packages/pkg2/const.cjs' has a '.cjs' extension - stripping it.
 File '/user/username/projects/myproject/packages/pkg2/const.cts' exists - use it as a name resolution result.
@@ -67,7 +67,7 @@ File '/package.json' does not exist.
 Found 'package.json' at '/user/username/projects/myproject/packages/pkg1/package.json'.
 ======== Resolving module 'pkg2' from '/user/username/projects/myproject/packages/pkg1/index.ts'. ========
 Module resolution kind is not specified, using 'Node16'.
-Resolving in ESM mode with conditions 'node', 'import', 'types'.
+Resolving in ESM mode with conditions 'import', 'types', 'node'.
 File '/user/username/projects/myproject/packages/pkg1/package.json' exists according to earlier cached lookups.
 Loading module 'pkg2' from 'node_modules' folder, target file types: TypeScript, JavaScript, Declaration.
 Directory '/user/username/projects/myproject/packages/pkg1/node_modules' does not exist, skipping all lookups in it.
@@ -92,7 +92,7 @@ File '/user/username/projects/myproject/packages/pkg2/package.json' exists accor
 ======== Resolving module './const.cjs' from '/user/username/projects/myproject/packages/pkg2/build/index.d.ts'. ========
 Using compiler options of project reference redirect '/user/username/projects/myproject/packages/pkg2/tsconfig.json'.
 Module resolution kind is not specified, using 'Node16'.
-Resolving in ESM mode with conditions 'node', 'import', 'types'.
+Resolving in ESM mode with conditions 'import', 'types', 'node'.
 Loading module as file / folder, candidate module location '/user/username/projects/myproject/packages/pkg2/build/const.cjs', target file types: TypeScript, JavaScript, Declaration.
 File name '/user/username/projects/myproject/packages/pkg2/build/const.cjs' has a '.cjs' extension - stripping it.
 File '/user/username/projects/myproject/packages/pkg2/build/const.cts' does not exist.
@@ -303,7 +303,7 @@ Output::
 Found 'package.json' at '/user/username/projects/myproject/packages/pkg1/package.json'.
 ======== Resolving module 'pkg2' from '/user/username/projects/myproject/packages/pkg1/index.ts'. ========
 Module resolution kind is not specified, using 'Node16'.
-Resolving in CJS mode with conditions 'node', 'require', 'types'.
+Resolving in CJS mode with conditions 'require', 'types', 'node'.
 File '/user/username/projects/myproject/packages/pkg1/package.json' exists according to earlier cached lookups.
 Loading module 'pkg2' from 'node_modules' folder, target file types: TypeScript, JavaScript, Declaration.
 Directory '/user/username/projects/myproject/packages/pkg1/node_modules' does not exist, skipping all lookups in it.
@@ -332,7 +332,7 @@ Found 'package.json' at '/user/username/projects/myproject/packages/pkg2/package
 ======== Resolving module './const.cjs' from '/user/username/projects/myproject/packages/pkg2/build/index.d.ts'. ========
 Using compiler options of project reference redirect '/user/username/projects/myproject/packages/pkg2/tsconfig.json'.
 Module resolution kind is not specified, using 'Node16'.
-Resolving in ESM mode with conditions 'node', 'import', 'types'.
+Resolving in ESM mode with conditions 'import', 'types', 'node'.
 Loading module as file / folder, candidate module location '/user/username/projects/myproject/packages/pkg2/build/const.cjs', target file types: TypeScript, JavaScript, Declaration.
 File name '/user/username/projects/myproject/packages/pkg2/build/const.cjs' has a '.cjs' extension - stripping it.
 File '/user/username/projects/myproject/packages/pkg2/build/const.cts' does not exist.
@@ -419,7 +419,7 @@ Output::
 Found 'package.json' at '/user/username/projects/myproject/packages/pkg1/package.json'.
 ======== Resolving module 'pkg2' from '/user/username/projects/myproject/packages/pkg1/index.ts'. ========
 Module resolution kind is not specified, using 'Node16'.
-Resolving in ESM mode with conditions 'node', 'import', 'types'.
+Resolving in ESM mode with conditions 'import', 'types', 'node'.
 File '/user/username/projects/myproject/packages/pkg1/package.json' exists according to earlier cached lookups.
 Loading module 'pkg2' from 'node_modules' folder, target file types: TypeScript, JavaScript, Declaration.
 Directory '/user/username/projects/myproject/packages/pkg1/node_modules' does not exist, skipping all lookups in it.
@@ -444,7 +444,7 @@ Found 'package.json' at '/user/username/projects/myproject/packages/pkg2/package
 ======== Resolving module './const.cjs' from '/user/username/projects/myproject/packages/pkg2/build/index.d.ts'. ========
 Using compiler options of project reference redirect '/user/username/projects/myproject/packages/pkg2/tsconfig.json'.
 Module resolution kind is not specified, using 'Node16'.
-Resolving in ESM mode with conditions 'node', 'import', 'types'.
+Resolving in ESM mode with conditions 'import', 'types', 'node'.
 Loading module as file / folder, candidate module location '/user/username/projects/myproject/packages/pkg2/build/const.cjs', target file types: TypeScript, JavaScript, Declaration.
 File name '/user/username/projects/myproject/packages/pkg2/build/const.cjs' has a '.cjs' extension - stripping it.
 File '/user/username/projects/myproject/packages/pkg2/build/const.cts' does not exist.
@@ -526,7 +526,7 @@ Output::
 Found 'package.json' at '/user/username/projects/myproject/packages/pkg1/package.json'.
 ======== Resolving module 'pkg2' from '/user/username/projects/myproject/packages/pkg1/index.ts'. ========
 Module resolution kind is not specified, using 'Node16'.
-Resolving in CJS mode with conditions 'node', 'require', 'types'.
+Resolving in CJS mode with conditions 'require', 'types', 'node'.
 File '/user/username/projects/myproject/packages/pkg1/package.json' exists according to earlier cached lookups.
 Loading module 'pkg2' from 'node_modules' folder, target file types: TypeScript, JavaScript, Declaration.
 Directory '/user/username/projects/myproject/packages/pkg1/node_modules' does not exist, skipping all lookups in it.
@@ -555,7 +555,7 @@ Found 'package.json' at '/user/username/projects/myproject/packages/pkg2/package
 ======== Resolving module './const.cjs' from '/user/username/projects/myproject/packages/pkg2/build/index.d.ts'. ========
 Using compiler options of project reference redirect '/user/username/projects/myproject/packages/pkg2/tsconfig.json'.
 Module resolution kind is not specified, using 'Node16'.
-Resolving in ESM mode with conditions 'node', 'import', 'types'.
+Resolving in ESM mode with conditions 'import', 'types', 'node'.
 Loading module as file / folder, candidate module location '/user/username/projects/myproject/packages/pkg2/build/const.cjs', target file types: TypeScript, JavaScript, Declaration.
 File name '/user/username/projects/myproject/packages/pkg2/build/const.cjs' has a '.cjs' extension - stripping it.
 File '/user/username/projects/myproject/packages/pkg2/build/const.cts' does not exist.
@@ -645,7 +645,7 @@ Output::
 
 ======== Resolving module './const.cjs' from '/user/username/projects/myproject/packages/pkg2/index.cts'. ========
 Module resolution kind is not specified, using 'Node16'.
-Resolving in CJS mode with conditions 'node', 'require', 'types'.
+Resolving in CJS mode with conditions 'require', 'types', 'node'.
 Loading module as file / folder, candidate module location '/user/username/projects/myproject/packages/pkg2/const.cjs', target file types: TypeScript, JavaScript, Declaration.
 File name '/user/username/projects/myproject/packages/pkg2/const.cjs' has a '.cjs' extension - stripping it.
 File '/user/username/projects/myproject/packages/pkg2/const.cts' exists - use it as a name resolution result.
@@ -660,7 +660,7 @@ File '/package.json' does not exist.
 Found 'package.json' at '/user/username/projects/myproject/packages/pkg1/package.json'.
 ======== Resolving module 'pkg2' from '/user/username/projects/myproject/packages/pkg1/index.ts'. ========
 Module resolution kind is not specified, using 'Node16'.
-Resolving in CJS mode with conditions 'node', 'require', 'types'.
+Resolving in CJS mode with conditions 'require', 'types', 'node'.
 File '/user/username/projects/myproject/packages/pkg1/package.json' exists according to earlier cached lookups.
 Loading module 'pkg2' from 'node_modules' folder, target file types: TypeScript, JavaScript, Declaration.
 Directory '/user/username/projects/myproject/packages/pkg1/node_modules' does not exist, skipping all lookups in it.
@@ -685,7 +685,7 @@ Resolving real path for '/user/username/projects/myproject/node_modules/pkg2/bui
 ======== Resolving module './const.cjs' from '/user/username/projects/myproject/packages/pkg2/build/index.d.cts'. ========
 Using compiler options of project reference redirect '/user/username/projects/myproject/packages/pkg2/tsconfig.json'.
 Module resolution kind is not specified, using 'Node16'.
-Resolving in CJS mode with conditions 'node', 'require', 'types'.
+Resolving in CJS mode with conditions 'require', 'types', 'node'.
 Loading module as file / folder, candidate module location '/user/username/projects/myproject/packages/pkg2/build/const.cjs', target file types: TypeScript, JavaScript, Declaration.
 File name '/user/username/projects/myproject/packages/pkg2/build/const.cjs' has a '.cjs' extension - stripping it.
 File '/user/username/projects/myproject/packages/pkg2/build/const.cts' does not exist.
