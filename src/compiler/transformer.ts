@@ -193,15 +193,8 @@ function getScriptTransformers(compilerOptions: CompilerOptions, customTransform
 
 function getDeclarationTransformers(customTransformers?: CustomTransformers) {
     const transformers: TransformerFactory<SourceFile | Bundle>[] = [];
-
-
-    // transformers.push(transformKix);
     transformers.push(kixDeclarationTransformer);
     transformers.push(transformDeclarations);
-    // transformers.push(transformKix);
-    // // transformers.push(kixDeclarationTransformer);
-
-
     addRange(transformers, customTransformers && map(customTransformers.afterDeclarations, wrapDeclarationTransformerFactory));
     return transformers;
 }

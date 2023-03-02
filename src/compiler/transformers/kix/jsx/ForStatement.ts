@@ -103,9 +103,9 @@ const updateLetInitializerAndConditionForBlock = (
 
     const declarationNode = context.factory.createVariableDeclaration(
         blockScopeIdentifiers,
-        undefined,
-        undefined,
-        undefined
+         /* exclamationToken */ undefined,
+         /* type */ undefined,
+         /* initializer */ undefined
     );
     initializer = context.factory.updateVariableDeclarationList(
         initializer,

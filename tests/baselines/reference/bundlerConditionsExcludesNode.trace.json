@@ -12,6 +12,7 @@
     "File name '/node_modules/conditions/index.web.js' has a '.js' extension - stripping it.",
     "File '/node_modules/conditions/index.web.ts' does not exist.",
     "File '/node_modules/conditions/index.web.tsx' does not exist.",
+    "File '/node_modules/conditions/index.web.kts' does not exist.",
     "File '/node_modules/conditions/index.web.d.ts' exists - use it as a name resolution result.",
     "Resolved under condition 'default'.",
     "Exiting conditional exports.",

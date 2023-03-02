@@ -1,8 +1,8 @@
-import { CustomContextType } from "../..";
 import { isClassStaticBlockDeclaration } from "../../../../factory/nodeTests";
 import { ArrowFunction, ClassStaticBlockDeclaration, FunctionDeclaration, FunctionExpression, MethodDeclaration, NodeFlags, VariableStatement, Visitor } from "../../../../types";
 import { visitEachChild } from "../../../../visitorPublic";
-import { createObject, createObjectArgsType } from "../../factoryCode/createObject";
+import { CustomContextType } from "../..";
+import { createObject, CreateObjectArgsType } from "../../factoryCode/createObject";
 import { identifier } from "../../factoryCode/identifier";
 import { variableStatement } from "../../factoryCode/variableStatement";
 import { getVariableDeclarationNames } from "../../utils/getVariableDeclarationNames";
@@ -11,7 +11,7 @@ import { createBlockVisitor } from "./createBlockVisitor";
 type BlockNodesType = FunctionExpression | ArrowFunction | FunctionDeclaration | MethodDeclaration | ClassStaticBlockDeclaration;
 
 const createGlobalBlockVisitor = createBlockVisitor(<N extends BlockNodesType>(node: N, visitor: Visitor, context: CustomContextType) => {
-    const declarationProperties: createObjectArgsType = [];
+    const declarationProperties: CreateObjectArgsType = [];
 
     if (!isClassStaticBlockDeclaration(node)) {
         for (const parameter of node.parameters) {
@@ -37,7 +37,7 @@ const createGlobalBlockVisitor = createBlockVisitor(<N extends BlockNodesType>(n
         declarationProperties
     };
     // return ts.visitEachChild(node, visitor, context);
-}, true);
+},  /* isGlobalBlock */ true);
 
 // TODO: parametrebi deklaraciaSia gasaSvebi
 export const createGlobalBlockNodesVisitor = <N extends BlockNodesType>(

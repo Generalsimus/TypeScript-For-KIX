@@ -1,12 +1,12 @@
-import { CustomContextType } from "..";
 import { isBlock } from "../../../factory/nodeTests";
 import { ArrowFunction, ConciseBody, Statement } from "../../../types";
 import { getModifiers } from "../../../utilitiesPublic";
+import { CustomContextType } from "..";
 import { createGlobalBlockNodesVisitor } from "./utils/createGlobalBlockNodesVisitor";
 
 export const VisitArrowFunction = createGlobalBlockNodesVisitor(
-    (visitedNode:  ArrowFunction, declarationVariableNode, context) => {
-        // console.log("🚀 --> file: ArrowFunction.ts --> line 7 --> declarationVariableNode", declarationVariableNode);
+    (visitedNode: ArrowFunction, declarationVariableNode, context) => {
+
 
         return context.factory.updateArrowFunction(
             visitedNode,
@@ -22,7 +22,7 @@ export const VisitArrowFunction = createGlobalBlockNodesVisitor(
     }
 );
 
-const ConciseBodyToMultiLineBlock = (body:  ConciseBody, context: CustomContextType, addStatement:  Statement[] = []) => {
+const ConciseBodyToMultiLineBlock = (body: ConciseBody, context: CustomContextType, addStatement: Statement[] = []) => {
     if (isBlock(body)) {
         return context.factory.updateBlock(body, [...addStatement, ...body.statements]);
     }
@@ -30,5 +30,5 @@ const ConciseBodyToMultiLineBlock = (body:  ConciseBody, context: CustomContextT
     return context.factory.createBlock([
         ...addStatement,
         context.factory.createReturnStatement(body)
-    ], true);
+    ],  /* multiline */ true);
 };

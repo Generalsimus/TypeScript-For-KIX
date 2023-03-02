@@ -38,7 +38,7 @@ export interface ReadonlyTextRange {
 
 // token > SyntaxKind.Identifier => token is a keyword
 // Also, If you add a new SyntaxKind be sure to keep the `Markers` section at the bottom in sync
-export  enum SyntaxKind {
+export const enum SyntaxKind {
     Unknown,
     EndOfFileToken,
     SingleLineCommentTrivia,
@@ -7237,7 +7237,7 @@ export const enum ScriptTarget {
     Latest = ESNext,
 }
 
-export   enum LanguageVariant {
+export const enum LanguageVariant {
     Standard,
     JSX,
     KJS,

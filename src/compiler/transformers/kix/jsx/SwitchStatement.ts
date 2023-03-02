@@ -1,8 +1,8 @@
-import { CustomContextType } from "..";
 import { isDefaultClause } from "../../../factory/nodeTests";
 import { CaseOrDefaultClause, Expression, NodeArray, Statement, SwitchStatement, Visitor } from "../../../types";
 import { isStatement } from "../../../utilitiesPublic";
 import { visitNodes } from "../../../visitorPublic";
+import { CustomContextType } from "..";
 import { createObject } from "../factoryCode/createObject";
 import { variableStatement } from "../factoryCode/variableStatement";
 import { createBlockVisitor, VariableStateType } from "./utils/createBlockVisitor";
@@ -11,7 +11,7 @@ import { createBlockVisitor, VariableStateType } from "./utils/createBlockVisito
 const SwitchStatementBlockVisitor = createBlockVisitor(<N extends NodeArray<Statement>>(nodes: N, visitor: Visitor, _: CustomContextType): NodeArray<Statement> => {
 
     return visitNodes(nodes, visitor, isStatement);
-}, false);
+},  /* isGlobalBlock */ false);
 
 export const VisitSwitchStatement = (
     node: SwitchStatement,

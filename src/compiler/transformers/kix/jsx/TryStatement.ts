@@ -1,6 +1,6 @@
-import { CustomContextType } from "..";
 import { Block, CatchClause, Node, TryStatement, Visitor } from "../../../types";
-import { createObject, createObjectArgsType } from "../factoryCode/createObject";
+import { CustomContextType } from "..";
+import { createObject, CreateObjectArgsType } from "../factoryCode/createObject";
 import { identifier } from "../factoryCode/identifier";
 import { variableStatement } from "../factoryCode/variableStatement";
 import { getVariableDeclarationNames } from "../utils/getVariableDeclarationNames";
@@ -10,10 +10,10 @@ import { createBlockVisitor, VariableStateType } from "./utils/createBlockVisito
 const TryStatementVisitor = createBlockVisitor(<N extends Node>(node: N, visitor: Visitor /*, context: CustomContextType */) => {
 
     return visitor(node);
-}, false);
+},  /* isGlobalBlock */ false);
 
 const TryStatementCatchClauseVisitor = createBlockVisitor(<N extends CatchClause>(node: N, visitor: Visitor, context: CustomContextType) => {
-    const propertyDeclaration: createObjectArgsType = [];
+    const propertyDeclaration: CreateObjectArgsType = [];
     if (node.variableDeclaration) {
         const declarationNamesObject = getVariableDeclarationNames(node.variableDeclaration);
         for (const declarationIdentifierName in declarationNamesObject) {
@@ -32,7 +32,7 @@ const TryStatementCatchClauseVisitor = createBlockVisitor(<N extends CatchClause
         propertyDeclaration,
         visitedNode: visitor(node)
     };
-}, false);
+},  /* isGlobalBlock */ false);
 
 export const VisitTryStatement = (
     node: TryStatement,
@@ -77,7 +77,7 @@ const updateBlock = (
     node: Block,
     variableState: VariableStateType,
     context: CustomContextType,
-    definedVariablesNames: createObjectArgsType = [],
+    definedVariablesNames: CreateObjectArgsType = [],
 ) => {
     if (variableState.blockScopeIdentifiers) {
         const declarationNode = variableStatement([

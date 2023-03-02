@@ -1,6 +1,6 @@
-import { CustomContextType } from "..";
 import { FunctionDeclaration, Node, NodeFlags, Visitor } from "../../../types";
 import { getModifiers, idText } from "../../../utilitiesPublic";
+import { CustomContextType } from "..";
 import { identifier } from "../factoryCode/identifier";
 import { nodeToken } from "../factoryCode/nodeToken";
 import { propertyAccessExpression } from "../factoryCode/propertyAccessExpression";

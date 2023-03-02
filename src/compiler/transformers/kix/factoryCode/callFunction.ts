@@ -9,7 +9,7 @@ export const callFunction = (
 ) => {
     return factory[callTypeName](
         identifier(name),
-        undefined,
+         /* typeArguments */ undefined,
         args.map(identifier),
     );
 };

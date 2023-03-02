@@ -1,6 +1,6 @@
+import { Expression, Identifier, Visitor } from "../../../../types";
 import { CustomContextType } from "../..";
 import { arrowFunction } from "../../factoryCode/arrowFunction";
-import { Expression, Identifier, Visitor } from "../../../../types";
 
 export const useJsxPropRegistration = <T extends Expression | undefined | void>(
     node: Expression,
@@ -14,8 +14,8 @@ export const useJsxPropRegistration = <T extends Expression | undefined | void>(
     const newNode = visitor(node);
     context.getJSXPropRegistrationIdentifier = OldGetRegistrationIdentifier;
     if (getRegistrationIdentifier) {
-        return callBeforeReturn(arrowFunction([getRegistrationIdentifier], [], newNode as Expression), true);
+        return callBeforeReturn(arrowFunction([getRegistrationIdentifier], [], newNode as Expression),  /* isJSXregistererNode */ true);
     }
 
-    return callBeforeReturn(newNode as typeof node, false);
+    return callBeforeReturn(newNode as typeof node,  /* isJSXregistererNode */ false);
 };

@@ -9,7 +9,7 @@ export const callChainFunction = (
     return factory.createCallChain(
         identifier(name),
         factory.createToken(SyntaxKind.QuestionDotToken),
-        undefined,
+         /* typeArguments */ undefined,
         args.map(identifier),
     );
 };

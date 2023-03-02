@@ -1,6 +1,6 @@
-import { CustomContextType } from "../..";
 import { isJsxText } from "../../../../factory/nodeTests";
 import { Expression, JsxChild, NodeArray, Visitor } from "../../../../types";
+import { CustomContextType } from "../..";
 import { createObject } from "../../factoryCode/createObject";
 import { stringLiteral } from "../../factoryCode/stringLiteral";
 import { safeInitializer } from "./safeInitializer";
@@ -42,7 +42,7 @@ export const createJsxChildrenNode = (
         return newChildren;
     }, []);
     if (newChildren.length > 1) {
-        return context.factory.createArrayLiteralExpression(newChildren, false);
+        return context.factory.createArrayLiteralExpression(newChildren,  /* multiLine */ false);
     }
  else if (newChildren.length === 1) {
         return newChildren[0];

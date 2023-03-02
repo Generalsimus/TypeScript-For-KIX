@@ -1,6 +1,6 @@
-import { CustomContextType } from "..";
 import { isBlock } from "../../../factory/nodeTests";
 import { IterationStatement, Visitor, WhileStatement } from "../../../types";
+import { CustomContextType } from "..";
 import { createObject } from "../factoryCode/createObject";
 import { variableStatement } from "../factoryCode/variableStatement";
 import { createBlockVisitor, VariableStateType } from "./utils/createBlockVisitor";
@@ -8,7 +8,7 @@ import { createBlockVisitor, VariableStateType } from "./utils/createBlockVisito
 // TODO: `do while გაითვალისწინე ბიჯოოოო`
 const WhileStatementBlockVisitor = createBlockVisitor(<N extends IterationStatement["statement"]>(statement: N, visitor: Visitor /*, context: CustomContextType */) => {
     return visitor(statement);
-}, false);
+},  /* isGlobalBlock */ false);
 
 export const VisitWhileStatement = (
     node: WhileStatement,

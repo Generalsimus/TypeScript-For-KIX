@@ -1,6 +1,6 @@
-import { CustomContextType } from "../..";
 import { ElementAccessExpression, Expression, PropertyAccessExpression, Visitor } from "../../../../types";
 import { visitEachChild } from "../../../../visitorPublic";
+import { CustomContextType } from "../..";
 import { callFunction } from "../../factoryCode/callFunction";
 import { getExpressionNames } from "./getExpressionNames";
 

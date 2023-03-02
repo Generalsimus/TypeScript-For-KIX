@@ -33,7 +33,7 @@ export const VisitBinaryExpression = (node: BinaryExpression, visitor: Visitor, 
         const identifierName = idText(visitedNode.left);
 
         context.addIdentifiersChannelCallback(identifierName, (identifierState) => {
-            // console.log("🚀 --> file: BinaryExpression.ts --> line 33 --> context.addIdentifiersChannelCallback --> identifierName", identifierName);
+
 
             identifierState.isChanged = true;
             identifierState.substituteCallback = (indexIdToUniqueString, declarationIdentifier) => {

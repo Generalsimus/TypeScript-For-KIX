@@ -148,7 +148,6 @@ import {
     isTypeQueryNode,
     isUnparsedSource,
     isVariableDeclaration,
-    // LanguageVariant,
     last,
     LateBoundDeclaration,
     LateVisibilityPaintedStatement,
@@ -221,7 +220,6 @@ import {
     VisitResult,
 } from "../_namespaces/ts";
 import * as moduleSpecifiers from "../_namespaces/ts.moduleSpecifiers";
-// import { createKixDeclarationTransformer } from "./kix";
 
 /** @internal */
 export function getDeclarationDiagnostics(host: EmitHost, resolver: EmitResolver, file: SourceFile | undefined): DiagnosticWithLocation[] | undefined {
@@ -308,7 +306,6 @@ export function transformDeclarations(context: TransformationContext) {
         reportNonSerializableProperty,
         reportImportTypeNodeResolutionModeOverride,
     };
-    // const kixDeclarationTransformer = createKixDeclarationTransformer(context as any, symbolTracker, ensureType);
     let errorNameNode: DeclarationName | undefined;
     let errorFallbackNode: Declaration | undefined;
 
@@ -404,8 +401,8 @@ export function transformDeclarations(context: TransformationContext) {
     function errorDeclarationNameWithFallback() {
         return errorNameNode ? declarationNameToString(errorNameNode) :
             errorFallbackNode && getNameOfDeclaration(errorFallbackNode) ? declarationNameToString(getNameOfDeclaration(errorFallbackNode)) :
-                errorFallbackNode && isExportAssignment(errorFallbackNode) ? errorFallbackNode.isExportEquals ? "export=" : "default" :
-                    "(Missing)"; // same fallback declarationNameToString uses when node is zero-width (ie, nameless)
+            errorFallbackNode && isExportAssignment(errorFallbackNode) ? errorFallbackNode.isExportEquals ? "export=" : "default" :
+            "(Missing)"; // same fallback declarationNameToString uses when node is zero-width (ie, nameless)
     }
 
     function reportInaccessibleUniqueSymbolError() {
@@ -499,9 +496,6 @@ export function transformDeclarations(context: TransformationContext) {
             const bundle = factory.createBundle(map(node.sourceFiles,
                 sourceFile => {
                     if (sourceFile.isDeclarationFile) return undefined!; // Omit declaration files from bundle results, too // TODO: GH#18217
-                    // if (sourceFile.languageVariant === LanguageVariant.JSX) {
-                    //     return kixDeclarationTransformer(sourceFile) as SourceFile;
-                    // }
                     hasNoDefaultLib = hasNoDefaultLib || sourceFile.hasNoDefaultLib;
                     currentSourceFile = sourceFile;
                     enclosingDeclaration = sourceFile;
@@ -521,12 +515,12 @@ export function transformDeclarations(context: TransformationContext) {
                             [factory.createModifier(SyntaxKind.DeclareKeyword)],
                             factory.createStringLiteral(getResolvedExternalModuleName(context.getEmitHost(), sourceFile)),
                             factory.createModuleBlock(setTextRange(factory.createNodeArray(transformAndReplaceLatePaintedStatements(statements)), sourceFile.statements))
-                        )], /*isDeclarationFile*/ true, /*referencedFiles*/[], /*typeReferences*/[], /*hasNoDefaultLib*/ false, /*libReferences*/[]);
+                        )], /*isDeclarationFile*/ true, /*referencedFiles*/ [], /*typeReferences*/ [], /*hasNoDefaultLib*/ false, /*libReferences*/ []);
                         return newFile;
                     }
                     needsDeclare = true;
                     const updated = isSourceFileJS(sourceFile) ? factory.createNodeArray(transformDeclarationsForJS(sourceFile)) : visitNodes(sourceFile.statements, visitDeclarationStatements, isStatement);
-                    return factory.updateSourceFile(sourceFile, transformAndReplaceLatePaintedStatements(updated), /*isDeclarationFile*/ true, /*referencedFiles*/[], /*typeReferences*/[], /*hasNoDefaultLib*/ false, /*libReferences*/[]);
+                    return factory.updateSourceFile(sourceFile, transformAndReplaceLatePaintedStatements(updated), /*isDeclarationFile*/ true, /*referencedFiles*/ [], /*typeReferences*/ [], /*hasNoDefaultLib*/ false, /*libReferences*/ []);
                 }
             ), mapDefined(node.prepends, prepend => {
                 if (prepend.kind === SyntaxKind.InputFiles) {
@@ -548,11 +542,7 @@ export function transformDeclarations(context: TransformationContext) {
             refs.forEach(referenceVisitor);
             return bundle;
         }
-        // if (node.languageVariant === LanguageVariant.JSX) {
-        //     console.log("🚀 --> file: declarations.ts:553 --> transformRoot --> node:", "node");
-        //     return kixDeclarationTransformer(node);
-        //     // as SourceFile; Gd
-        // }
+
         // Single source file
         needsDeclare = true;
         needsScopeFixMarker = false;
@@ -572,7 +562,6 @@ export function transformDeclarations(context: TransformationContext) {
         const outputFilePath = getDirectoryPath(normalizeSlashes(getOutputPathsFor(node, host, /*forceDtsPaths*/ true).declarationFilePath!));
         const referenceVisitor = mapReferencesIntoArray(references, outputFilePath);
         let combinedStatements: NodeArray<Statement>;
-        
         if (isSourceFileJS(currentSourceFile)) {
             combinedStatements = factory.createNodeArray(transformDeclarationsForJS(node));
             refs.forEach(referenceVisitor);
@@ -582,15 +571,12 @@ export function transformDeclarations(context: TransformationContext) {
             const statements = visitNodes(node.statements, visitDeclarationStatements, isStatement);
             combinedStatements = setTextRange(factory.createNodeArray(transformAndReplaceLatePaintedStatements(statements)), node.statements);
             refs.forEach(referenceVisitor);
-            
-         emittedImports = filter(combinedStatements, isAnyImportSyntax);
+            emittedImports = filter(combinedStatements, isAnyImportSyntax);
             if (isExternalModule(node) && (!resultHasExternalModuleIndicator || (needsScopeFixMarker && !resultHasScopeMarker))) {
                 combinedStatements = setTextRange(factory.createNodeArray([...combinedStatements, createEmptyExports(factory)]), combinedStatements);
             }
         }
-        
         const updated = factory.updateSourceFile(node, combinedStatements, /*isDeclarationFile*/ true, references, getFileReferencesForUsedTypeReferences(), node.hasNoDefaultLib, getLibReferences());
-
         updated.exportedModulesFromDeclarationEmit = exportedModulesFromDeclarationEmit;
         return updated;
 
@@ -711,7 +697,7 @@ export function transformDeclarations(context: TransformationContext) {
                 return elem;
             }
             if (elem.propertyName && isIdentifier(elem.propertyName) && isIdentifier(elem.name) && !elem.symbol.isReferenced && !isIdentifierANonContextualKeyword(elem.propertyName)) {
-                // Unnecessary property renaming is forbidden in types, so remove renaming
+               // Unnecessary property renaming is forbidden in types, so remove renaming
                 return factory.updateBindingElement(
                     elem,
                     elem.dotDotDotToken,
@@ -787,7 +773,7 @@ export function transformDeclarations(context: TransformationContext) {
         }
         const shouldUseResolverType = node.kind === SyntaxKind.Parameter &&
             (resolver.isRequiredInitializedParameter(node) ||
-                resolver.isOptionalUninitializedParameterProperty(node));
+             resolver.isOptionalUninitializedParameterProperty(node));
         if (type && !shouldUseResolverType) {
             return visitNode(type, visitDeclarationSubtree, isTypeNode);
         }

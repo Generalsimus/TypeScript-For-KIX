@@ -395,7 +395,7 @@ const enum SignatureFlags {
     None = 0,
     Yield = 1 << 0,
     Await = 1 << 1,
-    Type = 1 << 2,
+    Type  = 1 << 2,
     IgnoreMissingOpenBrace = 1 << 4,
     JSDoc = 1 << 5,
 }
@@ -1319,7 +1319,7 @@ export function createSourceFile(fileName: string, sourceText: string, languageV
     tracing?.push(tracing.Phase.Parse, "createSourceFile", { path: fileName }, /*separateBeginAndEnd*/ true);
     performance.mark("beforeParse");
     let result: SourceFile;
-    // console.log("🚀 --> file: parser.ts:9665 --> updateSourceFile --> sourceFile:", fileName);
+
     perfLogger.logStartParseSourceFile(fileName);
     const {
         languageVersion,
@@ -1341,14 +1341,6 @@ export function createSourceFile(fileName: string, sourceText: string, languageV
     performance.mark("afterParse");
     performance.measure("Parse", "beforeParse", "afterParse");
     tracing?.pop();
-    // console.log("🚀 --> file: </Node>parser.ts:1347 --> createSourceFile --> result.version:", result.fileName);
-    // if (!result.fileName.includes("node_modules") && !result.fileName.includes("/built/local/")) {
-    //     debugger;
-    //   }
-    //   if(result.languageVariant === LanguageVariant.KJS){
-        
-    //     // console.log("🚀 --> file: parser.ts:1351 --> createSourceFile --> sourceText:", {sourceText});
-    //   }
     return result;
 }
 
@@ -1481,7 +1473,7 @@ namespace Parser {
     var parseDiagnostics: DiagnosticWithDetachedLocation[];
     var jsDocDiagnostics: DiagnosticWithDetachedLocation[];
     var syntaxCursor: IncrementalParser.SyntaxCursor | undefined;
-    let kixExportedVariableStatements: (VariableDeclaration | ClassDeclaration | FunctionDeclaration)[] = [];
+    let kixExportedVariableStatements: VariableDeclaration[] = [];
 
     var currentToken: SyntaxKind;
     var nodeCount: number;
@@ -1648,7 +1640,7 @@ namespace Parser {
                             expression = parseLiteralNode() as StringLiteral | NumericLiteral;
                             break;
                         }
-                    // falls through
+                        // falls through
                     default:
                         expression = parseObjectLiteralExpression();
                         break;
@@ -1778,7 +1770,6 @@ namespace Parser {
         const endOfFileToken = addJSDocComment(parseTokenNode<EndOfFileToken>());
 
         const sourceFile = createSourceFile(fileName, languageVersion, scriptKind, isDeclarationFile, statements, endOfFileToken, sourceFlags, setExternalModuleIndicator);
-        // console.log("🚀 --> file: parser.ts:1742 --> parseSourceFileWorker --> fileName", fileName);
 
         // A member of ReadonlyArray<T> isn't assignable to a member of T[] (and prevents a direct cast) - but this is where we set up those members so they can be readonly in the future
         processCommentPragmas(sourceFile as {} as PragmaContext, sourceText);
@@ -1793,7 +1784,7 @@ namespace Parser {
             sourceFile.jsDocDiagnostics = attachFileToDiagnostics(jsDocDiagnostics, sourceFile);
         }
         if (languageVariant === LanguageVariant.KJS) {
-            const kixExportedProps: (VariableDeclaration | ClassDeclaration | FunctionDeclaration)[] = (sourceFile.kixExportedProps = []);
+            const kixExportedProps: VariableDeclaration[] = (sourceFile.kixExportedProps = []);
 
             for (const kixExportedDeclaration of kixExportedVariableStatements) {
                 kixExportedProps.push(kixExportedDeclaration);
@@ -1803,7 +1794,7 @@ namespace Parser {
         if (setParentNodes) {
             fixupParentReferences(sourceFile);
         }
-        // console.log("🚀 --> file: parser.ts:1766 --> parseSourceFileWorker --> kixExportedProps:", sourceFile.kixExportedProps?.length,kixExportedVariableStatements.length);
+
         return sourceFile;
 
         function reportPragmaDiagnostic(pos: number, end: number, diagnostic: DiagnosticMessage) {
@@ -2858,7 +2849,7 @@ namespace Parser {
                     case SyntaxKind.DotToken: // Not an array literal member, but don't want to close the array (see `tests/cases/fourslash/completionsDotInArrayLiteralInObjectLiteral.ts`)
                         return true;
                 }
-            // falls through
+                // falls through
             case ParsingContext.ArgumentExpressions:
                 return token() === SyntaxKind.DotDotDotToken || isStartOfExpression();
             case ParsingContext.Parameters:
@@ -3046,14 +3037,6 @@ namespace Parser {
             list,
             factory.createJsxJsxClosingFragment()
         )), pos);
-        // return createNodeArray([
-        // factory.createExpressionStatement(factory.createJsxFragment(
-        //     openingTag,
-        //     list,
-        //     factory.createJsxJsxClosingFragment()
-        // ))
-
-        // ], listPos);
     }
 
     function ParseMainStatements() {
@@ -4546,13 +4529,13 @@ namespace Parser {
             case SyntaxKind.AsteriskEqualsToken:
                 // If there is '*=', treat it as * followed by postfix =
                 scanner.reScanAsteriskEqualsToken();
-            // falls through
+                // falls through
             case SyntaxKind.AsteriskToken:
                 return parseJSDocAllType();
             case SyntaxKind.QuestionQuestionToken:
                 // If there is '??', treat it as prefix-'?' in JSDoc type.
                 scanner.reScanQuestionToken();
-            // falls through
+                // falls through
             case SyntaxKind.QuestionToken:
                 return parseJSDocUnknownOrNullableType();
             case SyntaxKind.FunctionKeyword:
@@ -5427,7 +5410,7 @@ namespace Parser {
         const hasJSDocFunctionType = unwrappedType && isJSDocFunctionType(unwrappedType);
         if (!allowAmbiguity && token() !== SyntaxKind.EqualsGreaterThanToken && (hasJSDocFunctionType || token() !== SyntaxKind.OpenBraceToken)) {
             // Returning undefined here will cause our caller to rewind to where we started from.
-            return undefined;
+                return undefined;
         }
 
         // If we have an arrow, then try to parse the body. Even if not, try to parse if we
@@ -5753,7 +5736,7 @@ namespace Parser {
                 if (isAwaitExpression()) {
                     return parseAwaitExpression();
                 }
-            // falls through
+                // falls through
             default:
                 return parseUpdateExpression();
         }
@@ -5785,8 +5768,8 @@ namespace Parser {
             case SyntaxKind.LessThanToken:
                 // If we are not in JSX context, we are parsing TypeAssertion which is an UnaryExpression
                 return LanguageVariant.KJS === languageVariant || LanguageVariant.JSX === languageVariant;
-            // We are in JSX context and the token is part of JSXElement.
-            // falls through
+                // We are in JSX context and the token is part of JSXElement.
+                // falls through
             default:
                 return true;
         }
@@ -5969,8 +5952,6 @@ namespace Parser {
     }
     function getPrimaryTagNameIfCanBy(openingTag: ts.JsxTagNameExpression) {
         if (openingTag.kind === SyntaxKind.Identifier) {
-
-            // return openingTag.tagName.escapedText
             return idText(openingTag);
         }
     }
@@ -6128,7 +6109,7 @@ namespace Parser {
         currentToken = scanner.reScanCssStringToken();
         const valur = scanner.getTokenValue();
 
-        list.push(factory.createJsxText(valur, true));
+        list.push(factory.createJsxText(valur, /* containsOnlyTriviaWhiteSpaces */ true));
 
         parsingContext = saveParsingContext;
         return createNodeArray(list, listPos);
@@ -6649,7 +6630,7 @@ namespace Parser {
     function parseArgumentOrArrayLiteralElement(): Expression {
         return token() === SyntaxKind.DotDotDotToken ? parseSpreadElement() :
             token() === SyntaxKind.CommaToken ? finishNode(factory.createOmittedExpression(), getNodePos()) :
-                parseAssignmentExpressionOrHigher(/*allowReturnTypeInArrowFunction*/ true);
+            parseAssignmentExpressionOrHigher(/*allowReturnTypeInArrowFunction*/ true);
     }
 
     function parseArgumentExpression(): Expression {
@@ -6750,8 +6731,8 @@ namespace Parser {
         const isAsync = some(modifiers, isAsyncModifier) ? SignatureFlags.Await : SignatureFlags.None;
         const name = isGenerator && isAsync ? doInYieldAndAwaitContext(parseOptionalBindingIdentifier) :
             isGenerator ? doInYieldContext(parseOptionalBindingIdentifier) :
-                isAsync ? doInAwaitContext(parseOptionalBindingIdentifier) :
-                    parseOptionalBindingIdentifier();
+            isAsync ? doInAwaitContext(parseOptionalBindingIdentifier) :
+            parseOptionalBindingIdentifier();
 
         const typeParameters = parseTypeParameters();
         const parameters = parseParameters(isGenerator | isAsync);
@@ -8523,22 +8504,10 @@ namespace Parser {
     }
     function parseExportKeywordDeclaration() {
         const exportedDeclaration = parseDeclaration();
-        if (languageVariant === LanguageVariant.KJS &&
-            (ts.isVariableStatement(exportedDeclaration)
-                || ts.isClassDeclaration(exportedDeclaration)
-                || ts.isFunctionDeclaration(exportedDeclaration)
-            )
-        ) {
-            if (ts.isVariableStatement(exportedDeclaration)) {
-                for (const declaration of exportedDeclaration.declarationList.declarations) {
-                    kixExportedVariableStatements.splice(0,0,declaration)
-                    // kixExportedVariableStatements.push(declaration);
-// console.log("dec;,",getDeclarationFromName)
-                }
-            }
-               else {
-                // kixExportedVariableStatements.splice(0,0,exportedDeclaration)
-                kixExportedVariableStatements.push(exportedDeclaration);
+        if (languageVariant === LanguageVariant.KJS && ts.isVariableStatement(exportedDeclaration)) {
+            for (const declaration of exportedDeclaration.declarationList.declarations) {
+
+                kixExportedVariableStatements.splice(0, 0, declaration);
             }
         }
         return exportedDeclaration;
@@ -8832,7 +8801,7 @@ namespace Parser {
                                 linkEnd = scanner.getTextPos();
                                 break;
                             }
-                        // fallthrough if it's not a {@link sequence
+                            // fallthrough if it's not a {@link sequence
                         default:
                             // Anything else is doc comment text. We just save it. Because it
                             // wasn't a tag, we can no longer parse a tag on this line until we hit the next
@@ -9049,7 +9018,7 @@ namespace Parser {
                                 break;
                             }
                             scanner.setTextPos(scanner.getTextPos() - 1);
-                        // falls through
+                            // falls through
                         case SyntaxKind.EndOfFileToken:
                             // Done
                             break loop;
@@ -9097,8 +9066,8 @@ namespace Parser {
                                 indent += 1;
                                 break;
                             }
-                        // record the * as a comment
-                        // falls through
+                            // record the * as a comment
+                            // falls through
                         default:
                             if (state !== JSDocState.SavingBackticks) {
                                 state = JSDocState.SavingComments; // leading identifiers start recording as well
@@ -9154,7 +9123,7 @@ namespace Parser {
                 }
                 const create = linkType === "link" ? factory.createJSDocLink
                     : linkType === "linkcode" ? factory.createJSDocLinkCode
-                        : factory.createJSDocLinkPlain;
+                    : factory.createJSDocLinkPlain;
                 return finishNode(create(name, text.join("")), start, scanner.getTextPos());
             }
 
@@ -9704,7 +9673,6 @@ namespace Parser {
 
 namespace IncrementalParser {
     export function updateSourceFile(sourceFile: SourceFile, newText: string, textChangeRange: TextChangeRange, aggressiveChecks: boolean): SourceFile {
-       
         aggressiveChecks = aggressiveChecks || Debug.shouldAssert(AssertionLevel.Aggressive);
 
         checkChangeRange(sourceFile, newText, textChangeRange, aggressiveChecks);
@@ -10482,7 +10450,7 @@ function extractPragmas(pragmas: PragmaPseudoMapEntry[], range: CommentRange, te
             return;
         }
         if (pragma.args) {
-            const argument: { [index: string]: string | { value: string, pos: number, end: number } } = {};
+            const argument: {[index: string]: string | {value: string, pos: number, end: number}} = {};
             for (const arg of pragma.args) {
                 const matcher = getNamedArgRegEx(arg.name);
                 const matchResult = matcher.exec(text);
@@ -10540,11 +10508,11 @@ function addPragmaForMatch(pragmas: PragmaPseudoMapEntry[], range: CommentRange,
     return;
 }
 
-function getNamedPragmaArguments(pragma: PragmaDefinition, text: string | undefined): { [index: string]: string } | "fail" {
+function getNamedPragmaArguments(pragma: PragmaDefinition, text: string | undefined): {[index: string]: string} | "fail" {
     if (!text) return {};
     if (!pragma.args) return {};
     const args = trimString(text).split(/\s+/);
-    const argMap: { [index: string]: string } = {};
+    const argMap: {[index: string]: string} = {};
     for (let i = 0; i < pragma.args.length; i++) {
         const argument = pragma.args[i];
         if (!args[i] && !argument.optional) {

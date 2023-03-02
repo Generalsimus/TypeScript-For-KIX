@@ -3042,8 +3042,8 @@ export function classicNameResolver(moduleName: string, containingFile: string, 
     };
 
     const resolved =
-    tryResolve(Extensions.TypeScript | Extensions.Declaration) ||
-    tryResolve(Extensions.JavaScript | (compilerOptions.resolveJsonModule ? Extensions.Json : 0));
+        tryResolve(Extensions.TypeScript | Extensions.Declaration) ||
+        tryResolve(Extensions.JavaScript | (compilerOptions.resolveJsonModule ? Extensions.Json : 0));
     // No originalPath because classic resolution doesn't resolve realPath
     return createResolvedModuleWithFailedLookupLocationsHandlingSymlink(
         moduleName,

@@ -85,10 +85,10 @@ export function kixDeclarationTransformer(context: TransformationContext) {
 
     return chainBundle(context, (sourceFile: SourceFile) => {
         const languageVariant = sourceFile?.languageVariant;
-        console.log("🚀 --> file: index.ts:84 --> returnchainBundle --> languageVariant:", sourceFile.fileName, LanguageVariant[languageVariant]);
+        // console.log("🚀 --> file: index.ts:84 --> returnchainBundle --> languageVariant:", sourceFile.fileName, LanguageVariant[languageVariant]);
 
         if (languageVariant === LanguageVariant.KJS) {
-            console.log("🚀 --> file: index.ts:86 --> returnchainBundle --> languageVariant:", languageVariant);
+            // console.log("🚀 --> file: index.ts:86 --> returnchainBundle --> languageVariant:", languageVariant);
             const file = visitor(sourceFile);
             // bindSourceFile(file, context.getCompilerOptions());
             return file;

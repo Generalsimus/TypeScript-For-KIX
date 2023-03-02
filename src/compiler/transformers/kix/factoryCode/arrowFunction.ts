@@ -7,14 +7,14 @@ import { parameterDeclaration } from "./parameterDeclaration";
 export const arrowFunction = (params: (string | BindingName)[] = [], statements: Statement[] = [], returnNode?: Expression) => {
 
     return factory.createArrowFunction(
-        undefined,
-        undefined,
+         /* modifiers */ undefined,
+         /* typeParameters */ undefined,
         parameterDeclaration(params),
-        undefined,
+         /* type */ undefined,
         factory.createToken(SyntaxKind.EqualsGreaterThanToken),
         returnNode ? factory.createParenthesizedExpression(returnNode) : factory.createBlock(
             statements,
-            true
+             /* multiline */ true
         )
     );
 };

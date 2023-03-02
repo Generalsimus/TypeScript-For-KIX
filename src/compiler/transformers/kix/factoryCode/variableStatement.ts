@@ -2,7 +2,7 @@ import { factory } from "../../../factory/nodeFactory";
 import { BindingName, Expression, ModifierLike, NodeFlags } from "../../../types";
 
 
-// [factory.createToken(SyntaxKind.DeclareKeyword)],
+
 export const variableStatement = (nodes: [BindingName | string, Expression][], flag = NodeFlags.Const, modifiers: ModifierLike[] | undefined = undefined) => {
 
     return factory.createVariableStatement(
@@ -11,8 +11,8 @@ export const variableStatement = (nodes: [BindingName | string, Expression][], f
             nodes.map(([nameNode, valueNode]) => {
                 return factory.createVariableDeclaration(
                     nameNode,
-                    undefined,
-                    undefined,
+                     /* exclamationToken */ undefined,
+                     /* type */ undefined,
                     valueNode
                 );
             }),

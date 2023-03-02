@@ -3,13 +3,13 @@ import { StringLiteral } from "../../../types";
 
 
 
-type ReturnValue<T> = T extends string ?  StringLiteral : T;
+type ReturnValue<T> = T extends string ? StringLiteral : T;
 
-export const stringLiteral = <T extends unknown | string>(StringOrNode: T): ReturnValue<T> => {
-    if (typeof StringOrNode === "string") {
+export const stringLiteral = <T extends unknown | string>(stringOrNode: T): ReturnValue<T> => {
+    if (typeof stringOrNode === "string") {
 
 
-        return factory.createStringLiteral(StringOrNode) as unknown as ReturnValue<T>;
+        return factory.createStringLiteral(stringOrNode) as unknown as ReturnValue<T>;
     }
-    return StringOrNode as unknown as ReturnValue<T>;
+    return stringOrNode as unknown as ReturnValue<T>;
 };

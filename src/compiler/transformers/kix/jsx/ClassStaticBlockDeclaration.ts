@@ -1,4 +1,3 @@
-// import ts from "typescript";
 import { ClassStaticBlockDeclaration } from "../../../types";
 import { createGlobalBlockNodesVisitor } from "./utils/createGlobalBlockNodesVisitor";
 

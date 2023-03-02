@@ -3,7 +3,7 @@ import { JsxAttributes, JsxChild, JsxTagNameExpression, NodeArray, Visitor } fro
 import { idText } from "../../../../../utilitiesPublic";
 import { CustomContextType } from "../../..";
 import { arrowFunction } from "../../../factoryCode/arrowFunction";
-import { createObject, createObjectArgsType } from "../../../factoryCode/createObject";
+import { createObject, CreateObjectArgsType } from "../../../factoryCode/createObject";
 import { stringLiteral } from "../../../factoryCode/stringLiteral";
 import { createJsxChildrenNode } from "../createJsxChildrenNode";
 import { createJSXComponent } from "../createJSXComponent";
@@ -26,7 +26,7 @@ export const createKIXJsxTag = (
 
 
     if (tagNameToString) {
-        const objectNodeProperties: createObjectArgsType = [
+        const objectNodeProperties: CreateObjectArgsType = [
             [
                 tagNameToString,
                 childrenNode || context.factory.createArrayLiteralExpression([], /* multiLine */ false)
@@ -36,9 +36,9 @@ export const createKIXJsxTag = (
 
 
 
-        const xmlnsNodeProperties: createObjectArgsType = [];
-        const eventObjectNodeProperties: createObjectArgsType = [];
-        const dynamicObjectNodeProperties: createObjectArgsType = [];
+        const xmlnsNodeProperties: CreateObjectArgsType = [];
+        const eventObjectNodeProperties: CreateObjectArgsType = [];
+        const dynamicObjectNodeProperties: CreateObjectArgsType = [];
         let haveDefaultXmlns = false;
         forEachJsxAttributes(attributes.properties, (attributeName, attributeValueNode) => {
             const attributeNameString = idText(attributeName);
@@ -82,7 +82,7 @@ export const createKIXJsxTag = (
             }
         });
 
-        const elementConstruction: createObjectArgsType = [];
+        const elementConstruction: CreateObjectArgsType = [];
 
         if (eventObjectNodeProperties.length) {
             elementConstruction.push([

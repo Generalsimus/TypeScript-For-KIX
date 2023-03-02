@@ -3,11 +3,11 @@ import { Identifier } from "../../../types";
 
 
 
-export const identifier = <T extends any | string>(StringOrNode: T): T extends string ? Identifier : T => {
-    if (typeof StringOrNode === "string") {
+export const identifier = <T extends any | string>(stringOrNode: T): T extends string ? Identifier : T => {
+    if (typeof stringOrNode === "string") {
 
 
-        return factory.createIdentifier(StringOrNode) as any;
+        return factory.createIdentifier(stringOrNode) as any;
     }
-    return StringOrNode as any;
+    return stringOrNode as any;
 };

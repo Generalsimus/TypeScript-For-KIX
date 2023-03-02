@@ -1,5 +1,5 @@
-import { CustomContextType } from "../..";
 import { Expression, Identifier, JsxAttributes, JsxChild, JsxTagNameExpression, NodeArray, Visitor } from "../../../../types";
+import { CustomContextType } from "../..";
 import { createObject } from "../../factoryCode/createObject";
 import { createJsxChildrenNode } from "./createJsxChildrenNode";
 import { forEachJsxAttributes } from "./forEachJsxAttributes";
@@ -42,7 +42,7 @@ export const createJSXComponent = (
                 if (isJSXregistererNode) {
                     dynamicPropsObjectNodesForFactoryCode.push([attributeName, node]);
                 }
- else {
+                else {
                     staticPropsObjectNodesForFactoryCode.push([attributeName, node]);
                 }
             }

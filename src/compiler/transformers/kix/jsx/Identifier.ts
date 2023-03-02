@@ -6,7 +6,7 @@ import { stringLiteral } from "../factoryCode/stringLiteral";
 
 
 
-export const VisitIdentifier = (node: Identifier, _: Visitor , context: CustomContextType) => {
+export const VisitIdentifier = (node: Identifier, _: Visitor, context: CustomContextType) => {
 
   if (context.getJSXPropRegistrationIdentifier && context.isSubstitutionEnabled(node)) {
     const JSXPropRegistrationIdentifier = context.getJSXPropRegistrationIdentifier();
@@ -15,7 +15,7 @@ export const VisitIdentifier = (node: Identifier, _: Visitor , context: CustomCo
 
     context.addIdentifiersChannelCallback(identifierName, (identifierState) => {
       identifierState.isDynamicJsx = true;
-      // const { substituteCallback } = identifierState
+
       identifierState.substituteCallback = (indexIdToUniqueString, declarationIdentifier) => {
 
         context.substituteNodesList.set(node, () => {
@@ -28,7 +28,7 @@ export const VisitIdentifier = (node: Identifier, _: Visitor , context: CustomCo
             ]
           );
         });
-        //   substituteCallback(indexIdToUniqueString, declarationIdentifier)
+
       };
 
 

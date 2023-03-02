@@ -85,7 +85,7 @@ describe("unittests:: programApi:: Program.getMissingFilePaths", () => {
 
     it("handles missing triple slash references", () => {
         const program = ts.createProgram([referenceFileRelativePath], options, testCompilerHost);
-        const missing = program.getMissingFilePaths();       
+        const missing = program.getMissingFilePaths();
         verifyMissingFilePaths(missing, [
             // From absolute reference
             "d:/imaginary/nonexistent1.ts",

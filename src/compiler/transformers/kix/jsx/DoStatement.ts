@@ -1,12 +1,13 @@
-import { CustomContextType } from "..";
 import { isBlock } from "../../../factory/nodeTests";
 import { DoStatement, NodeFlags, Visitor } from "../../../types";
+import { CustomContextType } from "..";
 import { createObject } from "../factoryCode/createObject";
 import { variableStatement } from "../factoryCode/variableStatement";
 import { createBlockVisitor, VariableStateType } from "./utils/createBlockVisitor";
+
 const doWhileBlockVisitor = createBlockVisitor(<N extends DoStatement["statement"]>(statement: N, visitor: Visitor,  /*, context: CustomContextType */) => {
     return visitor(statement) as typeof statement;
-}, false);
+},  /* isGlobalBlock */ false);
 
 export const VisitDoStatement = (node: DoStatement, visitor: Visitor, context: CustomContextType) => {
     const [visitedStatementNode, variableState] = doWhileBlockVisitor(node.statement, visitor, context);

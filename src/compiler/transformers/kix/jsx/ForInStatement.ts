@@ -1,14 +1,14 @@
-import { CustomContextType } from "..";
 import { isBlock, isVariableDeclarationList } from "../../../factory/nodeTests";
 import { ForInStatement, NodeFlags, Visitor } from "../../../types";
-import { createObject, createObjectArgsType } from "../factoryCode/createObject";
+import { CustomContextType } from "..";
+import { createObject, CreateObjectArgsType } from "../factoryCode/createObject";
 import { variableStatement } from "../factoryCode/variableStatement";
 import { getVariableDeclarationNames } from "../utils/getVariableDeclarationNames";
 import { createBlockVisitor, VariableStateType } from "./utils/createBlockVisitor";
 
-// type DefaultDeclarationsType = [string, string][]
+
 const ForInStatementVisitor = createBlockVisitor(<N extends ForInStatement>({ initializer, statement }: N, visitor: Visitor, context: CustomContextType) => {
-    const defaultDeclarations: createObjectArgsType = [];
+    const defaultDeclarations: CreateObjectArgsType = [];
 
     if (isVariableDeclarationList(initializer)) {
         for (const variableDeclaration of initializer.declarations) {
@@ -36,7 +36,7 @@ const ForInStatementVisitor = createBlockVisitor(<N extends ForInStatement>({ in
         defaultDeclarations,
         statement: visitor(statement) as typeof statement
     };
-}, false);
+},  /* isGlobalBlock */ false);
 
 export const VisitForInStatement = (
     node: ForInStatement,
@@ -60,7 +60,7 @@ export const VisitForInStatement = (
 const updateForInStatementStatement = (
     statement: ForInStatement["statement"],
     { blockScopeIdentifiers }: VariableStateType,
-    defaultDeclarations: createObjectArgsType,
+    defaultDeclarations: CreateObjectArgsType,
     context: CustomContextType
 ) => {
     if (!blockScopeIdentifiers) return statement;

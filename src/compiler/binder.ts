@@ -579,10 +579,9 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
             tracing?.push(tracing.Phase.Bind, "bindSourceFile", { path: file.path }, /*separateBeginAndEnd*/ true);
             bind(file);
             if (file.languageVariant === LanguageVariant.KJS) {
-                // console.log("🚀 --> file: binder.ts:589 --> bindSourceFile --> file.symbol", file.symbol.exports);
                 const defaultSymbol = createSymbol(SymbolFlags.ExportSupportsDefaultModifier | SymbolFlags.KJSModule, "default" as __String);
                 defaultSymbol.parent = file.symbol;
-                // console.log("🚀 --> file: binder.ts:583 --> bindSourceFile --> defaultSymbol", defaultSymbol);
+
 
                 defaultSymbol.members = createSymbolTable();
                 for (const exportedPropNode of (file.kixExportedProps || [])) {
@@ -594,21 +593,13 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
                 }
 
                 file.symbol.exports?.set("default" as __String, defaultSymbol);
-                // console.log("🚀 --> file: binder.ts:591 --> bindSourceFile --> file", file);
-
-                // setParent
             }
-            // console.log({ filename:file.fileName, file:"file",len:(file.kixExportedProps || []).length });
-            if (file.fileName.endsWith("impoooo.tsx") || file.fileName.endsWith("tesssssssss.kts")) {
 
-                // console.log("🚀 --> file: binder.ts:591 --> bindSourceFile --> file",  file.symbol.exports );
-            }
             tracing?.pop();
             file.symbolCount = symbolCount;
             file.classifiableNames = classifiableNames;
             delayedBindJSDocTypedefTag();
         }
-
 
         file = undefined!;
         options = undefined!;
@@ -767,7 +758,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
         // The exported symbol for an export default function/class node is always named "default"
         const name = isComputedName ? InternalSymbolName.Computed
             : isDefaultExport && parent ? InternalSymbolName.Default
-                : getDeclarationName(node);
+            : getDeclarationName(node);
 
         let symbol: Symbol | undefined;
         if (name === undefined) {
@@ -1214,7 +1205,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
                 // Carry over whether we are in an assignment pattern of Object and Array literals
                 // as well as their children that are valid assignment targets.
                 inAssignmentPattern = saveInAssignmentPattern;
-            // falls through
+                // falls through
             default:
                 bindEachChild(node);
                 break;
@@ -2358,7 +2349,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
                     declareModuleMember(node, symbolFlags, symbolExcludes);
                     break;
                 }
-            // falls through
+                // falls through
             default:
                 Debug.assertNode(blockScopeContainer, canHaveLocals);
                 if (!blockScopeContainer.locals) {
@@ -2412,7 +2403,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
                         case AssignmentDeclarationKind.Property:
                             container = isExportsOrModuleExportsOrAlias(file, declName.parent.expression) ? file
                                 : isPropertyAccessExpression(declName.parent.expression) ? declName.parent.expression.name
-                                    : declName.parent.expression;
+                                : declName.parent.expression;
                             break;
                         case AssignmentDeclarationKind.None:
                             return Debug.fail("Shouldn't have detected typedef or enum on non-assignment declaration");
@@ -2773,7 +2764,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
                     bindBlockScopedDeclaration(parentNode as Declaration, SymbolFlags.TypeAlias, SymbolFlags.TypeAliasExcludes);
                     break;
                 }
-            // falls through
+                // falls through
             case SyntaxKind.ThisKeyword:
                 // TODO: Why use `isExpression` here? both Identifier and ThisKeyword are expressions.
                 if (currentFlow && (isExpression(node) || parent.kind === SyntaxKind.ShorthandPropertyAssignment)) {
@@ -2979,7 +2970,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
                 if (!isFunctionLikeOrClassStaticBlockDeclaration(node.parent)) {
                     return;
                 }
-            // falls through
+                // falls through
             case SyntaxKind.ModuleBlock:
                 return updateStrictModeStatementList((node as Block | ModuleBlock).statements);
 
@@ -2990,7 +2981,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
                 if (node.parent.kind !== SyntaxKind.JSDocTypeLiteral) {
                     break;
                 }
-            // falls through
+                // falls through
             case SyntaxKind.JSDocPropertyTag:
                 const propTag = node as JSDocPropertyLikeTag;
                 const flags = propTag.isBracketed || propTag.typeExpression && propTag.typeExpression.type.kind === SyntaxKind.JSDocOptionalType ?
@@ -3063,8 +3054,8 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
         }
         const diag = !isSourceFile(node.parent) ? Diagnostics.Global_module_exports_may_only_appear_at_top_level
             : !isExternalModule(node.parent) ? Diagnostics.Global_module_exports_may_only_appear_in_module_files
-                : !node.parent.isDeclarationFile ? Diagnostics.Global_module_exports_may_only_appear_in_declaration_files
-                    : undefined;
+            : !node.parent.isDeclarationFile ? Diagnostics.Global_module_exports_may_only_appear_in_declaration_files
+            : undefined;
         if (diag) {
             file.bindDiagnostics.push(createDiagnosticForNode(node, diag));
         }
@@ -3314,7 +3305,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
 
     function bindSpecialPropertyAssignment(node: BindablePropertyAssignmentExpression) {
         // Class declarations in Typescript do not allow property declarations
-        const parentSymbol = lookupSymbolForPropertyAccess(node.left.expression, container) || lookupSymbolForPropertyAccess(node.left.expression, blockScopeContainer);
+        const parentSymbol = lookupSymbolForPropertyAccess(node.left.expression, container) || lookupSymbolForPropertyAccess(node.left.expression, blockScopeContainer) ;
         if (!isInJSFile(node) && !isFunctionSymbol(parentSymbol)) {
             return;
         }
@@ -3455,9 +3446,9 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
         }
         let init = !node ? undefined :
             isVariableDeclaration(node) ? node.initializer :
-                isBinaryExpression(node) ? node.right :
-                    isPropertyAccessExpression(node) && isBinaryExpression(node.parent) ? node.parent.right :
-                        undefined;
+            isBinaryExpression(node) ? node.right :
+            isPropertyAccessExpression(node) && isBinaryExpression(node.parent) ? node.parent.right :
+            undefined;
         init = init && getRightMostAssignedExpression(init);
         if (init) {
             const isPrototypeAssignment = isPrototypeAccess(isVariableDeclaration(node!) ? node.name : isBinaryExpression(node!) ? node.left : node!);
@@ -3827,7 +3818,7 @@ function getContainerFlags(node: Node): ContainerFlags {
             if (isObjectLiteralOrClassExpressionMethodOrAccessor(node)) {
                 return ContainerFlags.IsContainer | ContainerFlags.IsControlFlowContainer | ContainerFlags.HasLocals | ContainerFlags.IsFunctionLike | ContainerFlags.IsObjectLiteralOrClassExpressionMethodOrAccessor;
             }
-        // falls through
+            // falls through
         case SyntaxKind.Constructor:
         case SyntaxKind.FunctionDeclaration:
         case SyntaxKind.MethodSignature:

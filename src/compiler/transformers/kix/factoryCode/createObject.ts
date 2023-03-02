@@ -1,4 +1,3 @@
-// import ts from "typescript"
 import { factory } from "../../../factory/nodeFactory";
 import { isIdentifier } from "../../../factory/nodeTests";
 import { ComputedPropertyName, Expression, Identifier, ObjectLiteralElementLike, StringLiteral } from "../../../types";
@@ -6,8 +5,8 @@ import { idText, isObjectLiteralElementLike } from "../../../utilitiesPublic";
 import { identifier } from "./identifier";
 import { stringLiteral } from "./stringLiteral";
 
-export type createObjectArgsType = (ObjectLiteralElementLike | [string | Expression, Expression] | Expression)[];
-export const createObject = (objectPropertiesNodes: createObjectArgsType) => {
+export type CreateObjectArgsType = (ObjectLiteralElementLike | [string | Expression, Expression] | Expression)[];
+export const createObject = (objectPropertiesNodes: CreateObjectArgsType) => {
     const saferPropertyRegexp = /^[a-zA-Z_]+$/;
 
     return factory.createObjectLiteralExpression(
@@ -23,7 +22,7 @@ export const createObject = (objectPropertiesNodes: createObjectArgsType) => {
                     propertyNode = saferPropertyRegexp.test(propertyNameNode) ? identifier(propertyNameNode) : stringLiteral(propertyNameNode);
 
                 }
- else {
+                else {
                     propertyNode = factory.createComputedPropertyName(propertyNameNode);
                 }
 
@@ -32,11 +31,11 @@ export const createObject = (objectPropertiesNodes: createObjectArgsType) => {
                     node[1]
                 );
             }
- else if (isObjectLiteralElementLike(node)) {
+            else if (isObjectLiteralElementLike(node)) {
                 return node;
             }
             return factory.createSpreadAssignment(factory.createParenthesizedExpression(identifier(node)));
         }),
-        false
+         /* multiLine */ false
     );
 };
