@@ -76,7 +76,7 @@ import {
     VariableDeclaration,
 } from "./_namespaces/ts";
 import * as performance from "./_namespaces/ts.performance";
-import { transformKix, transformKixDeclaration } from "./transformers/kix";
+import { kixDeclarationTransformer, transformKix, } from "./transformers/kix";
 
 function getModuleTransformer(moduleKind: ModuleKind): TransformerFactory<SourceFile | Bundle> {
     switch (moduleKind) {
@@ -195,10 +195,11 @@ function getDeclarationTransformers(customTransformers?: CustomTransformers) {
     const transformers: TransformerFactory<SourceFile | Bundle>[] = [];
 
 
+    // transformers.push(transformKix);
+    transformers.push(kixDeclarationTransformer);
     transformers.push(transformDeclarations);
-
-    transformers.push(transformKixDeclaration);
-
+    // transformers.push(transformKix);
+    // // transformers.push(kixDeclarationTransformer);
 
 
     addRange(transformers, customTransformers && map(customTransformers.afterDeclarations, wrapDeclarationTransformerFactory));

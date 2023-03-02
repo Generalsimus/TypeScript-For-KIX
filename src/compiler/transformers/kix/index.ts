@@ -1,4 +1,4 @@
-import { Bundle, Identifier, LanguageVariant, Node, NodeFlags, SourceFile, ThisExpression, TransformationContext, TransformerFactory, Visitor } from "../../types";
+import { BindingElement, Bundle, CallSignatureDeclaration, ConstructSignatureDeclaration, FunctionDeclaration, GetAccessorDeclaration, Identifier, LanguageVariant, MethodDeclaration, MethodSignature, Node, NodeFlags, ParameterDeclaration, PropertyDeclaration, PropertySignature, SetAccessorDeclaration, SourceFile, Statement, SymbolTracker, ThisExpression, TransformationContext, TransformerFactory, TypeNode, VariableDeclaration, Visitor } from "../../types";
 import { chainBundle } from "../utilities";
 import { declarationTransformers } from "./declarations";
 import { jsxTransformers } from "./jsx";
@@ -51,20 +51,47 @@ export function transformKix(context: TransformationContext): (x: SourceFile | B
     });
 }
 
+type HasInferredType =
+    | FunctionDeclaration
+    | MethodDeclaration
+    | GetAccessorDeclaration
+    | SetAccessorDeclaration
+    | BindingElement
+    | ConstructSignatureDeclaration
+    | VariableDeclaration
+    | MethodSignature
+    | CallSignatureDeclaration
+    | ParameterDeclaration
+    | PropertyDeclaration
+    | PropertySignature;
+
+type EnsureFuncType = (node: HasInferredType, type: TypeNode | undefined, ignorePrivate?: boolean) => TypeNode | undefined;
 
 export interface DeclarationCustomContextType extends TransformationContext {
     isScriptTagInsideContent: boolean,
-    // scriptTagContentNodes: Statement[]
+    declarationsStatement: Statement[]
+    symbolTracker: SymbolTracker
+    ensureType: EnsureFuncType
 }
 const getDeclarationNodeVisitor = getVisitor(declarationTransformers) as TransformerFactory<SourceFile>;
-export function transformKixDeclaration(context: TransformationContext): (x: SourceFile | Bundle) => SourceFile | Bundle {
+export function kixDeclarationTransformer(context: TransformationContext) {
+    // context.symbolTracker = symbolTracker;
+    // context.ensureType = ensureType;
+    // context.getEmitHost().
+    // context.getEmitHelperFactory().get
+    // context.getEmitResolver().
     const visitor = getDeclarationNodeVisitor(context);
+    // const visitor = getNodeVisitor(context);
 
     return chainBundle(context, (sourceFile: SourceFile) => {
         const languageVariant = sourceFile?.languageVariant;
+        console.log("🚀 --> file: index.ts:84 --> returnchainBundle --> languageVariant:", sourceFile.fileName, LanguageVariant[languageVariant]);
 
         if (languageVariant === LanguageVariant.KJS) {
-            return visitor(sourceFile);
+            console.log("🚀 --> file: index.ts:86 --> returnchainBundle --> languageVariant:", languageVariant);
+            const file = visitor(sourceFile);
+            // bindSourceFile(file, context.getCompilerOptions());
+            return file;
         }
         return sourceFile;
     });

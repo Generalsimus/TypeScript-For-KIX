@@ -7237,7 +7237,7 @@ export const enum ScriptTarget {
     Latest = ESNext,
 }
 
-export const enum LanguageVariant {
+export   enum LanguageVariant {
     Standard,
     JSX,
     KJS,
