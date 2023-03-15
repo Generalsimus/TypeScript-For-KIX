@@ -145,35 +145,35 @@ Shape signatures in builder refreshed for::
 /user/username/projects/myproject/packages/pkg1/index.ts (used version)
 
 PolledWatches::
-/a/lib/package.json:
+/a/lib/package.json: *new*
   {"pollingInterval":2000}
-/a/package.json:
+/a/package.json: *new*
   {"pollingInterval":2000}
-/package.json:
+/package.json: *new*
   {"pollingInterval":2000}
-/user/username/projects/myproject/packages/pkg2/build/package.json:
+/user/username/projects/myproject/packages/pkg2/build/package.json: *new*
   {"pollingInterval":2000}
 
 FsWatches::
-/user/username/projects/myproject/packages/pkg2/tsconfig.json:
+/user/username/projects/myproject/packages/pkg2/tsconfig.json: *new*
   {}
-/user/username/projects/myproject/packages/pkg2/const.cts:
+/user/username/projects/myproject/packages/pkg2/const.cts: *new*
   {}
-/user/username/projects/myproject/packages/pkg2/index.ts:
+/user/username/projects/myproject/packages/pkg2/index.ts: *new*
   {}
-/user/username/projects/myproject/packages/pkg2/package.json:
+/user/username/projects/myproject/packages/pkg2/package.json: *new*
   {}
-/user/username/projects/myproject/packages/pkg1/tsconfig.json:
+/user/username/projects/myproject/packages/pkg1/tsconfig.json: *new*
   {}
-/user/username/projects/myproject/packages/pkg1/index.ts:
+/user/username/projects/myproject/packages/pkg1/index.ts: *new*
   {}
-/user/username/projects/myproject/packages/pkg1/package.json:
+/user/username/projects/myproject/packages/pkg1/package.json: *new*
   {}
 
 FsWatchesRecursive::
-/user/username/projects/myproject/packages/pkg2:
+/user/username/projects/myproject/packages/pkg2: *new*
   {}
-/user/username/projects/myproject/packages/pkg1:
+/user/username/projects/myproject/packages/pkg1: *new*
   {}
 
 exitCode:: ExitStatus.undefined
@@ -366,38 +366,6 @@ Semantic diagnostics in builder refreshed for::
 Shape signatures in builder refreshed for::
 /user/username/projects/myproject/packages/pkg1/index.ts (computed .d.ts)
 
-PolledWatches::
-/a/lib/package.json:
-  {"pollingInterval":2000}
-/a/package.json:
-  {"pollingInterval":2000}
-/package.json:
-  {"pollingInterval":2000}
-/user/username/projects/myproject/packages/pkg2/build/package.json:
-  {"pollingInterval":2000}
-
-FsWatches::
-/user/username/projects/myproject/packages/pkg2/tsconfig.json:
-  {}
-/user/username/projects/myproject/packages/pkg2/const.cts:
-  {}
-/user/username/projects/myproject/packages/pkg2/index.ts:
-  {}
-/user/username/projects/myproject/packages/pkg2/package.json:
-  {}
-/user/username/projects/myproject/packages/pkg1/tsconfig.json:
-  {}
-/user/username/projects/myproject/packages/pkg1/index.ts:
-  {}
-/user/username/projects/myproject/packages/pkg1/package.json:
-  {}
-
-FsWatchesRecursive::
-/user/username/projects/myproject/packages/pkg2:
-  {}
-/user/username/projects/myproject/packages/pkg1:
-  {}
-
 exitCode:: ExitStatus.undefined
 
 
@@ -471,38 +439,6 @@ Semantic diagnostics in builder refreshed for::
 
 Shape signatures in builder refreshed for::
 /user/username/projects/myproject/packages/pkg1/index.ts (computed .d.ts)
-
-PolledWatches::
-/a/lib/package.json:
-  {"pollingInterval":2000}
-/a/package.json:
-  {"pollingInterval":2000}
-/package.json:
-  {"pollingInterval":2000}
-/user/username/projects/myproject/packages/pkg2/build/package.json:
-  {"pollingInterval":2000}
-
-FsWatches::
-/user/username/projects/myproject/packages/pkg2/tsconfig.json:
-  {}
-/user/username/projects/myproject/packages/pkg2/const.cts:
-  {}
-/user/username/projects/myproject/packages/pkg2/index.ts:
-  {}
-/user/username/projects/myproject/packages/pkg2/package.json:
-  {}
-/user/username/projects/myproject/packages/pkg1/tsconfig.json:
-  {}
-/user/username/projects/myproject/packages/pkg1/index.ts:
-  {}
-/user/username/projects/myproject/packages/pkg1/package.json:
-  {}
-
-FsWatchesRecursive::
-/user/username/projects/myproject/packages/pkg2:
-  {}
-/user/username/projects/myproject/packages/pkg1:
-  {}
 
 exitCode:: ExitStatus.undefined
 
@@ -588,38 +524,6 @@ Semantic diagnostics in builder refreshed for::
 
 Shape signatures in builder refreshed for::
 /user/username/projects/myproject/packages/pkg1/index.ts (computed .d.ts)
-
-PolledWatches::
-/a/lib/package.json:
-  {"pollingInterval":2000}
-/a/package.json:
-  {"pollingInterval":2000}
-/package.json:
-  {"pollingInterval":2000}
-/user/username/projects/myproject/packages/pkg2/build/package.json:
-  {"pollingInterval":2000}
-
-FsWatches::
-/user/username/projects/myproject/packages/pkg2/tsconfig.json:
-  {}
-/user/username/projects/myproject/packages/pkg2/const.cts:
-  {}
-/user/username/projects/myproject/packages/pkg2/index.ts:
-  {}
-/user/username/projects/myproject/packages/pkg2/package.json:
-  {}
-/user/username/projects/myproject/packages/pkg1/tsconfig.json:
-  {}
-/user/username/projects/myproject/packages/pkg1/index.ts:
-  {}
-/user/username/projects/myproject/packages/pkg1/package.json:
-  {}
-
-FsWatchesRecursive::
-/user/username/projects/myproject/packages/pkg2:
-  {}
-/user/username/projects/myproject/packages/pkg1:
-  {}
 
 exitCode:: ExitStatus.undefined
 
@@ -752,7 +656,11 @@ FsWatches::
   {}
 /user/username/projects/myproject/packages/pkg1/package.json:
   {}
-/user/username/projects/myproject/packages/pkg2/index.cts:
+/user/username/projects/myproject/packages/pkg2/index.cts: *new*
+  {}
+
+FsWatches *deleted*::
+/user/username/projects/myproject/packages/pkg2/index.ts:
   {}
 
 FsWatchesRecursive::

@@ -309,29 +309,29 @@ Dependencies for::
   /user/username/projects/transitiveReferences/a.d.ts
 
 PolledWatches::
-/user/username/projects/transitivereferences/node_modules/@types:
+/user/username/projects/transitivereferences/node_modules/@types: *new*
   {"pollingInterval":500}
 
 FsWatches::
-/user/username/projects/transitivereferences/tsconfig.c.json:
+/user/username/projects/transitivereferences/tsconfig.c.json: *new*
   {}
-/user/username/projects/transitivereferences/tsconfig.b.json:
+/user/username/projects/transitivereferences/tsconfig.b.json: *new*
   {}
-/user/username/projects/transitivereferences/tsconfig.a.json:
+/user/username/projects/transitivereferences/tsconfig.a.json: *new*
   {}
-/user/username/projects/transitivereferences/c.ts:
+/user/username/projects/transitivereferences/c.ts: *new*
   {}
-/user/username/projects/transitivereferences/b.d.ts:
+/user/username/projects/transitivereferences/b.d.ts: *new*
   {}
-/user/username/projects/transitivereferences/a.d.ts:
+/user/username/projects/transitivereferences/a.d.ts: *new*
   {}
-/user/username/projects/transitivereferences/refs/a.d.ts:
+/user/username/projects/transitivereferences/refs/a.d.ts: *new*
   {}
-/a/lib/lib.d.ts:
+/a/lib/lib.d.ts: *new*
   {}
 
 FsWatchesRecursive::
-/user/username/projects/transitivereferences/refs:
+/user/username/projects/transitivereferences/refs: *new*
   {}
 
 exitCode:: ExitStatus.undefined
@@ -491,32 +491,6 @@ Dependencies for::
   /user/username/projects/transitiveReferences/b.d.ts
   /user/username/projects/transitiveReferences/a.d.ts
 
-PolledWatches::
-/user/username/projects/transitivereferences/node_modules/@types:
-  {"pollingInterval":500}
-
-FsWatches::
-/user/username/projects/transitivereferences/tsconfig.c.json:
-  {}
-/user/username/projects/transitivereferences/tsconfig.b.json:
-  {}
-/user/username/projects/transitivereferences/tsconfig.a.json:
-  {}
-/user/username/projects/transitivereferences/c.ts:
-  {}
-/user/username/projects/transitivereferences/b.d.ts:
-  {}
-/user/username/projects/transitivereferences/a.d.ts:
-  {}
-/user/username/projects/transitivereferences/refs/a.d.ts:
-  {}
-/a/lib/lib.d.ts:
-  {}
-
-FsWatchesRecursive::
-/user/username/projects/transitivereferences/refs:
-  {}
-
 exitCode:: ExitStatus.undefined
 
 //// [/user/username/projects/transitiveReferences/c.js] file written with same contents
@@ -614,6 +588,10 @@ Dependencies for::
 
 PolledWatches::
 /user/username/projects/transitivereferences/node_modules/@types:
+  {"pollingInterval":500} *new*
+
+PolledWatches *deleted*::
+/user/username/projects/transitivereferences/node_modules/@types:
   {"pollingInterval":500}
 
 FsWatches::
@@ -631,11 +609,19 @@ FsWatches::
   {}
 /a/lib/lib.d.ts:
   {}
-/user/username/projects/transitivereferences/nrefs/a.d.ts:
+/user/username/projects/transitivereferences/nrefs/a.d.ts: *new*
+  {}
+
+FsWatches *deleted*::
+/user/username/projects/transitivereferences/refs/a.d.ts:
   {}
 
 FsWatchesRecursive::
-/user/username/projects/transitivereferences/nrefs:
+/user/username/projects/transitivereferences/nrefs: *new*
+  {}
+
+FsWatchesRecursive *deleted*::
+/user/username/projects/transitivereferences/refs:
   {}
 
 exitCode:: ExitStatus.undefined
@@ -730,6 +716,10 @@ Dependencies for::
 
 PolledWatches::
 /user/username/projects/transitivereferences/node_modules/@types:
+  {"pollingInterval":500} *new*
+
+PolledWatches *deleted*::
+/user/username/projects/transitivereferences/node_modules/@types:
   {"pollingInterval":500}
 
 FsWatches::
@@ -747,11 +737,19 @@ FsWatches::
   {}
 /a/lib/lib.d.ts:
   {}
-/user/username/projects/transitivereferences/refs/a.d.ts:
+/user/username/projects/transitivereferences/refs/a.d.ts: *new*
+  {}
+
+FsWatches *deleted*::
+/user/username/projects/transitivereferences/nrefs/a.d.ts:
   {}
 
 FsWatchesRecursive::
-/user/username/projects/transitivereferences/refs:
+/user/username/projects/transitivereferences/refs: *new*
+  {}
+
+FsWatchesRecursive *deleted*::
+/user/username/projects/transitivereferences/nrefs:
   {}
 
 exitCode:: ExitStatus.undefined
@@ -847,13 +845,17 @@ FsWatches::
   {}
 /user/username/projects/transitivereferences/refs/a.d.ts:
   {}
-/user/username/projects/transitivereferences/nrefs/a.d.ts:
+/user/username/projects/transitivereferences/nrefs/a.d.ts: *new*
+  {}
+
+FsWatches *deleted*::
+/user/username/projects/transitivereferences/a.d.ts:
   {}
 
 FsWatchesRecursive::
 /user/username/projects/transitivereferences/refs:
   {}
-/user/username/projects/transitivereferences/nrefs:
+/user/username/projects/transitivereferences/nrefs: *new*
   {}
 
 exitCode:: ExitStatus.undefined
@@ -941,8 +943,16 @@ FsWatches::
 /user/username/projects/transitivereferences/refs/a.d.ts:
   {}
 
+FsWatches *deleted*::
+/user/username/projects/transitivereferences/nrefs/a.d.ts:
+  {}
+
 FsWatchesRecursive::
 /user/username/projects/transitivereferences/refs:
+  {}
+
+FsWatchesRecursive *deleted*::
+/user/username/projects/transitivereferences/nrefs:
   {}
 
 exitCode:: ExitStatus.undefined
@@ -1037,7 +1047,13 @@ FsWatches::
   {}
 /user/username/projects/transitivereferences/refs/a.d.ts:
   {}
-/user/username/projects/transitivereferences/b.ts:
+/user/username/projects/transitivereferences/b.ts: *new*
+  {}
+
+FsWatches *deleted*::
+/user/username/projects/transitivereferences/tsconfig.a.json:
+  {}
+/user/username/projects/transitivereferences/b.d.ts:
   {}
 
 FsWatchesRecursive::
@@ -1148,11 +1164,15 @@ FsWatches::
   {}
 /user/username/projects/transitivereferences/refs/a.d.ts:
   {}
-/user/username/projects/transitivereferences/tsconfig.a.json:
+/user/username/projects/transitivereferences/tsconfig.a.json: *new*
   {}
-/user/username/projects/transitivereferences/b.d.ts:
+/user/username/projects/transitivereferences/b.d.ts: *new*
   {}
-/user/username/projects/transitivereferences/a.d.ts:
+/user/username/projects/transitivereferences/a.d.ts: *new*
+  {}
+
+FsWatches *deleted*::
+/user/username/projects/transitivereferences/b.ts:
   {}
 
 FsWatchesRecursive::
@@ -1252,7 +1272,11 @@ FsWatches::
   {}
 /user/username/projects/transitivereferences/b.d.ts:
   {}
-/user/username/projects/transitivereferences/a.ts:
+/user/username/projects/transitivereferences/a.ts: *new*
+  {}
+
+FsWatches *deleted*::
+/user/username/projects/transitivereferences/a.d.ts:
   {}
 
 FsWatchesRecursive::
@@ -1353,7 +1377,11 @@ FsWatches::
   {}
 /user/username/projects/transitivereferences/b.d.ts:
   {}
-/user/username/projects/transitivereferences/a.d.ts:
+/user/username/projects/transitivereferences/a.d.ts: *new*
+  {}
+
+FsWatches *deleted*::
+/user/username/projects/transitivereferences/a.ts:
   {}
 
 FsWatchesRecursive::

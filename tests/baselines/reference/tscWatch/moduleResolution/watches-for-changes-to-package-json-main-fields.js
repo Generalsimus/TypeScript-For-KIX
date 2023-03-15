@@ -99,37 +99,37 @@ Shape signatures in builder refreshed for::
 /user/username/projects/myproject/packages/pkg1/index.ts (used version)
 
 PolledWatches::
-/user/username/projects/myproject/packages/pkg1/node_modules:
+/user/username/projects/myproject/packages/pkg1/node_modules: *new*
   {"pollingInterval":500}
-/user/username/projects/myproject/packages/node_modules:
+/user/username/projects/myproject/packages/node_modules: *new*
   {"pollingInterval":500}
-/user/username/projects/myproject/packages/pkg1/node_modules/@types:
+/user/username/projects/myproject/packages/pkg1/node_modules/@types: *new*
   {"pollingInterval":500}
-/user/username/projects/myproject/packages/node_modules/@types:
+/user/username/projects/myproject/packages/node_modules/@types: *new*
   {"pollingInterval":500}
-/user/username/projects/myproject/node_modules/@types:
+/user/username/projects/myproject/node_modules/@types: *new*
   {"pollingInterval":500}
 
 FsWatches::
-/user/username/projects/myproject/packages/pkg1/tsconfig.json:
+/user/username/projects/myproject/packages/pkg1/tsconfig.json: *new*
   {}
-/user/username/projects/myproject/packages/pkg1/index.ts:
+/user/username/projects/myproject/packages/pkg1/index.ts: *new*
   {}
-/user/username/projects/myproject/packages/pkg2/build/index.d.ts:
+/user/username/projects/myproject/packages/pkg2/build/index.d.ts: *new*
   {}
-/user/username/projects/myproject/packages/pkg2/build/const.d.ts:
+/user/username/projects/myproject/packages/pkg2/build/const.d.ts: *new*
   {}
-/a/lib/lib.d.ts:
+/a/lib/lib.d.ts: *new*
   {}
-/user/username/projects/myproject/packages/pkg2/package.json:
+/user/username/projects/myproject/packages/pkg2/package.json: *new*
   {}
 
 FsWatchesRecursive::
-/user/username/projects/myproject/packages/pkg2:
+/user/username/projects/myproject/packages/pkg2: *new*
   {}
-/user/username/projects/myproject/node_modules:
+/user/username/projects/myproject/node_modules: *new*
   {}
-/user/username/projects/myproject/packages/pkg1:
+/user/username/projects/myproject/packages/pkg1: *new*
   {}
 
 exitCode:: ExitStatus.undefined
@@ -222,13 +222,23 @@ FsWatches::
   {}
 /user/username/projects/myproject/packages/pkg2/package.json:
   {}
-/user/username/projects/myproject/packages/pkg2/build/other.d.ts:
+/user/username/projects/myproject/packages/pkg2/build/other.d.ts: *new*
+  {}
+
+FsWatches *deleted*::
+/user/username/projects/myproject/packages/pkg2/build/index.d.ts:
+  {}
+/user/username/projects/myproject/packages/pkg2/build/const.d.ts:
   {}
 
 FsWatchesRecursive::
 /user/username/projects/myproject/node_modules:
   {}
 /user/username/projects/myproject/packages/pkg1:
+  {}
+
+FsWatchesRecursive *deleted*::
+/user/username/projects/myproject/packages/pkg2:
   {}
 
 exitCode:: ExitStatus.undefined
@@ -322,9 +332,13 @@ FsWatches::
   {}
 /user/username/projects/myproject/packages/pkg2/package.json:
   {}
-/user/username/projects/myproject/packages/pkg2/build/index.d.ts:
+/user/username/projects/myproject/packages/pkg2/build/index.d.ts: *new*
   {}
-/user/username/projects/myproject/packages/pkg2/build/const.d.ts:
+/user/username/projects/myproject/packages/pkg2/build/const.d.ts: *new*
+  {}
+
+FsWatches *deleted*::
+/user/username/projects/myproject/packages/pkg2/build/other.d.ts:
   {}
 
 FsWatchesRecursive::
@@ -332,7 +346,7 @@ FsWatchesRecursive::
   {}
 /user/username/projects/myproject/packages/pkg1:
   {}
-/user/username/projects/myproject/packages/pkg2:
+/user/username/projects/myproject/packages/pkg2: *new*
   {}
 
 exitCode:: ExitStatus.undefined
