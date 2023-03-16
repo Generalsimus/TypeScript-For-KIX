@@ -1,6 +1,6 @@
 {
-    "name": "typescript",
-    "author": "Microsoft Corp.",
+    "name": "ktypescript",
+    "author": "Generalsimus",
     "homepage": "https://www.typescriptlang.org/",
     "version": "5.1.0",
     "license": "Apache-2.0",
@@ -13,17 +13,16 @@
         "javascript"
     ],
     "bugs": {
-        "url": "https://github.com/Microsoft/TypeScript/issues"
+        "url": "https://github.com/Generalsimus/ktypescript/issues"
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/Microsoft/TypeScript.git"
+        "url": "https://github.com/Generalsimus/ktypescript.git"
     },
     "main": "./lib/typescript.js",
     "typings": "./lib/typescript.d.ts",
     "bin": {
         "tsc": "./bin/tsc",
-        "tscc": "./bin/tscc",
         "tsserver": "./bin/tsserver"
     },
     "engines": {
